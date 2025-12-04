@@ -1,0 +1,1587 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Taxo Impuestos API - Documentación</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/styles/obsidian.min.css">
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.6.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jets/0.14.1/jets.min.js"></script>
+
+    <style id="language-style">
+        /* starts out as display none and is replaced with js later  */
+                    body .content .bash-example code { display: none; }
+                    body .content .javascript-example code { display: none; }
+                    body .content .php-example code { display: none; }
+                    body .content .python-example code { display: none; }
+            </style>
+
+    <script>
+        var tryItOutBaseUrl = "http://localhost:8000";
+        var useCsrf = Boolean();
+        var csrfUrl = "/sanctum/csrf-cookie";
+    </script>
+    <script src="../docs/js/tryitout-5.6.0.js"></script>
+
+    <script src="../docs/js/theme-default-5.6.0.js"></script>
+
+</head>
+
+<body data-languages="[&quot;bash&quot;,&quot;javascript&quot;,&quot;php&quot;,&quot;python&quot;]">
+
+<a href="#" id="nav-button">
+    <span>
+        MENU
+        <img src="../docs/images/navbar.png" alt="navbar-image"/>
+    </span>
+</a>
+<div class="tocify-wrapper">
+    
+            <div class="lang-selector">
+                                            <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                            <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                                            <button type="button" class="lang-button" data-language-name="php">php</button>
+                                            <button type="button" class="lang-button" data-language-name="python">python</button>
+                    </div>
+    
+    <div class="search">
+        <input type="text" class="search" id="input-search" placeholder="Search">
+    </div>
+
+    <div id="toc">
+                    <ul id="tocify-header-introduction" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="introduction">
+                    <a href="#introduction">Introduction</a>
+                </li>
+                            </ul>
+                    <ul id="tocify-header-authenticating-requests" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="authenticating-requests">
+                    <a href="#authenticating-requests">Authenticating requests</a>
+                </li>
+                            </ul>
+                    <ul id="tocify-header-taxpayers" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="taxpayers">
+                    <a href="#taxpayers">Taxpayers</a>
+                </li>
+                                    <ul id="tocify-subheader-taxpayers" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="taxpayers-GETapi-v1-taxpayers">
+                                <a href="#taxpayers-GETapi-v1-taxpayers">List taxpayers</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="taxpayers-POSTapi-v1-taxpayers">
+                                <a href="#taxpayers-POSTapi-v1-taxpayers">Create a new taxpayer</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="taxpayers-GETapi-v1-taxpayers--taxNumber-">
+                                <a href="#taxpayers-GETapi-v1-taxpayers--taxNumber-">Get a specific taxpayer</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="taxpayers-GETapi-v1-taxpayers--taxNumber--categories">
+                                <a href="#taxpayers-GETapi-v1-taxpayers--taxNumber--categories">Get taxpayer categories</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+            </div>
+
+    <ul class="toc-footer" id="toc-footer">
+                    <li style="padding-bottom: 5px;"><a href="../docs/collection.json">View Postman collection</a></li>
+                            <li style="padding-bottom: 5px;"><a href="../docs/openapi.yaml">View OpenAPI spec</a></li>
+                <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
+    </ul>
+
+    <ul class="toc-footer" id="last-updated">
+        <li>Last updated: December 4, 2025</li>
+    </ul>
+</div>
+
+<div class="page-wrapper">
+    <div class="dark-box"></div>
+    <div class="content">
+        <h1 id="introduction">Introduction</h1>
+<p>API RESTful para gestión de contribuyentes, categorías, documentos emitidos, documentos recibidos y reportes tributarios.</p>
+<aside>
+    <strong>Base URL</strong>: <code>http://localhost:8000</code>
+</aside>
+<pre><code>Esta documentación proporciona toda la información necesaria para trabajar con la API de Taxo Impuestos.
+
+## Autenticación
+
+Todas las peticiones a la API requieren dos headers:
+- **x-api-key**: Tu API key proporcionado por TWS
+- **x-organization-id**: Tu organization ID de TWS
+
+## Rate Limiting
+
+La API está limitada a 60 peticiones por minuto por API key.
+
+&lt;aside&gt;A medida que navegues por la documentación, verás ejemplos de código en diferentes lenguajes en el área oscura a la derecha.&lt;/aside&gt;</code></pre>
+
+        <h1 id="authenticating-requests">Authenticating requests</h1>
+<p>To authenticate requests, include a <strong><code>x-api-key</code></strong> header with the value <strong><code>"YOUR_API_KEY_HERE"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>Puedes obtener tu API key y Organization ID desde tu dashboard de TWS. <br><br>Debes incluir también el header <code>x-organization-id</code> con tu Organization ID.</p>
+
+        <h1 id="taxpayers">Taxpayers</h1>
+
+    <p>API endpoints for managing taxpayers and their related data.</p>
+
+                                <h2 id="taxpayers-GETapi-v1-taxpayers">List taxpayers</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves a paginated list of all taxpayers belonging to the authenticated organization.
+You can filter and sort the results using query parameters.</p>
+
+<span id="example-requests-GETapi-v1-taxpayers">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/v1/taxpayers?page=1&amp;per_page=20&amp;sort=-created_at&amp;search=Empresa+S.A.&amp;status=1&amp;iva_period=MENSUAL&amp;tax_regime_cat=GENERAL&amp;declaration_day=10" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/taxpayers"
+);
+
+const params = {
+    "page": "1",
+    "per_page": "20",
+    "sort": "-created_at",
+    "search": "Empresa S.A.",
+    "status": "1",
+    "iva_period": "MENSUAL",
+    "tax_regime_cat": "GENERAL",
+    "declaration_day": "10",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost:8000/api/v1/taxpayers';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'query' =&gt; [
+            'page' =&gt; '1',
+            'per_page' =&gt; '20',
+            'sort' =&gt; '-created_at',
+            'search' =&gt; 'Empresa S.A.',
+            'status' =&gt; '1',
+            'iva_period' =&gt; 'MENSUAL',
+            'tax_regime_cat' =&gt; 'GENERAL',
+            'declaration_day' =&gt; '10',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/v1/taxpayers'
+params = {
+  'page': '1',
+  'per_page': '20',
+  'sort': '-created_at',
+  'search': 'Empresa S.A.',
+  'status': '1',
+  'iva_period': 'MENSUAL',
+  'tax_regime_cat': 'GENERAL',
+  'declaration_day': '10',
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers, params=params)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers">
+            <blockquote>
+            <p>Example response (200, Success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Taxpayers retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;taxpayers&quot;: [
+            {
+                &quot;id&quot;: 144,
+                &quot;ulid&quot;: &quot;01HZXXX...&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;,
+                &quot;business_name&quot;: &quot;EMPRESA DEMO S.A.&quot;,
+                &quot;trade_name&quot;: &quot;DEMO&quot;,
+                &quot;tax_payer_status&quot;: &quot;ACTIVE&quot;,
+                &quot;tax_regime&quot;: &quot;general&quot;,
+                &quot;tax_regime_cat&quot;: &quot;general&quot;,
+                &quot;iva_period&quot;: &quot;monthly&quot;,
+                &quot;declaration_day&quot;: 12,
+                &quot;required_to_keep_accounts&quot;: &quot;SI&quot;,
+                &quot;withholding_agent&quot;: &quot;SI&quot;,
+                &quot;special_contributor&quot;: &quot;NO&quot;,
+                &quot;economic_activity&quot;: &quot;Actividades de consultor&iacute;a de gesti&oacute;n empresarial&quot;,
+                &quot;start_activities_date&quot;: &quot;2020-01-15T00:00:00.000000Z&quot;,
+                &quot;created_at&quot;: &quot;2024-01-15T10:30:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2024-01-15T10:30:00.000000Z&quot;
+            }
+        ]
+    },
+    &quot;meta&quot;: {
+        &quot;pagination&quot;: {
+            &quot;total&quot;: 5,
+            &quot;count&quot;: 5,
+            &quot;per_page&quot;: 20,
+            &quot;current_page&quot;: 1,
+            &quot;total_pages&quot;: 1
+        },
+        &quot;filters&quot;: {
+            &quot;status&quot;: &quot;ACTIVE&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving taxpayers&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers" data-method="GET"
+      data-path="api/v1/taxpayers"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers"
+                    onclick="tryItOut('GETapi-v1-taxpayers');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number for pagination. El campo value debe ser al menos 1. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers"
+               value="20"
+               data-component="query">
+    <br>
+<p>Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100. Example: <code>20</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort"                data-endpoint="GETapi-v1-taxpayers"
+               value="-created_at"
+               data-component="query">
+    <br>
+<p>Sort field and direction. Prefix with &quot;-&quot; for descending order. Example: <code>-created_at</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>business_name</code></li> <li><code>-business_name</code></li> <li><code>tax_number</code></li> <li><code>-tax_number</code></li> <li><code>next_declaration</code></li> <li><code>-next_declaration</code></li> <li><code>created_at</code></li> <li><code>-created_at</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-taxpayers"
+               value="Empresa S.A."
+               data-component="query">
+    <br>
+<p>Search term to filter by business name or tax number. El campo value no debe ser mayor que 255 caracteres. Example: <code>Empresa S.A.</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="status"                data-endpoint="GETapi-v1-taxpayers"
+               value="1"
+               data-component="query">
+    <br>
+<p>Filter by status (0=inactive, 1=active). Example: <code>1</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>0</code></li> <li><code>1</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>iva_period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="iva_period"                data-endpoint="GETapi-v1-taxpayers"
+               value="MENSUAL"
+               data-component="query">
+    <br>
+<p>Filter by IVA period (MENSUAL, SEMESTRAL). Example: <code>MENSUAL</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>MENSUAL</code></li> <li><code>SEMESTRAL</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>tax_regime_cat</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_regime_cat"                data-endpoint="GETapi-v1-taxpayers"
+               value="GENERAL"
+               data-component="query">
+    <br>
+<p>Filter by tax regime category. Example: <code>GENERAL</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>RISE</code></li> <li><code>GENERAL</code></li> <li><code>ESPECIAL</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>declaration_day</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="declaration_day"                data-endpoint="GETapi-v1-taxpayers"
+               value="10"
+               data-component="query">
+    <br>
+<p>Filter by declaration day (1-28). El campo value debe ser al menos 1. El campo value no debe ser mayor que 28. Example: <code>10</code></p>
+            </div>
+                </form>
+
+                    <h2 id="taxpayers-POSTapi-v1-taxpayers">Create a new taxpayer</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Creates a new taxpayer in your organization after validating that the tax identifier exists
+in the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 digits), or Passport.</p>
+<p>This endpoint will:</p>
+<ol>
+<li>Validate the taxpayer doesn't already exist in your organization</li>
+<li>Query the TWS registry API to verify the identifier is valid and active</li>
+<li>Create the taxpayer with all available data from TWS</li>
+<li>Automatically create default categories for document classification</li>
+<li>Set up auto-categorization rules</li>
+</ol>
+<p><strong>Note:</strong> This process may take 5-10 seconds as it queries external services.</p>
+
+<span id="example-requests-POSTapi-v1-taxpayers">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "http://localhost:8000/api/v1/taxpayers" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"taxpayerId\": \"1726051285001\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/taxpayers"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "taxpayerId": "1726051285001"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost:8000/api/v1/taxpayers';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'taxpayerId' =&gt; '1726051285001',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/v1/taxpayers'
+payload = {
+    "taxpayerId": "1726051285001"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers">
+            <blockquote>
+            <p>Example response (201, Taxpayer created successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Taxpayer created successfully&quot;,
+    &quot;data&quot;: {
+        &quot;taxpayer&quot;: {
+            &quot;id&quot;: &quot;01JDXYZ123ABC456DEF789GHI&quot;,
+            &quot;tax_number&quot;: &quot;1726051285001&quot;,
+            &quot;business_name&quot;: &quot;AGUIRRE MEJIA AIDA ISABEL&quot;,
+            &quot;legal_name&quot;: &quot;AGUIRRE MEJIA AIDA ISABEL&quot;,
+            &quot;email&quot;: null,
+            &quot;phone&quot;: null,
+            &quot;status&quot;: 1,
+            &quot;tax_payer_status&quot;: &quot;ACTIVO&quot;,
+            &quot;economic_activity&quot;: &quot;VENTA AL POR MAYOR DE FRUTAS&quot;,
+            &quot;tax_regime&quot;: &quot;GENERAL&quot;,
+            &quot;tax_regime_cat&quot;: &quot;general&quot;,
+            &quot;iva_period&quot;: &quot;monthly&quot;,
+            &quot;category&quot;: null,
+            &quot;required_to_keep_accounts&quot;: &quot;NO&quot;,
+            &quot;withholding_agent&quot;: &quot;NO&quot;,
+            &quot;special_contributor&quot;: &quot;NO&quot;,
+            &quot;declaration_day&quot;: 12,
+            &quot;next_declaration&quot;: null,
+            &quot;start_activities_date&quot;: &quot;2018-09-04&quot;,
+            &quot;last_sync_at&quot;: null,
+            &quot;created_at&quot;: &quot;2024-12-02 15:30:45&quot;,
+            &quot;updated_at&quot;: &quot;2024-12-02 15:30:45&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found in TWS):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found in TWS. Please verify the taxpayer ID&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_NOT_FOUND_IN_TWS&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (409, Taxpayer already exists):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer already exists for this organization&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_ALREADY_EXISTS&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;taxpayerId&quot;: [
+            &quot;The taxpayer ID can only contain letters, numbers, and hyphens&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Internal server error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Failed to create taxpayer due to an internal error&quot;,
+    &quot;code&quot;: &quot;INTERNAL_SERVER_ERROR&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (503, TWS service unavailable):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Unable to verify taxpayer with TWS app&quot;,
+    &quot;code&quot;: &quot;TWS_SERVICE_UNAVAILABLE&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (504, TWS service timeout):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;TWS service timeout. Please try again later&quot;,
+    &quot;code&quot;: &quot;TWS_SERVICE_TIMEOUT&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers" data-method="POST"
+      data-path="api/v1/taxpayers"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers"
+                    onclick="tryItOut('POSTapi-v1-taxpayers');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>taxpayerId</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxpayerId"                data-endpoint="POSTapi-v1-taxpayers"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Ecuadorian tax identifier. Can be: RUC (13 digits), Cédula (10 digits), or Passport (alphanumeric). Must match the regex /^[a-zA-Z0-9-]+$/. El campo value debe ser de al menos 5 caracteres. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+        </form>
+
+                    <h2 id="taxpayers-GETapi-v1-taxpayers--taxNumber-">Get a specific taxpayer</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves detailed information for a specific taxpayer identified by their RUC number.
+The taxpayer must belong to the authenticated organization.</p>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/v1/taxpayers/1726051285001" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/taxpayers/1726051285001"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost:8000/api/v1/taxpayers/1726051285001';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/v1/taxpayers/1726051285001'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber-">
+            <blockquote>
+            <p>Example response (200, Success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Taxpayer retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;taxpayer&quot;: {
+            &quot;id&quot;: 144,
+            &quot;ulid&quot;: &quot;01HZXXX...&quot;,
+            &quot;tax_number&quot;: &quot;1726051285001&quot;,
+            &quot;business_name&quot;: &quot;EMPRESA DEMO S.A.&quot;,
+            &quot;trade_name&quot;: &quot;DEMO&quot;,
+            &quot;address&quot;: &quot;Av. Principal 123 y Secundaria&quot;,
+            &quot;phone&quot;: &quot;0987654321&quot;,
+            &quot;email&quot;: &quot;contacto@demo.com&quot;,
+            &quot;legal_representatives&quot;: &quot;Juan P&eacute;rez, Mar&iacute;a Gonz&aacute;lez&quot;,
+            &quot;economic_activity&quot;: &quot;Actividades de consultor&iacute;a de gesti&oacute;n empresarial&quot;,
+            &quot;tax_payer_status&quot;: &quot;ACTIVE&quot;,
+            &quot;tax_payer_type&quot;: &quot;PERSONA JUR&Iacute;DICA&quot;,
+            &quot;tax_regime&quot;: &quot;general&quot;,
+            &quot;tax_regime_cat&quot;: &quot;general&quot;,
+            &quot;category&quot;: null,
+            &quot;iva_period&quot;: &quot;monthly&quot;,
+            &quot;declaration_day&quot;: 12,
+            &quot;required_to_keep_accounts&quot;: &quot;SI&quot;,
+            &quot;withholding_agent&quot;: &quot;SI&quot;,
+            &quot;special_contributor&quot;: &quot;NO&quot;,
+            &quot;ghost_taxpayer&quot;: &quot;NO&quot;,
+            &quot;nonexistent_transactions&quot;: &quot;NO&quot;,
+            &quot;start_activities_date&quot;: &quot;2020-01-15T00:00:00.000000Z&quot;,
+            &quot;cessation_date&quot;: null,
+            &quot;restart_activities_date&quot;: null,
+            &quot;information_update_date&quot;: &quot;2024-01-15T00:00:00.000000Z&quot;,
+            &quot;created_at&quot;: &quot;2024-01-15T10:30:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2024-01-15T10:30:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving the taxpayer&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber-" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber-"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber-"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber-"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber-"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber-"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="taxpayers-GETapi-v1-taxpayers--taxNumber--categories">Get taxpayer categories</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves a paginated list of categories for a specific taxpayer.
+Categories are used to classify purchase and sales documents.</p>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--categories">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost:8000/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost:8000/api/v1/taxpayers/1726051285001/categories"
+);
+
+const params = {
+    "page": "1",
+    "per_page": "20",
+    "document_type": "sales",
+    "category_type": "commercial_expenses",
+    "enabled": "1",
+    "editable": "1",
+    "search": "Alimentación",
+    "filter[document_type]": "sales",
+    "filter[category_type]": "personal_expenses",
+    "filter[search]": "vmqeopfuudtdsufvyvddq",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost:8000/api/v1/taxpayers/1726051285001/categories';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'query' =&gt; [
+            'page' =&gt; '1',
+            'per_page' =&gt; '20',
+            'document_type' =&gt; 'sales',
+            'category_type' =&gt; 'commercial_expenses',
+            'enabled' =&gt; '1',
+            'editable' =&gt; '1',
+            'search' =&gt; 'Alimentación',
+            'filter[document_type]' =&gt; 'sales',
+            'filter[category_type]' =&gt; 'personal_expenses',
+            'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'http://localhost:8000/api/v1/taxpayers/1726051285001/categories'
+params = {
+  'page': '1',
+  'per_page': '20',
+  'document_type': 'sales',
+  'category_type': 'commercial_expenses',
+  'enabled': '1',
+  'editable': '1',
+  'search': 'Alimentación',
+  'filter[document_type]': 'sales',
+  'filter[category_type]': 'personal_expenses',
+  'filter[search]': 'vmqeopfuudtdsufvyvddq',
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers, params=params)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--categories">
+            <blockquote>
+            <p>Example response (200, Success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Categories retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;categories&quot;: [
+            {
+                &quot;id&quot;: 9857,
+                &quot;name&quot;: &quot;Alimentaci&oacute;n&quot;,
+                &quot;code&quot;: &quot;D-001&quot;,
+                &quot;description&quot;: null,
+                &quot;icon&quot;: &quot;M20 10a5.27...&quot;,
+                &quot;color&quot;: &quot;bg-teal-500&quot;,
+                &quot;document_type&quot;: &quot;purchases&quot;,
+                &quot;category_type&quot;: &quot;personal_expenses&quot;,
+                &quot;editable&quot;: false,
+                &quot;has_been_edited&quot;: false,
+                &quot;enabled&quot;: true,
+                &quot;created_at&quot;: &quot;2024-01-15T10:30:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2024-01-15T10:30:00.000000Z&quot;,
+                &quot;archived_at&quot;: null
+            }
+        ]
+    },
+    &quot;meta&quot;: {
+        &quot;pagination&quot;: {
+            &quot;total&quot;: 30,
+            &quot;count&quot;: 20,
+            &quot;per_page&quot;: 20,
+            &quot;current_page&quot;: 1,
+            &quot;total_pages&quot;: 2
+        },
+        &quot;filters&quot;: {
+            &quot;document_type&quot;: &quot;purchases&quot;,
+            &quot;enabled&quot;: true
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found or access denied&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Failed to retrieve categories. Please try again later.&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--categories" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--categories"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--categories"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--categories" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--categories">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--categories" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/categories"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--categories', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--categories"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--categories');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--categories"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--categories');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--categories"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/categories</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number for pagination. El campo value debe ser al menos 1. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="20"
+               data-component="query">
+    <br>
+<p>Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100. Example: <code>20</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>document_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="sales"
+               data-component="query">
+    <br>
+<p>Filter by document type (purchases or sales). Example: <code>sales</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="commercial_expenses"
+               data-component="query">
+    <br>
+<p>Filter by category type (personal_expenses, commercial_expenses, non_deductible_expenses, sales). Example: <code>commercial_expenses</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>enabled</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="enabled"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="1"
+               data-component="query">
+    <br>
+<p>Filter by enabled status (1 or 0). Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>editable</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="editable"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="1"
+               data-component="query">
+    <br>
+<p>Filter by editable status (1 or 0). Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="Alimentación"
+               data-component="query">
+    <br>
+<p>Search term to filter by name, code, or description. El campo value no debe ser mayor que 255 caracteres. Example: <code>Alimentación</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter</code></b>&nbsp;&nbsp;
+<small>object</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="filter"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value=""
+               data-component="query">
+    <br>
+
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter.document_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="sales"
+               data-component="query">
+    <br>
+<p>Example: <code>sales</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter.category_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="personal_expenses"
+               data-component="query">
+    <br>
+<p>Example: <code>personal_expenses</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter.enabled</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.enabled"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value=""
+               data-component="query">
+    <br>
+
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter.editable</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.editable"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value=""
+               data-component="query">
+    <br>
+
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>filter.search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="filter.search"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
+               value="vmqeopfuudtdsufvyvddq"
+               data-component="query">
+    <br>
+<p>El campo value no debe ser mayor que 255 caracteres. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
+            </div>
+                </form>
+
+            
+
+        
+    </div>
+    <div class="dark-box">
+                    <div class="lang-selector">
+                                                        <button type="button" class="lang-button" data-language-name="bash">bash</button>
+                                                        <button type="button" class="lang-button" data-language-name="javascript">javascript</button>
+                                                        <button type="button" class="lang-button" data-language-name="php">php</button>
+                                                        <button type="button" class="lang-button" data-language-name="python">python</button>
+                            </div>
+            </div>
+</div>
+</body>
+</html>

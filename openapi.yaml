@@ -1,0 +1,1261 @@
+openapi: 3.0.3
+info:
+  title: 'Taxo Impuestos API - Documentación'
+  description: 'API RESTful para gestión de contribuyentes, categorías, documentos emitidos, documentos recibidos y reportes tributarios.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost:8000'
+tags:
+  -
+    name: Taxpayers
+    description: "\nAPI endpoints for managing taxpayers and their related data."
+components:
+  securitySchemes:
+    default:
+      type: apiKey
+      name: x-api-key
+      in: header
+      description: 'Puedes obtener tu API key y Organization ID desde tu dashboard de TWS. <br><br>Debes incluir también el header <code>x-organization-id</code> con tu Organization ID.'
+security:
+  -
+    default: []
+paths:
+  /api/v1/taxpayers:
+    get:
+      summary: 'List taxpayers'
+      operationId: listTaxpayers
+      description: "Retrieves a paginated list of all taxpayers belonging to the authenticated organization.\nYou can filter and sort the results using query parameters."
+      parameters:
+        -
+          in: query
+          name: page
+          description: 'Page number for pagination. El campo value debe ser al menos 1.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number for pagination. El campo value debe ser al menos 1.'
+            example: 1
+            nullable: true
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+            example: 20
+            nullable: true
+        -
+          in: query
+          name: sort
+          description: 'Sort field and direction. Prefix with "-" for descending order.'
+          example: '-created_at'
+          required: false
+          schema:
+            type: string
+            description: 'Sort field and direction. Prefix with "-" for descending order.'
+            example: '-created_at'
+            enum:
+              - business_name
+              - '-business_name'
+              - tax_number
+              - '-tax_number'
+              - next_declaration
+              - '-next_declaration'
+              - created_at
+              - '-created_at'
+            nullable: true
+        -
+          in: query
+          name: search
+          description: 'Search term to filter by business name or tax number. El campo value no debe ser mayor que 255 caracteres.'
+          example: 'Empresa S.A.'
+          required: false
+          schema:
+            type: string
+            description: 'Search term to filter by business name or tax number. El campo value no debe ser mayor que 255 caracteres.'
+            example: 'Empresa S.A.'
+            nullable: true
+        -
+          in: query
+          name: status
+          description: 'Filter by status (0=inactive, 1=active).'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by status (0=inactive, 1=active).'
+            example: 1
+            enum:
+              - '0'
+              - '1'
+            nullable: true
+        -
+          in: query
+          name: iva_period
+          description: 'Filter by IVA period (MENSUAL, SEMESTRAL).'
+          example: MENSUAL
+          required: false
+          schema:
+            type: string
+            description: 'Filter by IVA period (MENSUAL, SEMESTRAL).'
+            example: MENSUAL
+            enum:
+              - MENSUAL
+              - SEMESTRAL
+            nullable: true
+        -
+          in: query
+          name: tax_regime_cat
+          description: 'Filter by tax regime category.'
+          example: GENERAL
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax regime category.'
+            example: GENERAL
+            enum:
+              - RISE
+              - GENERAL
+              - ESPECIAL
+            nullable: true
+        -
+          in: query
+          name: declaration_day
+          description: 'Filter by declaration day (1-28). El campo value debe ser al menos 1. El campo value no debe ser mayor que 28.'
+          example: 10
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by declaration day (1-28). El campo value debe ser al menos 1. El campo value no debe ser mayor que 28.'
+            example: 10
+            nullable: true
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Taxpayers retrieved successfully'
+                  data:
+                    taxpayers:
+                      -
+                        id: 144
+                        ulid: 01HZXXX...
+                        tax_number: '1726051285001'
+                        business_name: 'EMPRESA DEMO S.A.'
+                        trade_name: DEMO
+                        tax_payer_status: ACTIVE
+                        tax_regime: general
+                        tax_regime_cat: general
+                        iva_period: monthly
+                        declaration_day: 12
+                        required_to_keep_accounts: SI
+                        withholding_agent: SI
+                        special_contributor: 'NO'
+                        economic_activity: 'Actividades de consultoría de gestión empresarial'
+                        start_activities_date: '2020-01-15T00:00:00.000000Z'
+                        created_at: '2024-01-15T10:30:00.000000Z'
+                        updated_at: '2024-01-15T10:30:00.000000Z'
+                  meta:
+                    pagination:
+                      total: 5
+                      count: 5
+                      per_page: 20
+                      current_page: 1
+                      total_pages: 1
+                    filters:
+                      status: ACTIVE
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Taxpayers retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      taxpayers:
+                        type: array
+                        example:
+                          -
+                            id: 144
+                            ulid: 01HZXXX...
+                            tax_number: '1726051285001'
+                            business_name: 'EMPRESA DEMO S.A.'
+                            trade_name: DEMO
+                            tax_payer_status: ACTIVE
+                            tax_regime: general
+                            tax_regime_cat: general
+                            iva_period: monthly
+                            declaration_day: 12
+                            required_to_keep_accounts: SI
+                            withholding_agent: SI
+                            special_contributor: 'NO'
+                            economic_activity: 'Actividades de consultoría de gestión empresarial'
+                            start_activities_date: '2020-01-15T00:00:00.000000Z'
+                            created_at: '2024-01-15T10:30:00.000000Z'
+                            updated_at: '2024-01-15T10:30:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 144
+                            ulid:
+                              type: string
+                              example: 01HZXXX...
+                            tax_number:
+                              type: string
+                              example: '1726051285001'
+                            business_name:
+                              type: string
+                              example: 'EMPRESA DEMO S.A.'
+                            trade_name:
+                              type: string
+                              example: DEMO
+                            tax_payer_status:
+                              type: string
+                              example: ACTIVE
+                            tax_regime:
+                              type: string
+                              example: general
+                            tax_regime_cat:
+                              type: string
+                              example: general
+                            iva_period:
+                              type: string
+                              example: monthly
+                            declaration_day:
+                              type: integer
+                              example: 12
+                            required_to_keep_accounts:
+                              type: string
+                              example: SI
+                            withholding_agent:
+                              type: string
+                              example: SI
+                            special_contributor:
+                              type: string
+                              example: 'NO'
+                            economic_activity:
+                              type: string
+                              example: 'Actividades de consultoría de gestión empresarial'
+                            start_activities_date:
+                              type: string
+                              example: '2020-01-15T00:00:00.000000Z'
+                            created_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                  meta:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            example: 5
+                          count:
+                            type: integer
+                            example: 5
+                          per_page:
+                            type: integer
+                            example: 20
+                          current_page:
+                            type: integer
+                            example: 1
+                          total_pages:
+                            type: integer
+                            example: 1
+                      filters:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: ACTIVE
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key or organization ID'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key or organization ID'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving taxpayers'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving taxpayers'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Taxpayers
+    post:
+      summary: 'Create a new taxpayer'
+      operationId: createANewTaxpayer
+      description: "Creates a new taxpayer in your organization after validating that the tax identifier exists\nin the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 digits), or Passport.\n\nThis endpoint will:\n1. Validate the taxpayer doesn't already exist in your organization\n2. Query the TWS registry API to verify the identifier is valid and active\n3. Create the taxpayer with all available data from TWS\n4. Automatically create default categories for document classification\n5. Set up auto-categorization rules\n\n**Note:** This process may take 5-10 seconds as it queries external services."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        201:
+          description: 'Taxpayer created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Taxpayer created successfully'
+                  data:
+                    taxpayer:
+                      id: 01JDXYZ123ABC456DEF789GHI
+                      tax_number: '1726051285001'
+                      business_name: 'AGUIRRE MEJIA AIDA ISABEL'
+                      legal_name: 'AGUIRRE MEJIA AIDA ISABEL'
+                      email: null
+                      phone: null
+                      status: 1
+                      tax_payer_status: ACTIVO
+                      economic_activity: 'VENTA AL POR MAYOR DE FRUTAS'
+                      tax_regime: GENERAL
+                      tax_regime_cat: general
+                      iva_period: monthly
+                      category: null
+                      required_to_keep_accounts: 'NO'
+                      withholding_agent: 'NO'
+                      special_contributor: 'NO'
+                      declaration_day: 12
+                      next_declaration: null
+                      start_activities_date: '2018-09-04'
+                      last_sync_at: null
+                      created_at: '2024-12-02 15:30:45'
+                      updated_at: '2024-12-02 15:30:45'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Taxpayer created successfully'
+                  data:
+                    type: object
+                    properties:
+                      taxpayer:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01JDXYZ123ABC456DEF789GHI
+                          tax_number:
+                            type: string
+                            example: '1726051285001'
+                          business_name:
+                            type: string
+                            example: 'AGUIRRE MEJIA AIDA ISABEL'
+                          legal_name:
+                            type: string
+                            example: 'AGUIRRE MEJIA AIDA ISABEL'
+                          email:
+                            type: string
+                            example: null
+                          phone:
+                            type: string
+                            example: null
+                          status:
+                            type: integer
+                            example: 1
+                          tax_payer_status:
+                            type: string
+                            example: ACTIVO
+                          economic_activity:
+                            type: string
+                            example: 'VENTA AL POR MAYOR DE FRUTAS'
+                          tax_regime:
+                            type: string
+                            example: GENERAL
+                          tax_regime_cat:
+                            type: string
+                            example: general
+                          iva_period:
+                            type: string
+                            example: monthly
+                          category:
+                            type: string
+                            example: null
+                          required_to_keep_accounts:
+                            type: string
+                            example: 'NO'
+                          withholding_agent:
+                            type: string
+                            example: 'NO'
+                          special_contributor:
+                            type: string
+                            example: 'NO'
+                          declaration_day:
+                            type: integer
+                            example: 12
+                          next_declaration:
+                            type: string
+                            example: null
+                          start_activities_date:
+                            type: string
+                            example: '2018-09-04'
+                          last_sync_at:
+                            type: string
+                            example: null
+                          created_at:
+                            type: string
+                            example: '2024-12-02 15:30:45'
+                          updated_at:
+                            type: string
+                            example: '2024-12-02 15:30:45'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key or organization ID'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key or organization ID'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        404:
+          description: 'Taxpayer not found in TWS'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found in TWS. Please verify the taxpayer ID'
+                  code: TAXPAYER_NOT_FOUND_IN_TWS
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found in TWS. Please verify the taxpayer ID'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND_IN_TWS
+        409:
+          description: 'Taxpayer already exists'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer already exists for this organization'
+                  code: TAXPAYER_ALREADY_EXISTS
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer already exists for this organization'
+                  code:
+                    type: string
+                    example: TAXPAYER_ALREADY_EXISTS
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    taxpayerId:
+                      - 'The taxpayer ID can only contain letters, numbers, and hyphens'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      taxpayerId:
+                        type: array
+                        example:
+                          - 'The taxpayer ID can only contain letters, numbers, and hyphens'
+                        items:
+                          type: string
+        500:
+          description: 'Internal server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Failed to create taxpayer due to an internal error'
+                  code: INTERNAL_SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Failed to create taxpayer due to an internal error'
+                  code:
+                    type: string
+                    example: INTERNAL_SERVER_ERROR
+        503:
+          description: 'TWS service unavailable'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Unable to verify taxpayer with TWS app'
+                  code: TWS_SERVICE_UNAVAILABLE
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Unable to verify taxpayer with TWS app'
+                  code:
+                    type: string
+                    example: TWS_SERVICE_UNAVAILABLE
+        504:
+          description: 'TWS service timeout'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'TWS service timeout. Please try again later'
+                  code: TWS_SERVICE_TIMEOUT
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'TWS service timeout. Please try again later'
+                  code:
+                    type: string
+                    example: TWS_SERVICE_TIMEOUT
+      tags:
+        - Taxpayers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taxpayerId:
+                  type: string
+                  description: 'Ecuadorian tax identifier. Can be: RUC (13 digits), Cédula (10 digits), or Passport (alphanumeric). Must match the regex /^[a-zA-Z0-9\-]+$/. El campo value debe ser de al menos 5 caracteres. El campo value no debe ser mayor que 20 caracteres.'
+                  example: '1726051285001'
+              required:
+                - taxpayerId
+  '/api/v1/taxpayers/{taxNumber}':
+    get:
+      summary: 'Get a specific taxpayer'
+      operationId: getASpecificTaxpayer
+      description: "Retrieves detailed information for a specific taxpayer identified by their RUC number.\nThe taxpayer must belong to the authenticated organization."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Taxpayer retrieved successfully'
+                  data:
+                    taxpayer:
+                      id: 144
+                      ulid: 01HZXXX...
+                      tax_number: '1726051285001'
+                      business_name: 'EMPRESA DEMO S.A.'
+                      trade_name: DEMO
+                      address: 'Av. Principal 123 y Secundaria'
+                      phone: '0987654321'
+                      email: contacto@demo.com
+                      legal_representatives: 'Juan Pérez, María González'
+                      economic_activity: 'Actividades de consultoría de gestión empresarial'
+                      tax_payer_status: ACTIVE
+                      tax_payer_type: 'PERSONA JURÍDICA'
+                      tax_regime: general
+                      tax_regime_cat: general
+                      category: null
+                      iva_period: monthly
+                      declaration_day: 12
+                      required_to_keep_accounts: SI
+                      withholding_agent: SI
+                      special_contributor: 'NO'
+                      ghost_taxpayer: 'NO'
+                      nonexistent_transactions: 'NO'
+                      start_activities_date: '2020-01-15T00:00:00.000000Z'
+                      cessation_date: null
+                      restart_activities_date: null
+                      information_update_date: '2024-01-15T00:00:00.000000Z'
+                      created_at: '2024-01-15T10:30:00.000000Z'
+                      updated_at: '2024-01-15T10:30:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Taxpayer retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      taxpayer:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 144
+                          ulid:
+                            type: string
+                            example: 01HZXXX...
+                          tax_number:
+                            type: string
+                            example: '1726051285001'
+                          business_name:
+                            type: string
+                            example: 'EMPRESA DEMO S.A.'
+                          trade_name:
+                            type: string
+                            example: DEMO
+                          address:
+                            type: string
+                            example: 'Av. Principal 123 y Secundaria'
+                          phone:
+                            type: string
+                            example: '0987654321'
+                          email:
+                            type: string
+                            example: contacto@demo.com
+                          legal_representatives:
+                            type: string
+                            example: 'Juan Pérez, María González'
+                          economic_activity:
+                            type: string
+                            example: 'Actividades de consultoría de gestión empresarial'
+                          tax_payer_status:
+                            type: string
+                            example: ACTIVE
+                          tax_payer_type:
+                            type: string
+                            example: 'PERSONA JURÍDICA'
+                          tax_regime:
+                            type: string
+                            example: general
+                          tax_regime_cat:
+                            type: string
+                            example: general
+                          category:
+                            type: string
+                            example: null
+                          iva_period:
+                            type: string
+                            example: monthly
+                          declaration_day:
+                            type: integer
+                            example: 12
+                          required_to_keep_accounts:
+                            type: string
+                            example: SI
+                          withholding_agent:
+                            type: string
+                            example: SI
+                          special_contributor:
+                            type: string
+                            example: 'NO'
+                          ghost_taxpayer:
+                            type: string
+                            example: 'NO'
+                          nonexistent_transactions:
+                            type: string
+                            example: 'NO'
+                          start_activities_date:
+                            type: string
+                            example: '2020-01-15T00:00:00.000000Z'
+                          cessation_date:
+                            type: string
+                            example: null
+                          restart_activities_date:
+                            type: string
+                            example: null
+                          information_update_date:
+                            type: string
+                            example: '2024-01-15T00:00:00.000000Z'
+                          created_at:
+                            type: string
+                            example: '2024-01-15T10:30:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2024-01-15T10:30:00.000000Z'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key or organization ID'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key or organization ID'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving the taxpayer'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving the taxpayer'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Taxpayers
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/categories':
+    get:
+      summary: 'Get taxpayer categories'
+      operationId: getTaxpayerCategories
+      description: "Retrieves a paginated list of categories for a specific taxpayer.\nCategories are used to classify purchase and sales documents."
+      parameters:
+        -
+          in: query
+          name: page
+          description: 'Page number for pagination. El campo value debe ser al menos 1.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number for pagination. El campo value debe ser al menos 1.'
+            example: 1
+            nullable: true
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+            example: 20
+            nullable: true
+        -
+          in: query
+          name: document_type
+          description: 'Filter by document type (purchases or sales).'
+          example: sales
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document type (purchases or sales).'
+            example: sales
+            enum:
+              - purchases
+              - sales
+            nullable: true
+        -
+          in: query
+          name: category_type
+          description: 'Filter by category type (personal_expenses, commercial_expenses, non_deductible_expenses, sales).'
+          example: commercial_expenses
+          required: false
+          schema:
+            type: string
+            description: 'Filter by category type (personal_expenses, commercial_expenses, non_deductible_expenses, sales).'
+            example: commercial_expenses
+            enum:
+              - personal_expenses
+              - commercial_expenses
+              - non_deductible_expenses
+              - sales
+            nullable: true
+        -
+          in: query
+          name: enabled
+          description: 'Filter by enabled status (1 or 0).'
+          example: 1
+          required: false
+          schema:
+            type: string
+            description: 'Filter by enabled status (1 or 0).'
+            example: 1
+            nullable: true
+        -
+          in: query
+          name: editable
+          description: 'Filter by editable status (1 or 0).'
+          example: 1
+          required: false
+          schema:
+            type: string
+            description: 'Filter by editable status (1 or 0).'
+            example: 1
+            nullable: true
+        -
+          in: query
+          name: search
+          description: 'Search term to filter by name, code, or description. El campo value no debe ser mayor que 255 caracteres.'
+          example: Alimentación
+          required: false
+          schema:
+            type: string
+            description: 'Search term to filter by name, code, or description. El campo value no debe ser mayor que 255 caracteres.'
+            example: Alimentación
+            nullable: true
+        -
+          in: query
+          name: filter
+          description: ''
+          example: null
+          required: false
+          schema:
+            type: object
+            description: ''
+            example: null
+            properties: {  }
+            nullable: true
+        -
+          in: query
+          name: filter.document_type
+          description: ''
+          example: sales
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: sales
+            enum:
+              - purchases
+              - sales
+            nullable: true
+        -
+          in: query
+          name: filter.category_type
+          description: ''
+          example: personal_expenses
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: personal_expenses
+            enum:
+              - personal_expenses
+              - commercial_expenses
+              - non_deductible_expenses
+              - sales
+            nullable: true
+        -
+          in: query
+          name: filter.enabled
+          description: ''
+          example: null
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: null
+            nullable: true
+        -
+          in: query
+          name: filter.editable
+          description: ''
+          example: null
+          required: false
+          schema:
+            type: string
+            description: ''
+            example: null
+            nullable: true
+        -
+          in: query
+          name: filter.search
+          description: 'El campo value no debe ser mayor que 255 caracteres.'
+          example: vmqeopfuudtdsufvyvddq
+          required: false
+          schema:
+            type: string
+            description: 'El campo value no debe ser mayor que 255 caracteres.'
+            example: vmqeopfuudtdsufvyvddq
+            nullable: true
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Categories retrieved successfully'
+                  data:
+                    categories:
+                      -
+                        id: 9857
+                        name: Alimentación
+                        code: D-001
+                        description: null
+                        icon: 'M20 10a5.27...'
+                        color: bg-teal-500
+                        document_type: purchases
+                        category_type: personal_expenses
+                        editable: false
+                        has_been_edited: false
+                        enabled: true
+                        created_at: '2024-01-15T10:30:00.000000Z'
+                        updated_at: '2024-01-15T10:30:00.000000Z'
+                        archived_at: null
+                  meta:
+                    pagination:
+                      total: 30
+                      count: 20
+                      per_page: 20
+                      current_page: 1
+                      total_pages: 2
+                    filters:
+                      document_type: purchases
+                      enabled: true
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Categories retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      categories:
+                        type: array
+                        example:
+                          -
+                            id: 9857
+                            name: Alimentación
+                            code: D-001
+                            description: null
+                            icon: 'M20 10a5.27...'
+                            color: bg-teal-500
+                            document_type: purchases
+                            category_type: personal_expenses
+                            editable: false
+                            has_been_edited: false
+                            enabled: true
+                            created_at: '2024-01-15T10:30:00.000000Z'
+                            updated_at: '2024-01-15T10:30:00.000000Z'
+                            archived_at: null
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 9857
+                            name:
+                              type: string
+                              example: Alimentación
+                            code:
+                              type: string
+                              example: D-001
+                            description:
+                              type: string
+                              example: null
+                            icon:
+                              type: string
+                              example: 'M20 10a5.27...'
+                            color:
+                              type: string
+                              example: bg-teal-500
+                            document_type:
+                              type: string
+                              example: purchases
+                            category_type:
+                              type: string
+                              example: personal_expenses
+                            editable:
+                              type: boolean
+                              example: false
+                            has_been_edited:
+                              type: boolean
+                              example: false
+                            enabled:
+                              type: boolean
+                              example: true
+                            created_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2024-01-15T10:30:00.000000Z'
+                            archived_at:
+                              type: string
+                              example: null
+                  meta:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            example: 30
+                          count:
+                            type: integer
+                            example: 20
+                          per_page:
+                            type: integer
+                            example: 20
+                          current_page:
+                            type: integer
+                            example: 1
+                          total_pages:
+                            type: integer
+                            example: 2
+                      filters:
+                        type: object
+                        properties:
+                          document_type:
+                            type: string
+                            example: purchases
+                          enabled:
+                            type: boolean
+                            example: true
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key or organization ID'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key or organization ID'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found or access denied'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found or access denied'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Failed to retrieve categories. Please try again later.'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Failed to retrieve categories. Please try again later.'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Taxpayers
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string

@@ -1,0 +1,422 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": "http:\/\/localhost:8000"
+        }
+    ],
+    "info": {
+        "name": "Taxo Impuestos API - Documentaci\u00f3n",
+        "_postman_id": "e6f28957-ff32-432a-a71a-da71843eb165",
+        "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
+        "version": "1.0.0"
+    },
+    "item": [
+        {
+            "name": "Taxpayers",
+            "description": "\nAPI endpoints for managing taxpayers and their related data.",
+            "item": [
+                {
+                    "name": "List taxpayers",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers",
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination. El campo value debe ser al menos 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "-created_at",
+                                    "description": "Sort field and direction. Prefix with \"-\" for descending order.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "Empresa+S.A.",
+                                    "description": "Search term to filter by business name or tax number. El campo value no debe ser mayor que 255 caracteres.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "1",
+                                    "description": "Filter by status (0=inactive, 1=active).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "iva_period",
+                                    "value": "MENSUAL",
+                                    "description": "Filter by IVA period (MENSUAL, SEMESTRAL).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "tax_regime_cat",
+                                    "value": "GENERAL",
+                                    "description": "Filter by tax regime category.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "declaration_day",
+                                    "value": "10",
+                                    "description": "Filter by declaration day (1-28). El campo value debe ser al menos 1. El campo value no debe ser mayor que 28.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers?page=1&per_page=20&sort=-created_at&search=Empresa+S.A.&status=1&iva_period=MENSUAL&tax_regime_cat=GENERAL&declaration_day=10"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves a paginated list of all taxpayers belonging to the authenticated organization.\nYou can filter and sort the results using query parameters."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Taxpayers retrieved successfully\",\n  \"data\": {\n    \"taxpayers\": [\n      {\n        \"id\": 144,\n        \"ulid\": \"01HZXXX...\",\n        \"tax_number\": \"1726051285001\",\n        \"business_name\": \"EMPRESA DEMO S.A.\",\n        \"trade_name\": \"DEMO\",\n        \"tax_payer_status\": \"ACTIVE\",\n        \"tax_regime\": \"general\",\n        \"tax_regime_cat\": \"general\",\n        \"iva_period\": \"monthly\",\n        \"declaration_day\": 12,\n        \"required_to_keep_accounts\": \"SI\",\n        \"withholding_agent\": \"SI\",\n        \"special_contributor\": \"NO\",\n        \"economic_activity\": \"Actividades de consultor\u00eda de gesti\u00f3n empresarial\",\n        \"start_activities_date\": \"2020-01-15T00:00:00.000000Z\",\n        \"created_at\": \"2024-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2024-01-15T10:30:00.000000Z\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"pagination\": {\n      \"total\": 5,\n      \"count\": 5,\n      \"per_page\": 20,\n      \"current_page\": 1,\n      \"total_pages\": 1\n    },\n    \"filters\": {\n      \"status\": \"ACTIVE\"\n    }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving taxpayers\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new taxpayer",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"taxpayerId\":\"1726051285001\"}"
+                        },
+                        "description": "Creates a new taxpayer in your organization after validating that the tax identifier exists\nin the TWS (Tax Web Services) registry. Accepts RUC (13 digits), C\u00e9dula (10 digits), or Passport.\n\nThis endpoint will:\n1. Validate the taxpayer doesn't already exist in your organization\n2. Query the TWS registry API to verify the identifier is valid and active\n3. Create the taxpayer with all available data from TWS\n4. Automatically create default categories for document classification\n5. Set up auto-categorization rules\n\n**Note:** This process may take 5-10 seconds as it queries external services."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Taxpayer created successfully\",\n  \"data\": {\n    \"taxpayer\": {\n      \"id\": \"01JDXYZ123ABC456DEF789GHI\",\n      \"tax_number\": \"1726051285001\",\n      \"business_name\": \"AGUIRRE MEJIA AIDA ISABEL\",\n      \"legal_name\": \"AGUIRRE MEJIA AIDA ISABEL\",\n      \"email\": null,\n      \"phone\": null,\n      \"status\": 1,\n      \"tax_payer_status\": \"ACTIVO\",\n      \"economic_activity\": \"VENTA AL POR MAYOR DE FRUTAS\",\n      \"tax_regime\": \"GENERAL\",\n      \"tax_regime_cat\": \"general\",\n      \"iva_period\": \"monthly\",\n      \"category\": null,\n      \"required_to_keep_accounts\": \"NO\",\n      \"withholding_agent\": \"NO\",\n      \"special_contributor\": \"NO\",\n      \"declaration_day\": 12,\n      \"next_declaration\": null,\n      \"start_activities_date\": \"2018-09-04\",\n      \"last_sync_at\": null,\n      \"created_at\": \"2024-12-02 15:30:45\",\n      \"updated_at\": \"2024-12-02 15:30:45\"\n    }\n  }\n}",
+                            "name": "Taxpayer created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found in TWS. Please verify the taxpayer ID\",\n  \"code\": \"TAXPAYER_NOT_FOUND_IN_TWS\"\n}",
+                            "name": "Taxpayer not found in TWS"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer already exists for this organization\",\n  \"code\": \"TAXPAYER_ALREADY_EXISTS\"\n}",
+                            "name": "Taxpayer already exists"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"taxpayerId\": [\n      \"The taxpayer ID can only contain letters, numbers, and hyphens\"\n    ]\n  }\n}",
+                            "name": "Validation error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Failed to create taxpayer due to an internal error\",\n  \"code\": \"INTERNAL_SERVER_ERROR\"\n}",
+                            "name": "Internal server error"
+                        },
+                        {
+                            "header": [],
+                            "code": 503,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Unable to verify taxpayer with TWS app\",\n  \"code\": \"TWS_SERVICE_UNAVAILABLE\"\n}",
+                            "name": "TWS service unavailable"
+                        },
+                        {
+                            "header": [],
+                            "code": 504,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"TWS service timeout. Please try again later\",\n  \"code\": \"TWS_SERVICE_TIMEOUT\"\n}",
+                            "name": "TWS service timeout"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get a specific taxpayer",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves detailed information for a specific taxpayer identified by their RUC number.\nThe taxpayer must belong to the authenticated organization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Taxpayer retrieved successfully\",\n  \"data\": {\n    \"taxpayer\": {\n      \"id\": 144,\n      \"ulid\": \"01HZXXX...\",\n      \"tax_number\": \"1726051285001\",\n      \"business_name\": \"EMPRESA DEMO S.A.\",\n      \"trade_name\": \"DEMO\",\n      \"address\": \"Av. Principal 123 y Secundaria\",\n      \"phone\": \"0987654321\",\n      \"email\": \"contacto@demo.com\",\n      \"legal_representatives\": \"Juan P\u00e9rez, Mar\u00eda Gonz\u00e1lez\",\n      \"economic_activity\": \"Actividades de consultor\u00eda de gesti\u00f3n empresarial\",\n      \"tax_payer_status\": \"ACTIVE\",\n      \"tax_payer_type\": \"PERSONA JUR\u00cdDICA\",\n      \"tax_regime\": \"general\",\n      \"tax_regime_cat\": \"general\",\n      \"category\": null,\n      \"iva_period\": \"monthly\",\n      \"declaration_day\": 12,\n      \"required_to_keep_accounts\": \"SI\",\n      \"withholding_agent\": \"SI\",\n      \"special_contributor\": \"NO\",\n      \"ghost_taxpayer\": \"NO\",\n      \"nonexistent_transactions\": \"NO\",\n      \"start_activities_date\": \"2020-01-15T00:00:00.000000Z\",\n      \"cessation_date\": null,\n      \"restart_activities_date\": null,\n      \"information_update_date\": \"2024-01-15T00:00:00.000000Z\",\n      \"created_at\": \"2024-01-15T10:30:00.000000Z\",\n      \"updated_at\": \"2024-01-15T10:30:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving the taxpayer\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get taxpayer categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/categories",
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination. El campo value debe ser al menos 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "document_type",
+                                    "value": "sales",
+                                    "description": "Filter by document type (purchases or sales).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "category_type",
+                                    "value": "commercial_expenses",
+                                    "description": "Filter by category type (personal_expenses, commercial_expenses, non_deductible_expenses, sales).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "enabled",
+                                    "value": "1",
+                                    "description": "Filter by enabled status (1 or 0).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "editable",
+                                    "value": "1",
+                                    "description": "Filter by editable status (1 or 0).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "Alimentaci%C3%B3n",
+                                    "description": "Search term to filter by name, code, or description. El campo value no debe ser mayor que 255 caracteres.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter[]",
+                                    "value": "",
+                                    "description": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "filter.document_type",
+                                    "value": "sales",
+                                    "description": "",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter.category_type",
+                                    "value": "personal_expenses",
+                                    "description": "",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "filter.enabled",
+                                    "value": "",
+                                    "description": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "filter.editable",
+                                    "value": "",
+                                    "description": "",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "filter.search",
+                                    "value": "vmqeopfuudtdsufvyvddq",
+                                    "description": "El campo value no debe ser mayor que 255 caracteres.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=personal_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves a paginated list of categories for a specific taxpayer.\nCategories are used to classify purchase and sales documents."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Categories retrieved successfully\",\n  \"data\": {\n    \"categories\": [\n      {\n        \"id\": 9857,\n        \"name\": \"Alimentaci\u00f3n\",\n        \"code\": \"D-001\",\n        \"description\": null,\n        \"icon\": \"M20 10a5.27...\",\n        \"color\": \"bg-teal-500\",\n        \"document_type\": \"purchases\",\n        \"category_type\": \"personal_expenses\",\n        \"editable\": false,\n        \"has_been_edited\": false,\n        \"enabled\": true,\n        \"created_at\": \"2024-01-15T10:30:00.000000Z\",\n        \"updated_at\": \"2024-01-15T10:30:00.000000Z\",\n        \"archived_at\": null\n      }\n    ]\n  },\n  \"meta\": {\n    \"pagination\": {\n      \"total\": 30,\n      \"count\": 20,\n      \"per_page\": 20,\n      \"current_page\": 1,\n      \"total_pages\": 2\n    },\n    \"filters\": {\n      \"document_type\": \"purchases\",\n      \"enabled\": true\n    }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Failed to retrieve categories. Please try again later.\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "apikey",
+        "apikey": [
+            {
+                "key": "in",
+                "value": "header",
+                "type": "string"
+            },
+            {
+                "key": "key",
+                "value": "x-api-key",
+                "type": "string"
+            }
+        ]
+    }
+}
