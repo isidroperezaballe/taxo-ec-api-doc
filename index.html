@@ -8,8 +8,8 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
-    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
+    <link rel="stylesheet" href="css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="css/theme-default.print.css" media="print">
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
@@ -32,9 +32,9 @@
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="../docs/js/tryitout-5.6.0.js"></script>
+    <script src="js/tryitout-5.6.0.js"></script>
 
-    <script src="../docs/js/theme-default-5.6.0.js"></script>
+    <script src="js/theme-default-5.6.0.js"></script>
 
 </head>
 
@@ -111,6 +111,17 @@
     <strong>Base URL</strong>: <code>https://ec-demo.taxo.co</code>
 </aside>
 <pre><code>Esta documentación proporciona toda la información necesaria para trabajar con la API de Taxo Impuestos.
+
+## Ambientes
+
+La API está disponible en los siguientes ambientes:
+
+| Ambiente | URL | Descripción |
+|----------|-----|-------------|
+| **Staging** | `https://ec-demo.taxo.co` | Ambiente de pruebas y desarrollo |
+| **Producción** | `https://ec-impuestos.taxo.co` | Ambiente productivo *(próximamente)* |
+
+&lt;aside class="warning"&gt;⚠️ Actualmente esta documentación apunta al ambiente de &lt;strong&gt;Staging&lt;/strong&gt;. Los ejemplos de código usan la URL de staging.&lt;/aside&gt;
 
 ## Autenticación
 
@@ -1118,7 +1129,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1138,7 +1149,7 @@ const params = {
     "enabled": "1",
     "editable": "1",
     "search": "Alimentación",
-    "filter[document_type]": "sales",
+    "filter[document_type]": "purchases",
     "filter[category_type]": "personal_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
@@ -1178,7 +1189,7 @@ $response = $client-&gt;get(
             'enabled' =&gt; '1',
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
-            'filter[document_type]' =&gt; 'sales',
+            'filter[document_type]' =&gt; 'purchases',
             'filter[category_type]' =&gt; 'personal_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
@@ -1201,7 +1212,7 @@ params = {
   'enabled': '1',
   'editable': '1',
   'search': 'Alimentación',
-  'filter[document_type]': 'sales',
+  'filter[document_type]': 'purchases',
   'filter[category_type]': 'personal_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
@@ -1511,10 +1522,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="sales"
+               value="purchases"
                data-component="query">
     <br>
-<p>Example: <code>sales</code></p>
+<p>Example: <code>purchases</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
             </div>
