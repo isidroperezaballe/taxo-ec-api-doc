@@ -28,7 +28,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://localhost:8000";
+        var tryItOutBaseUrl = "https://ec-impuestos.taxo.co";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -98,7 +98,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: December 4, 2025</li>
+        <li>Last updated: December 5, 2025</li>
     </ul>
 </div>
 
@@ -108,7 +108,7 @@
         <h1 id="introduction">Introduction</h1>
 <p>API RESTful para gestión de contribuyentes, categorías, documentos emitidos, documentos recibidos y reportes tributarios.</p>
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost:8000</code>
+    <strong>Base URL</strong>: <code>https://ec-impuestos.taxo.co</code>
 </aside>
 <pre><code>Esta documentación proporciona toda la información necesaria para trabajar con la API de Taxo Impuestos.
 
@@ -148,7 +148,7 @@ You can filter and sort the results using query parameters.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/v1/taxpayers?page=1&amp;per_page=20&amp;sort=-created_at&amp;search=Empresa+S.A.&amp;status=1&amp;iva_period=MENSUAL&amp;tax_regime_cat=GENERAL&amp;declaration_day=10" \
+    --get "https://ec-impuestos.taxo.co/api/v1/taxpayers?page=1&amp;per_page=20&amp;sort=-created_at&amp;search=Empresa+S.A.&amp;status=1&amp;iva_period=MENSUAL&amp;tax_regime_cat=GENERAL&amp;declaration_day=10" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -157,7 +157,7 @@ You can filter and sort the results using query parameters.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/taxpayers"
+    "https://ec-impuestos.taxo.co/api/v1/taxpayers"
 );
 
 const params = {
@@ -188,7 +188,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost:8000/api/v1/taxpayers';
+$url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers';
 $response = $client-&gt;get(
     $url,
     [
@@ -218,7 +218,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/v1/taxpayers'
+url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers'
 params = {
   'page': '1',
   'per_page': '20',
@@ -536,7 +536,7 @@ in the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 dig
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost:8000/api/v1/taxpayers" \
+    "https://ec-impuestos.taxo.co/api/v1/taxpayers" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -549,7 +549,7 @@ in the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 dig
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/taxpayers"
+    "https://ec-impuestos.taxo.co/api/v1/taxpayers"
 );
 
 const headers = {
@@ -572,7 +572,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost:8000/api/v1/taxpayers';
+$url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers';
 $response = $client-&gt;post(
     $url,
     [
@@ -595,7 +595,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/v1/taxpayers'
+url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers'
 payload = {
     "taxpayerId": "1726051285001"
 }
@@ -856,7 +856,7 @@ The taxpayer must belong to the authenticated organization.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/v1/taxpayers/1726051285001" \
+    --get "https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -865,7 +865,7 @@ The taxpayer must belong to the authenticated organization.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/taxpayers/1726051285001"
+    "https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001"
 );
 
 const headers = {
@@ -883,7 +883,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost:8000/api/v1/taxpayers/1726051285001';
+$url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001';
 $response = $client-&gt;get(
     $url,
     [
@@ -903,7 +903,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/v1/taxpayers/1726051285001'
+url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
   'Content-Type': 'application/json',
@@ -1118,7 +1118,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost:8000/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=non_deductible_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1127,7 +1127,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost:8000/api/v1/taxpayers/1726051285001/categories"
+    "https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001/categories"
 );
 
 const params = {
@@ -1138,8 +1138,8 @@ const params = {
     "enabled": "1",
     "editable": "1",
     "search": "Alimentación",
-    "filter[document_type]": "sales",
-    "filter[category_type]": "personal_expenses",
+    "filter[document_type]": "purchases",
+    "filter[category_type]": "non_deductible_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1160,7 +1160,7 @@ fetch(url, {
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost:8000/api/v1/taxpayers/1726051285001/categories';
+$url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001/categories';
 $response = $client-&gt;get(
     $url,
     [
@@ -1178,8 +1178,8 @@ $response = $client-&gt;get(
             'enabled' =&gt; '1',
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
-            'filter[document_type]' =&gt; 'sales',
-            'filter[category_type]' =&gt; 'personal_expenses',
+            'filter[document_type]' =&gt; 'purchases',
+            'filter[category_type]' =&gt; 'non_deductible_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1192,7 +1192,7 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-python">import requests
 import json
 
-url = 'http://localhost:8000/api/v1/taxpayers/1726051285001/categories'
+url = 'https://ec-impuestos.taxo.co/api/v1/taxpayers/1726051285001/categories'
 params = {
   'page': '1',
   'per_page': '20',
@@ -1201,8 +1201,8 @@ params = {
   'enabled': '1',
   'editable': '1',
   'search': 'Alimentación',
-  'filter[document_type]': 'sales',
-  'filter[category_type]': 'personal_expenses',
+  'filter[document_type]': 'purchases',
+  'filter[category_type]': 'non_deductible_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1511,10 +1511,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="sales"
+               value="purchases"
                data-component="query">
     <br>
-<p>Example: <code>sales</code></p>
+<p>Example: <code>purchases</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1525,10 +1525,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="personal_expenses"
+               value="non_deductible_expenses"
                data-component="query">
     <br>
-<p>Example: <code>personal_expenses</code></p>
+<p>Example: <code>non_deductible_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
