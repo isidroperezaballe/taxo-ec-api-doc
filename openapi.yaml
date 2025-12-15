@@ -10,6 +10,9 @@ tags:
   -
     name: Taxpayers
     description: "\nAPI endpoints for managing taxpayers and their related data."
+  -
+    name: 'IVA Reports'
+    description: "\nAPI endpoints for managing IVA (Value Added Tax) reports.\n\nThese endpoints allow you to create, manage, and submit IVA tax reports for your taxpayers.\nEach report goes through a workflow from draft to declared status."
 components:
   securitySchemes:
     default:
@@ -989,12 +992,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: personal_expenses
+          example: sales
           required: false
           schema:
             type: string
             description: ''
-            example: personal_expenses
+            example: sales
             enum:
               - personal_expenses
               - commercial_expenses
@@ -1250,6 +1253,2332 @@ paths:
                     example: SERVER_ERROR
       tags:
         - Taxpayers
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports':
+    get:
+      summary: 'List IVA reports for a taxpayer'
+      operationId: listIVAReportsForATaxpayer
+      description: "Retrieves a paginated list of IVA reports for a specific taxpayer.\nYou can filter by status, year, periodicity and sort the results.\n\n**Available statuses:**\n- `draft`: Initial state, being edited\n- `edited`: Has manual edits\n- `saved`: Ready for review\n- `sent`: Sent to taxpayer for approval\n- `approved`: Approved and ready for SRI submission\n- `rejected`: Rejected, needs corrections\n- `sri_sended`: Sent to SRI (in progress)\n- `sri_sended_completed`: SRI processing completed\n- `declared`: Marked as declared\n- `error`: Error during SRI submission"
+      parameters:
+        -
+          in: query
+          name: page
+          description: 'Page number for pagination.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number for pagination.'
+            example: 1
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (1-100).'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (1-100).'
+            example: 20
+        -
+          in: query
+          name: status
+          description: 'Filter by report status.'
+          example: saved
+          required: false
+          schema:
+            type: string
+            description: 'Filter by report status.'
+            example: saved
+        -
+          in: query
+          name: periodicity
+          description: 'Filter by periodicity (monthly, biannual).'
+          example: monthly
+          required: false
+          schema:
+            type: string
+            description: 'Filter by periodicity (monthly, biannual).'
+            example: monthly
+        -
+          in: query
+          name: year
+          description: 'Filter by year.'
+          example: 2024
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by year.'
+            example: 2024
+        -
+          in: query
+          name: sort
+          description: 'Sort field. Prefix with - for descending.'
+          example: '-period'
+          required: false
+          schema:
+            type: string
+            description: 'Sort field. Prefix with - for descending.'
+            example: '-period'
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Reports retrieved successfully'
+                  data:
+                    reports:
+                      -
+                        id: 01HZXXX123ABC456
+                        tax_payer_id: 123
+                        period: '2024-03-15'
+                        periodicity: monthly
+                        status: saved
+                        status_label: Guardado
+                        total_sales_raw_value: 15000.0
+                        total_taxes_to_pay_iva: 1200.5
+                        created_at: '2024-03-01T09:00:00.000000Z'
+                        updated_at: '2024-03-05T14:30:00.000000Z'
+                      -
+                        id: 01HZXXX123ABC789
+                        tax_payer_id: 123
+                        period: '2024-02-15'
+                        periodicity: monthly
+                        status: declared
+                        status_label: Declarado
+                        total_sales_raw_value: 12500.0
+                        total_taxes_to_pay_iva: 980.0
+                        created_at: '2024-02-01T10:15:00.000000Z'
+                        updated_at: '2024-02-20T16:45:00.000000Z'
+                  meta:
+                    pagination:
+                      current_page: 1
+                      per_page: 20
+                      total: 24
+                      total_pages: 2
+                      from: 1
+                      to: 20
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Reports retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      reports:
+                        type: array
+                        example:
+                          -
+                            id: 01HZXXX123ABC456
+                            tax_payer_id: 123
+                            period: '2024-03-15'
+                            periodicity: monthly
+                            status: saved
+                            status_label: Guardado
+                            total_sales_raw_value: 15000
+                            total_taxes_to_pay_iva: 1200.5
+                            created_at: '2024-03-01T09:00:00.000000Z'
+                            updated_at: '2024-03-05T14:30:00.000000Z'
+                          -
+                            id: 01HZXXX123ABC789
+                            tax_payer_id: 123
+                            period: '2024-02-15'
+                            periodicity: monthly
+                            status: declared
+                            status_label: Declarado
+                            total_sales_raw_value: 12500
+                            total_taxes_to_pay_iva: 980
+                            created_at: '2024-02-01T10:15:00.000000Z'
+                            updated_at: '2024-02-20T16:45:00.000000Z'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              example: 01HZXXX123ABC456
+                            tax_payer_id:
+                              type: integer
+                              example: 123
+                            period:
+                              type: string
+                              example: '2024-03-15'
+                            periodicity:
+                              type: string
+                              example: monthly
+                            status:
+                              type: string
+                              example: saved
+                            status_label:
+                              type: string
+                              example: Guardado
+                            total_sales_raw_value:
+                              type: number
+                              example: 15000.0
+                            total_taxes_to_pay_iva:
+                              type: number
+                              example: 1200.5
+                            created_at:
+                              type: string
+                              example: '2024-03-01T09:00:00.000000Z'
+                            updated_at:
+                              type: string
+                              example: '2024-03-05T14:30:00.000000Z'
+                  meta:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 20
+                          total:
+                            type: integer
+                            example: 24
+                          total_pages:
+                            type: integer
+                            example: 2
+                          from:
+                            type: integer
+                            example: 1
+                          to:
+                            type: integer
+                            example: 20
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key or organization ID'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key or organization ID'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: 'Invalid filter'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    status:
+                      - 'Invalid status value'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      status:
+                        type: array
+                        example:
+                          - 'Invalid status value'
+                        items:
+                          type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  description: 'El campo value debe ser al menos 1.'
+                  example: 73
+                per_page:
+                  type: integer
+                  description: 'El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+                  example: 13
+                status:
+                  type: string
+                  description: ''
+                  example: draft
+                  enum:
+                    - draft
+                    - edited
+                    - saved
+                    - sent
+                    - approved
+                    - rejected
+                    - declared
+                    - sri_declared_confirmed
+                    - sri_sended
+                    - sri_sended_completed
+                    - error
+                periodicity:
+                  type: string
+                  description: ''
+                  example: monthly
+                  enum:
+                    - monthly
+                    - biannual
+                year:
+                  type: integer
+                  description: 'El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026.'
+                  example: 16
+                sort:
+                  type: string
+                  description: ''
+                  example: '-status'
+                  enum:
+                    - period
+                    - '-period'
+                    - status
+                    - '-status'
+                    - created_at
+                    - '-created_at'
+    post:
+      summary: 'Create a new IVA report'
+      operationId: createANewIVAReport
+      description: "Creates a new IVA report for the specified period if it doesn't already exist.\nThe report is created in DRAFT status with all values calculated automatically from:\n- Sales invoices and credit notes\n- Purchase bills and credit notes\n- Withholding documents\n\n**Important notes:**\n- If a report already exists for the period, it returns the existing one (idempotent)\n- The period is converted to a full date based on taxpayer's periodicity\n- Monthly taxpayers: YYYY-MM → YYYY-MM-15\n- Biannual taxpayers: Only YYYY-06 or YYYY-12 allowed\n- This process may take 3-5 seconds as it calculates from all documents\n\n**Workflow:**\n1. Validates period format\n2. Checks if report already exists\n3. Queries all documents for the period\n4. Calculates sales, purchases, and tax totals\n5. Creates report in DRAFT status\n6. Records initial status in history"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Report already exists'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report already exists for this period'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: saved
+                      status_label: Guardado
+                      total_taxes_to_pay_iva: 1200.0
+                      created_at: '2024-03-01T09:00:00.000000Z'
+                      updated_at: '2024-03-05T14:30:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report already exists for this period'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: saved
+                          status_label:
+                            type: string
+                            example: Guardado
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          created_at:
+                            type: string
+                            example: '2024-03-01T09:00:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2024-03-05T14:30:00.000000Z'
+        201:
+          description: 'Report created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report created successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: draft
+                      status_label: Borrador
+                      local_sales_different_0_rate_raw_value: 10000.0
+                      local_sales_different_0_rate_iva: 1200.0
+                      total_sales_raw_value: 15000.0
+                      total_sales_iva: 1800.0
+                      purchases_different_0_rate_with_right_iva: 600.0
+                      total_taxes_to_pay_iva: 1200.0
+                      total_invoices_issued: 45
+                      created_at: '2024-03-01T09:00:00.000000Z'
+                      updated_at: '2024-03-01T09:00:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report created successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: draft
+                          status_label:
+                            type: string
+                            example: Borrador
+                          local_sales_different_0_rate_raw_value:
+                            type: number
+                            example: 10000.0
+                          local_sales_different_0_rate_iva:
+                            type: number
+                            example: 1200.0
+                          total_sales_raw_value:
+                            type: number
+                            example: 15000.0
+                          total_sales_iva:
+                            type: number
+                            example: 1800.0
+                          purchases_different_0_rate_with_right_iva:
+                            type: number
+                            example: 600.0
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          total_invoices_issued:
+                            type: integer
+                            example: 45
+                          created_at:
+                            type: string
+                            example: '2024-03-01T09:00:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2024-03-01T09:00:00.000000Z'
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Invalid period format'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Validation failed'
+                      code: VALIDATION_ERROR
+                      errors:
+                        period:
+                          - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Validation failed'
+                      code:
+                        type: string
+                        example: VALIDATION_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          period:
+                            type: array
+                            example:
+                              - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                            items:
+                              type: string
+                  -
+                    description: 'Invalid period for biannual'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Validation failed'
+                      code: VALIDATION_ERROR
+                      errors:
+                        period:
+                          - 'For biannual periodicity, period must be YYYY-06 or YYYY-12'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Validation failed'
+                      code:
+                        type: string
+                        example: VALIDATION_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          period:
+                            type: array
+                            example:
+                              - 'For biannual periodicity, period must be YYYY-06 or YYYY-12'
+                            items:
+                              type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+              required:
+                - period
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/{period}':
+    get:
+      summary: 'Get a specific IVA report'
+      operationId: getASpecificIVAReport
+      description: "Retrieves detailed information for a specific IVA report identified by period.\nReturns all calculated fields including sales, purchases, tax credits, and final tax amount.\n\nThe period parameter is automatically converted to the full date based on the taxpayer's periodicity:\n- Monthly: YYYY-MM becomes YYYY-MM-15\n- Biannual: YYYY-06 becomes YYYY-06-15 (first semester) or YYYY-12 becomes YYYY-12-15 (second semester)"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report retrieved successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: saved
+                      status_label: Guardado
+                      public_link: 'https://app.taxo.ec/public/reports/abc123'
+                      comments: null
+                      report_comments: 'Reporte revisado'
+                      vat_declaration_pdf: null
+                      vat_payment_receipt_pdf: null
+                      local_sales_different_0_rate_raw_value: 10000.0
+                      local_sales_different_0_rate_iva: 1200.0
+                      total_sales_raw_value: 15000.0
+                      total_sales_iva: 1800.0
+                      purchases_different_0_rate_with_right_raw_value: 5000.0
+                      purchases_different_0_rate_with_right_iva: 600.0
+                      total_acquisitions_and_payments_raw_value: 6500.0
+                      total_acquisitions_and_payments_iva: 780.0
+                      purchases_tax_credit_applicable_period_iva: 780.0
+                      tax_caused_iva: 1800.0
+                      total_tax_credit_period_iva: 780.0
+                      subtotal_to_pay_iva: 1020.0
+                      total_taxes_to_pay_iva: 1020.0
+                      total_invoices_issued: 45
+                      total_invoices_canceled: 2
+                      documents_generated_period: 128
+                      created_at: '2024-03-01T09:00:00.000000Z'
+                      updated_at: '2024-03-05T14:30:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: saved
+                          status_label:
+                            type: string
+                            example: Guardado
+                          public_link:
+                            type: string
+                            example: 'https://app.taxo.ec/public/reports/abc123'
+                          comments:
+                            type: string
+                            example: null
+                          report_comments:
+                            type: string
+                            example: 'Reporte revisado'
+                          vat_declaration_pdf:
+                            type: string
+                            example: null
+                          vat_payment_receipt_pdf:
+                            type: string
+                            example: null
+                          local_sales_different_0_rate_raw_value:
+                            type: number
+                            example: 10000.0
+                          local_sales_different_0_rate_iva:
+                            type: number
+                            example: 1200.0
+                          total_sales_raw_value:
+                            type: number
+                            example: 15000.0
+                          total_sales_iva:
+                            type: number
+                            example: 1800.0
+                          purchases_different_0_rate_with_right_raw_value:
+                            type: number
+                            example: 5000.0
+                          purchases_different_0_rate_with_right_iva:
+                            type: number
+                            example: 600.0
+                          total_acquisitions_and_payments_raw_value:
+                            type: number
+                            example: 6500.0
+                          total_acquisitions_and_payments_iva:
+                            type: number
+                            example: 780.0
+                          purchases_tax_credit_applicable_period_iva:
+                            type: number
+                            example: 780.0
+                          tax_caused_iva:
+                            type: number
+                            example: 1800.0
+                          total_tax_credit_period_iva:
+                            type: number
+                            example: 780.0
+                          subtotal_to_pay_iva:
+                            type: number
+                            example: 1020.0
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1020.0
+                          total_invoices_issued:
+                            type: integer
+                            example: 45
+                          total_invoices_canceled:
+                            type: integer
+                            example: 2
+                          documents_generated_period:
+                            type: integer
+                            example: 128
+                          created_at:
+                            type: string
+                            example: '2024-03-01T09:00:00.000000Z'
+                          updated_at:
+                            type: string
+                            example: '2024-03-05T14:30:00.000000Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Report not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Report not found for period 2024-03'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Report not found for period 2024-03'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+                  -
+                    description: 'Taxpayer not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+        422:
+          description: 'Invalid period format'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    period:
+                      - 'Invalid period format. Expected YYYY-MM (e.g., 2024-03)'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      period:
+                        type: array
+                        example:
+                          - 'Invalid period format. Expected YYYY-MM (e.g., 2024-03)'
+                        items:
+                          type: string
+      tags:
+        - 'IVA Reports'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: period
+        description: 'Period in YYYY-MM format.'
+        example: 2024-03
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/recalculate':
+    post:
+      summary: 'Recalculate IVA report (Update Report)'
+      operationId: recalculateIVAReportUpdateReport
+      description: "Resets the report to DRAFT status and recalculates all values from current documents.\nThis is the API equivalent of the \"Actualizar reporte\" button in the UI.\n\n**Use cases:**\n- New invoices/bills were added after creating the report\n- Documents were corrected or updated\n- Need to refresh calculations with latest data\n- Reset report from any state back to draft\n\n**What this endpoint does:**\n1. Validates the report exists for the period\n2. Clears uploaded PDF files (vat_declaration_pdf, vat_payment_receipt_pdf)\n3. Transitions report status to DRAFT (allowed from any state)\n4. Queries all documents for the period again\n5. Recalculates all sales, purchases, and tax totals\n6. Records the status change in history\n\n**Warning:** This action will overwrite any manual edits made to the report."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully recalculated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report recalculated successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: draft
+                      status_label: Borrador
+                      vat_declaration_pdf: null
+                      vat_payment_receipt_pdf: null
+                      total_sales_raw_value: 16500.0
+                      total_sales_iva: 1980.0
+                      total_taxes_to_pay_iva: 1350.75
+                      total_invoices_issued: 52
+                      updated_at: '2024-03-10T15:45:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report recalculated successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: draft
+                          status_label:
+                            type: string
+                            example: Borrador
+                          vat_declaration_pdf:
+                            type: string
+                            example: null
+                          vat_payment_receipt_pdf:
+                            type: string
+                            example: null
+                          total_sales_raw_value:
+                            type: number
+                            example: 16500.0
+                          total_sales_iva:
+                            type: number
+                            example: 1980.0
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1350.75
+                          total_invoices_issued:
+                            type: integer
+                            example: 52
+                          updated_at:
+                            type: string
+                            example: '2024-03-10T15:45:00.000000Z'
+        400:
+          description: 'Invalid transition (should not happen)'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Cannot transition from sri_sended to draft'
+                  code: INVALID_TRANSITION
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Cannot transition from sri_sended to draft'
+                  code:
+                    type: string
+                    example: INVALID_TRANSITION
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: 'Invalid period format'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    period:
+                      - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      period:
+                        type: array
+                        example:
+                          - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                        items:
+                          type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+              required:
+                - period
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/save':
+    patch:
+      summary: 'Save IVA report'
+      operationId: saveIVAReport
+      description: "Saves the report by changing its status from DRAFT/EDITED to SAVED.\nA saved report is locked from further edits and ready for approval workflow.\nOptionally adds comments to document any observations or notes.\n\n**When to use:**\n- After reviewing calculated values in draft\n- Before sending to taxpayer for approval\n- When report data is final and correct\n\n**Valid transitions:**\n- DRAFT → SAVED\n- EDITED → SAVED\n\n**After saving, you can:**\n- Send report via email for approval (`/send`)\n- Directly approve as accountant (`/approve`)\n- Reject if issues found (`/reject`)"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully saved'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report saved successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: saved
+                      status_label: Guardado
+                      report_comments: 'Reporte revisado, valores correctos'
+                      total_sales_raw_value: 15000.0
+                      total_taxes_to_pay_iva: 1200.0
+                      updated_at: '2024-03-05T14:30:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report saved successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: saved
+                          status_label:
+                            type: string
+                            example: Guardado
+                          report_comments:
+                            type: string
+                            example: 'Reporte revisado, valores correctos'
+                          total_sales_raw_value:
+                            type: number
+                            example: 15000.0
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          updated_at:
+                            type: string
+                            example: '2024-03-05T14:30:00.000000Z'
+        400:
+          description: 'Invalid status'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Cannot transition from approved to saved'
+                  code: INVALID_TRANSITION
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Cannot transition from approved to saved'
+                  code:
+                    type: string
+                    example: INVALID_TRANSITION
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    comments:
+                      - 'Comments cannot exceed 1000 characters'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      comments:
+                        type: array
+                        example:
+                          - 'Comments cannot exceed 1000 characters'
+                        items:
+                          type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+                comments:
+                  type: string
+                  description: 'Optional comments about the report (max 1000 chars).'
+                  example: 'Reporte revisado, valores correctos'
+                  nullable: true
+              required:
+                - period
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/approve':
+    patch:
+      summary: 'Approve IVA report'
+      operationId: approveIVAReport
+      description: "Approves the report, changing its status to APPROVED.\nThis indicates the report has been reviewed and validated by an accountant\nand is ready for submission to the SRI (Tax Authority).\n\n**Approval means:**\n- All values have been verified\n- Report is accurate and complete\n- Ready for tax authority submission\n- No further changes from taxpayer needed\n\n**Valid transitions:**\n- SAVED → APPROVED (direct approval without sending)\n- SENT → APPROVED (after taxpayer received via email)\n\n**After approval, you can:**\n- Send to SRI draft (`/send-sri-draft`)\n- Mark as manually declared (`/mark-declared`)\n- Reset if needed (`/recalculate`)"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully approved'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report approved successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: approved
+                      status_label: Aprobado
+                      comments:
+                        -
+                          status: approved
+                          comment: 'Valores verificados, aprobado para envío al SRI'
+                          timestamp: '2024-03-06T10:30:00Z'
+                      total_taxes_to_pay_iva: 1200.0
+                      updated_at: '2024-03-06T10:30:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report approved successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: approved
+                          status_label:
+                            type: string
+                            example: Aprobado
+                          comments:
+                            type: array
+                            example:
+                              -
+                                status: approved
+                                comment: 'Valores verificados, aprobado para envío al SRI'
+                                timestamp: '2024-03-06T10:30:00Z'
+                            items:
+                              type: object
+                              properties:
+                                status:
+                                  type: string
+                                  example: approved
+                                comment:
+                                  type: string
+                                  example: 'Valores verificados, aprobado para envío al SRI'
+                                timestamp:
+                                  type: string
+                                  example: '2024-03-06T10:30:00Z'
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          updated_at:
+                            type: string
+                            example: '2024-03-06T10:30:00.000000Z'
+        400:
+          description: 'Invalid status transition'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: "Cannot transition from draft to approved. Report must be in 'saved' or 'sent' status"
+                  code: INVALID_TRANSITION
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: "Cannot transition from draft to approved. Report must be in 'saved' or 'sent' status"
+                  code:
+                    type: string
+                    example: INVALID_TRANSITION
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    period:
+                      - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      period:
+                        type: array
+                        example:
+                          - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                        items:
+                          type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+                comments:
+                  type: string
+                  description: 'Optional approval comments or notes (max 1000 chars).'
+                  example: 'Valores verificados, aprobado para envío al SRI'
+                  nullable: true
+              required:
+                - period
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/reject':
+    patch:
+      summary: 'Reject IVA report'
+      operationId: rejectIVAReport
+      description: "Rejects the report, changing its status to REJECTED.\nThis action requires detailed comments explaining why the report was rejected.\nUsed when errors or inconsistencies are found during review.\n\n**Rejection means:**\n- Report has errors or inconsistencies\n- Corrections are needed before approval\n- Report must be recalculated or edited\n- Clear feedback must be provided\n\n**Valid transitions:**\n- SAVED → REJECTED\n- SENT → REJECTED (taxpayer or accountant found issues)\n\n**After rejection:**\n- Report must be recalculated (`/recalculate`)\n- Then saved, reviewed, and re-approved\n\n**Important:** Comments are REQUIRED (minimum 10 characters) to document the rejection reason."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully rejected'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report rejected successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: rejected
+                      status_label: Rechazado
+                      comments:
+                        -
+                          status: rejected
+                          comment: 'Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456'
+                          timestamp: '2024-03-06T11:00:00Z'
+                      total_taxes_to_pay_iva: 1200.0
+                      updated_at: '2024-03-06T11:00:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report rejected successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: rejected
+                          status_label:
+                            type: string
+                            example: Rechazado
+                          comments:
+                            type: array
+                            example:
+                              -
+                                status: rejected
+                                comment: 'Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456'
+                                timestamp: '2024-03-06T11:00:00Z'
+                            items:
+                              type: object
+                              properties:
+                                status:
+                                  type: string
+                                  example: rejected
+                                comment:
+                                  type: string
+                                  example: 'Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456'
+                                timestamp:
+                                  type: string
+                                  example: '2024-03-06T11:00:00Z'
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          updated_at:
+                            type: string
+                            example: '2024-03-06T11:00:00.000000Z'
+        400:
+          description: 'Invalid status transition'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: "Cannot transition from approved to rejected. Report must be in 'saved' or 'sent' status"
+                  code: INVALID_TRANSITION
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: "Cannot transition from approved to rejected. Report must be in 'saved' or 'sent' status"
+                  code:
+                    type: string
+                    example: INVALID_TRANSITION
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Missing comments'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Validation failed'
+                      code: VALIDATION_ERROR
+                      errors:
+                        comments:
+                          - 'Comments are required when rejecting a report'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Validation failed'
+                      code:
+                        type: string
+                        example: VALIDATION_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          comments:
+                            type: array
+                            example:
+                              - 'Comments are required when rejecting a report'
+                            items:
+                              type: string
+                  -
+                    description: 'Comments too short'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Validation failed'
+                      code: VALIDATION_ERROR
+                      errors:
+                        comments:
+                          - 'Comments must be at least 10 characters'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Validation failed'
+                      code:
+                        type: string
+                        example: VALIDATION_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          comments:
+                            type: array
+                            example:
+                              - 'Comments must be at least 10 characters'
+                            items:
+                              type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+                comments:
+                  type: string
+                  description: 'Detailed reason for rejection (10-1000 chars).'
+                  example: 'Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456'
+              required:
+                - period
+                - comments
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/mark-declared':
+    patch:
+      summary: 'Mark report as declared'
+      operationId: markReportAsDeclared
+      description: "Marks the report as DECLARED in your database.\nThis is a LOCAL action that does NOT interact with SRI services.\n\n**When to use this endpoint:**\n- You declared the report manually on the SRI website\n- You declared through another system or platform\n- You want to skip automatic SRI submission\n- You completed the declaration offline\n\n**What this does:**\n- Changes report status to DECLARED\n- Records the status change in history\n- Marks the period as completed for this taxpayer\n- Does NOT send anything to external services\n\n**Valid transitions:**\n- APPROVED → DECLARED (skip SRI auto-submission)\n- SRI_SENDED_COMPLETED → DECLARED (after SRI processing)\n\n**After marking as declared:**\n- Report can still be recalculated if needed\n- PDFs can be uploaded (`/upload-pdfs` - not yet implemented)\n- Status can transition to SRI_DECLARED_CONFIRMED"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully marked'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report marked as declared successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: declared
+                      status_label: Declarado
+                      total_taxes_to_pay_iva: 1200.0
+                      updated_at: '2024-03-20T09:15:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report marked as declared successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: declared
+                          status_label:
+                            type: string
+                            example: Declarado
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          updated_at:
+                            type: string
+                            example: '2024-03-20T09:15:00.000000Z'
+        400:
+          description: 'Invalid status transition'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: "Cannot transition from draft to declared. Report must be in 'approved' or 'sri_sended_completed' status"
+                  code: INVALID_TRANSITION
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: "Cannot transition from draft to declared. Report must be in 'approved' or 'sri_sended_completed' status"
+                  code:
+                    type: string
+                    example: INVALID_TRANSITION
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    period:
+                      - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      period:
+                        type: array
+                        example:
+                          - 'Period must be in YYYY-MM format (e.g., 2024-03)'
+                        items:
+                          type: string
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+              required:
+                - period
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/send':
+    post:
+      summary: 'Send IVA report via email'
+      operationId: sendIVAReportViaEmail
+      description: "Sends the IVA report via email to the taxpayer or specified recipients for review and approval.\nThis is an EXTERNAL COMMUNICATION action that actually sends emails through SMTP.\n\n**What this endpoint does:**\n1. Validates the report is in SAVED or SENT status\n2. Generates a PDF of the report (if not cached)\n3. Sends email with PDF attachment to specified addresses\n4. Records each recipient in share logs for audit\n5. Changes report status to SENT (if not already)\n6. Registers status change in history\n\n**Email recipients:**\n- If `emails` parameter provided: sends to those addresses\n- If `emails` is empty: uses taxpayer's registered email\n- Maximum 10 email addresses per request\n\n**Valid transitions:**\n- SAVED → SENT (first send)\n- SENT → SENT (resend to same or different recipients)\n\n**Email content includes:**\n- PDF report attachment\n- Optional comments/message\n- Link to view report online\n- Instructions for approval/rejection\n\n**Note:** This operation may take 5-10 seconds depending on SMTP server response."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully sent'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report sent successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: sent
+                      status_label: 'Enviado para revisión'
+                      report_comments: 'Por favor revisar los totales de ventas y confirmar'
+                      public_link: 'https://app.taxo.ec/public/reports/abc123def'
+                      total_taxes_to_pay_iva: 1200.0
+                      updated_at: '2024-03-06T12:00:00.000000Z'
+                    recipients:
+                      - cliente@example.com
+                      - contabilidad@empresa.com
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report sent successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: sent
+                          status_label:
+                            type: string
+                            example: 'Enviado para revisión'
+                          report_comments:
+                            type: string
+                            example: 'Por favor revisar los totales de ventas y confirmar'
+                          public_link:
+                            type: string
+                            example: 'https://app.taxo.ec/public/reports/abc123def'
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          updated_at:
+                            type: string
+                            example: '2024-03-06T12:00:00.000000Z'
+                      recipients:
+                        type: array
+                        example:
+                          - cliente@example.com
+                          - contabilidad@empresa.com
+                        items:
+                          type: string
+        400:
+          description: 'Invalid status'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: "Cannot send report from status draft. Report must be in 'saved' or 'sent' status"
+                  code: INVALID_STATUS
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: "Cannot send report from status draft. Report must be in 'saved' or 'sent' status"
+                  code:
+                    type: string
+                    example: INVALID_STATUS
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'No recipients'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Validation failed'
+                      code: VALIDATION_ERROR
+                      errors:
+                        emails:
+                          - 'No email addresses provided and taxpayer has no registered email'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Validation failed'
+                      code:
+                        type: string
+                        example: VALIDATION_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          emails:
+                            type: array
+                            example:
+                              - 'No email addresses provided and taxpayer has no registered email'
+                            items:
+                              type: string
+                  -
+                    description: 'Too many emails'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Validation failed'
+                      code: VALIDATION_ERROR
+                      errors:
+                        emails:
+                          - 'Cannot send to more than 10 email addresses'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Validation failed'
+                      code:
+                        type: string
+                        example: VALIDATION_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          emails:
+                            type: array
+                            example:
+                              - 'Cannot send to more than 10 email addresses'
+                            items:
+                              type: string
+        503:
+          description: 'SMTP error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Failed to send email: Connection to SMTP server failed'
+                  code: EMAIL_SEND_FAILED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Failed to send email: Connection to SMTP server failed'
+                  code:
+                    type: string
+                    example: EMAIL_SEND_FAILED
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+                emails:
+                  type: array
+                  description: 'Optional array of email addresses (max 10).'
+                  example:
+                    - cliente@example.com
+                    - contabilidad@empresa.com
+                  items:
+                    type: string
+                comments:
+                  type: string
+                  description: 'Optional message/comments to include in email (max 1000 chars).'
+                  example: 'Por favor revisar los totales de ventas y confirmar'
+                  nullable: true
+              required:
+                - period
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/iva-reports/send-sri-draft':
+    post:
+      summary: 'Send report to SRI draft'
+      operationId: sendReportToSRIDraft
+      description: "Sends the report to the SRI (Ecuadorian Tax Authority) draft/borrador system.\nThis creates a DRAFT in the SRI system for validation, NOT a final declaration.\nThis is an EXTERNAL COMMUNICATION action that calls SRI web services.\n\n**Important notes:**\n- This creates a DRAFT (borrador) in SRI, not a final declaration\n- After draft creation, you must finalize it on SRI website\n- The process is asynchronous (uses webhooks or timeout)\n- May take several minutes to complete\n\n**The complete workflow:**\n1. Validates report is APPROVED or ERROR (for retry)\n2. Creates JSON representation of report (Form 104)\n3. Calls SRI API to create draft\n4. Changes status to SRI_SENDED (processing)\n5. Queues timeout job (15 minutes safety net)\n6. Awaits SRI webhook response:\n   - Success → SRI_SENDED_COMPLETED\n   - Failure → ERROR\n7. Timeout if no webhook received\n\n**Valid transitions:**\n- APPROVED → SRI_SENDED (first submission)\n- ERROR → SRI_SENDED (retry after error)\n\n**After successful SRI draft:**\n- Wait for webhook (usually 2-5 minutes)\n- Check report status via GET endpoint\n- When SRI_SENDED_COMPLETED, mark as declared\n\n**Requirements:**\n- Taxpayer must have valid digital signature configured\n- All report values must be valid\n- SRI services must be operational\n\n**Note:** This operation typically takes 5-10 seconds for the API call,\nplus 2-5 minutes for SRI processing (webhook notification)."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Successfully sent to SRI'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Report sent to SRI draft successfully'
+                  data:
+                    report:
+                      id: 01HZXXX123ABC456
+                      tax_payer_id: 123
+                      period: '2024-03-15'
+                      periodicity: monthly
+                      status: sri_sended
+                      status_label: 'Borrador SRI en progreso'
+                      total_taxes_to_pay_iva: 1200.0
+                      updated_at: '2024-03-07T10:00:00.000000Z'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Report sent to SRI draft successfully'
+                  data:
+                    type: object
+                    properties:
+                      report:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 01HZXXX123ABC456
+                          tax_payer_id:
+                            type: integer
+                            example: 123
+                          period:
+                            type: string
+                            example: '2024-03-15'
+                          periodicity:
+                            type: string
+                            example: monthly
+                          status:
+                            type: string
+                            example: sri_sended
+                          status_label:
+                            type: string
+                            example: 'Borrador SRI en progreso'
+                          total_taxes_to_pay_iva:
+                            type: number
+                            example: 1200.0
+                          updated_at:
+                            type: string
+                            example: '2024-03-07T10:00:00.000000Z'
+        400:
+          description: 'Invalid status'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: "Cannot send to SRI from status saved. Report must be in 'approved' or 'error' status"
+                  code: INVALID_STATUS
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: "Cannot send to SRI from status saved. Report must be in 'approved' or 'error' status"
+                  code:
+                    type: string
+                    example: INVALID_STATUS
+        404:
+          description: 'Report not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Report not found for period 2024-03'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Report not found for period 2024-03'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        500:
+          description: 'JSON creation failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Failed to create report JSON: Missing required field'
+                  code: JSON_CREATION_FAILED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Failed to create report JSON: Missing required field'
+                  code:
+                    type: string
+                    example: JSON_CREATION_FAILED
+        503:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'SRI unavailable'
+                    type: object
+                    example:
+                      status: error
+                      message: 'SRI service is unavailable or timeout'
+                      code: SRI_UNAVAILABLE
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'SRI service is unavailable or timeout'
+                      code:
+                        type: string
+                        example: SRI_UNAVAILABLE
+                  -
+                    description: 'SRI error response'
+                    type: object
+                    example:
+                      status: error
+                      message: 'SRI service returned an error'
+                      code: SRI_ERROR
+                      errors:
+                        sri_response:
+                          status: error
+                          message: 'Invalid signature'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'SRI service returned an error'
+                      code:
+                        type: string
+                        example: SRI_ERROR
+                      errors:
+                        type: object
+                        properties:
+                          sri_response:
+                            type: object
+                            properties:
+                              status:
+                                type: string
+                                example: error
+                              message:
+                                type: string
+                                example: 'Invalid signature'
+      tags:
+        - 'IVA Reports'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                period:
+                  type: string
+                  description: 'Period in YYYY-MM format.'
+                  example: 2024-03
+              required:
+                - period
     parameters:
       -
         in: path

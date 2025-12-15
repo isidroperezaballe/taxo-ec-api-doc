@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "8cd98efb-32a8-4355-90f1-f836670a6fe6",
+        "_postman_id": "08a101ad-2c3f-41a6-bc97-4dae651a0011",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -323,7 +323,7 @@
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "personal_expenses",
+                                    "value": "sales",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -346,7 +346,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=personal_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=sales&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -398,6 +398,738 @@
                             "code": 500,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"Failed to retrieve categories. Please try again later.\",\n  \"code\": \"SERVER_ERROR\"\n}",
                             "name": "Server error"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "IVA Reports",
+            "description": "\nAPI endpoints for managing IVA (Value Added Tax) reports.\n\nThese endpoints allow you to create, manage, and submit IVA tax reports for your taxpayers.\nEach report goes through a workflow from draft to declared status.",
+            "item": [
+                {
+                    "name": "List IVA reports for a taxpayer",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports",
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Items per page (1-100).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "saved",
+                                    "description": "Filter by report status.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "periodicity",
+                                    "value": "monthly",
+                                    "description": "Filter by periodicity (monthly, biannual).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "year",
+                                    "value": "2024",
+                                    "description": "Filter by year.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "-period",
+                                    "description": "Sort field. Prefix with - for descending.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports?page=1&per_page=20&status=saved&periodicity=monthly&year=2024&sort=-period",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"page\":73,\"per_page\":13,\"status\":\"draft\",\"periodicity\":\"monthly\",\"year\":16,\"sort\":\"-status\"}"
+                        },
+                        "description": "Retrieves a paginated list of IVA reports for a specific taxpayer.\nYou can filter by status, year, periodicity and sort the results.\n\n**Available statuses:**\n- `draft`: Initial state, being edited\n- `edited`: Has manual edits\n- `saved`: Ready for review\n- `sent`: Sent to taxpayer for approval\n- `approved`: Approved and ready for SRI submission\n- `rejected`: Rejected, needs corrections\n- `sri_sended`: Sent to SRI (in progress)\n- `sri_sended_completed`: SRI processing completed\n- `declared`: Marked as declared\n- `error`: Error during SRI submission"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Reports retrieved successfully\",\n  \"data\": {\n    \"reports\": [\n      {\n        \"id\": \"01HZXXX123ABC456\",\n        \"tax_payer_id\": 123,\n        \"period\": \"2024-03-15\",\n        \"periodicity\": \"monthly\",\n        \"status\": \"saved\",\n        \"status_label\": \"Guardado\",\n        \"total_sales_raw_value\": 15000.00,\n        \"total_taxes_to_pay_iva\": 1200.50,\n        \"created_at\": \"2024-03-01T09:00:00.000000Z\",\n        \"updated_at\": \"2024-03-05T14:30:00.000000Z\"\n      },\n      {\n        \"id\": \"01HZXXX123ABC789\",\n        \"tax_payer_id\": 123,\n        \"period\": \"2024-02-15\",\n        \"periodicity\": \"monthly\",\n        \"status\": \"declared\",\n        \"status_label\": \"Declarado\",\n        \"total_sales_raw_value\": 12500.00,\n        \"total_taxes_to_pay_iva\": 980.00,\n        \"created_at\": \"2024-02-01T10:15:00.000000Z\",\n        \"updated_at\": \"2024-02-20T16:45:00.000000Z\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"pagination\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 24,\n      \"total_pages\": 2,\n      \"from\": 1,\n      \"to\": 20\n    }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"status\": [\"Invalid status value\"]\n  }\n}",
+                            "name": "Invalid filter"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create a new IVA report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\"}"
+                        },
+                        "description": "Creates a new IVA report for the specified period if it doesn't already exist.\nThe report is created in DRAFT status with all values calculated automatically from:\n- Sales invoices and credit notes\n- Purchase bills and credit notes\n- Withholding documents\n\n**Important notes:**\n- If a report already exists for the period, it returns the existing one (idempotent)\n- The period is converted to a full date based on taxpayer's periodicity\n- Monthly taxpayers: YYYY-MM \u2192 YYYY-MM-15\n- Biannual taxpayers: Only YYYY-06 or YYYY-12 allowed\n- This process may take 3-5 seconds as it calculates from all documents\n\n**Workflow:**\n1. Validates period format\n2. Checks if report already exists\n3. Queries all documents for the period\n4. Calculates sales, purchases, and tax totals\n5. Creates report in DRAFT status\n6. Records initial status in history"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report already exists for this period\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"saved\",\n      \"status_label\": \"Guardado\",\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"created_at\": \"2024-03-01T09:00:00.000000Z\",\n      \"updated_at\": \"2024-03-05T14:30:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Report already exists"
+                        },
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report created successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"draft\",\n      \"status_label\": \"Borrador\",\n      \"local_sales_different_0_rate_raw_value\": 10000.00,\n      \"local_sales_different_0_rate_iva\": 1200.00,\n      \"total_sales_raw_value\": 15000.00,\n      \"total_sales_iva\": 1800.00,\n      \"purchases_different_0_rate_with_right_iva\": 600.00,\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"total_invoices_issued\": 45,\n      \"created_at\": \"2024-03-01T09:00:00.000000Z\",\n      \"updated_at\": \"2024-03-01T09:00:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Report created successfully"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"period\": [\"Period must be in YYYY-MM format (e.g., 2024-03)\"]\n  }\n}",
+                            "name": "Invalid period format"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"period\": [\"For biannual periodicity, period must be YYYY-06 or YYYY-12\"]\n  }\n}",
+                            "name": "Invalid period for biannual"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get a specific IVA report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/:period",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/:period",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "period",
+                                    "key": "period",
+                                    "value": "2024-03",
+                                    "description": "Period in YYYY-MM format."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves detailed information for a specific IVA report identified by period.\nReturns all calculated fields including sales, purchases, tax credits, and final tax amount.\n\nThe period parameter is automatically converted to the full date based on the taxpayer's periodicity:\n- Monthly: YYYY-MM becomes YYYY-MM-15\n- Biannual: YYYY-06 becomes YYYY-06-15 (first semester) or YYYY-12 becomes YYYY-12-15 (second semester)"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report retrieved successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"saved\",\n      \"status_label\": \"Guardado\",\n      \"public_link\": \"https:\/\/app.taxo.ec\/public\/reports\/abc123\",\n      \"comments\": null,\n      \"report_comments\": \"Reporte revisado\",\n      \"vat_declaration_pdf\": null,\n      \"vat_payment_receipt_pdf\": null,\n      \"local_sales_different_0_rate_raw_value\": 10000.00,\n      \"local_sales_different_0_rate_iva\": 1200.00,\n      \"total_sales_raw_value\": 15000.00,\n      \"total_sales_iva\": 1800.00,\n      \"purchases_different_0_rate_with_right_raw_value\": 5000.00,\n      \"purchases_different_0_rate_with_right_iva\": 600.00,\n      \"total_acquisitions_and_payments_raw_value\": 6500.00,\n      \"total_acquisitions_and_payments_iva\": 780.00,\n      \"purchases_tax_credit_applicable_period_iva\": 780.00,\n      \"tax_caused_iva\": 1800.00,\n      \"total_tax_credit_period_iva\": 780.00,\n      \"subtotal_to_pay_iva\": 1020.00,\n      \"total_taxes_to_pay_iva\": 1020.00,\n      \"total_invoices_issued\": 45,\n      \"total_invoices_canceled\": 2,\n      \"documents_generated_period\": 128,\n      \"created_at\": \"2024-03-01T09:00:00.000000Z\",\n      \"updated_at\": \"2024-03-05T14:30:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"period\": [\"Invalid period format. Expected YYYY-MM (e.g., 2024-03)\"]\n  }\n}",
+                            "name": "Invalid period format"
+                        }
+                    ]
+                },
+                {
+                    "name": "Recalculate IVA report (Update Report)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/recalculate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/recalculate",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\"}"
+                        },
+                        "description": "Resets the report to DRAFT status and recalculates all values from current documents.\nThis is the API equivalent of the \"Actualizar reporte\" button in the UI.\n\n**Use cases:**\n- New invoices\/bills were added after creating the report\n- Documents were corrected or updated\n- Need to refresh calculations with latest data\n- Reset report from any state back to draft\n\n**What this endpoint does:**\n1. Validates the report exists for the period\n2. Clears uploaded PDF files (vat_declaration_pdf, vat_payment_receipt_pdf)\n3. Transitions report status to DRAFT (allowed from any state)\n4. Queries all documents for the period again\n5. Recalculates all sales, purchases, and tax totals\n6. Records the status change in history\n\n**Warning:** This action will overwrite any manual edits made to the report."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report recalculated successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"draft\",\n      \"status_label\": \"Borrador\",\n      \"vat_declaration_pdf\": null,\n      \"vat_payment_receipt_pdf\": null,\n      \"total_sales_raw_value\": 16500.00,\n      \"total_sales_iva\": 1980.00,\n      \"total_taxes_to_pay_iva\": 1350.75,\n      \"total_invoices_issued\": 52,\n      \"updated_at\": \"2024-03-10T15:45:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Successfully recalculated"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot transition from sri_sended to draft\",\n  \"code\": \"INVALID_TRANSITION\"\n}",
+                            "name": "Invalid transition (should not happen)"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"period\": [\"Period must be in YYYY-MM format (e.g., 2024-03)\"]\n  }\n}",
+                            "name": "Invalid period format"
+                        }
+                    ]
+                },
+                {
+                    "name": "Save IVA report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/save",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/save",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\",\"comments\":\"Reporte revisado, valores correctos\"}"
+                        },
+                        "description": "Saves the report by changing its status from DRAFT\/EDITED to SAVED.\nA saved report is locked from further edits and ready for approval workflow.\nOptionally adds comments to document any observations or notes.\n\n**When to use:**\n- After reviewing calculated values in draft\n- Before sending to taxpayer for approval\n- When report data is final and correct\n\n**Valid transitions:**\n- DRAFT \u2192 SAVED\n- EDITED \u2192 SAVED\n\n**After saving, you can:**\n- Send report via email for approval (`\/send`)\n- Directly approve as accountant (`\/approve`)\n- Reject if issues found (`\/reject`)"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report saved successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"saved\",\n      \"status_label\": \"Guardado\",\n      \"report_comments\": \"Reporte revisado, valores correctos\",\n      \"total_sales_raw_value\": 15000.00,\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"updated_at\": \"2024-03-05T14:30:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Successfully saved"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot transition from approved to saved\",\n  \"code\": \"INVALID_TRANSITION\"\n}",
+                            "name": "Invalid status"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"comments\": [\"Comments cannot exceed 1000 characters\"]\n  }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Approve IVA report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/approve",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/approve",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\",\"comments\":\"Valores verificados, aprobado para env\u00edo al SRI\"}"
+                        },
+                        "description": "Approves the report, changing its status to APPROVED.\nThis indicates the report has been reviewed and validated by an accountant\nand is ready for submission to the SRI (Tax Authority).\n\n**Approval means:**\n- All values have been verified\n- Report is accurate and complete\n- Ready for tax authority submission\n- No further changes from taxpayer needed\n\n**Valid transitions:**\n- SAVED \u2192 APPROVED (direct approval without sending)\n- SENT \u2192 APPROVED (after taxpayer received via email)\n\n**After approval, you can:**\n- Send to SRI draft (`\/send-sri-draft`)\n- Mark as manually declared (`\/mark-declared`)\n- Reset if needed (`\/recalculate`)"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report approved successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"approved\",\n      \"status_label\": \"Aprobado\",\n      \"comments\": [\n        {\n          \"status\": \"approved\",\n          \"comment\": \"Valores verificados, aprobado para env\u00edo al SRI\",\n          \"timestamp\": \"2024-03-06T10:30:00Z\"\n        }\n      ],\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"updated_at\": \"2024-03-06T10:30:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Successfully approved"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot transition from draft to approved. Report must be in 'saved' or 'sent' status\",\n  \"code\": \"INVALID_TRANSITION\"\n}",
+                            "name": "Invalid status transition"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"period\": [\"Period must be in YYYY-MM format (e.g., 2024-03)\"]\n  }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Reject IVA report",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/reject",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/reject",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\",\"comments\":\"Hay errores en las facturas de compras del d\u00eda 15. Falta incluir factura #001-001-000123456\"}"
+                        },
+                        "description": "Rejects the report, changing its status to REJECTED.\nThis action requires detailed comments explaining why the report was rejected.\nUsed when errors or inconsistencies are found during review.\n\n**Rejection means:**\n- Report has errors or inconsistencies\n- Corrections are needed before approval\n- Report must be recalculated or edited\n- Clear feedback must be provided\n\n**Valid transitions:**\n- SAVED \u2192 REJECTED\n- SENT \u2192 REJECTED (taxpayer or accountant found issues)\n\n**After rejection:**\n- Report must be recalculated (`\/recalculate`)\n- Then saved, reviewed, and re-approved\n\n**Important:** Comments are REQUIRED (minimum 10 characters) to document the rejection reason."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report rejected successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"rejected\",\n      \"status_label\": \"Rechazado\",\n      \"comments\": [\n        {\n          \"status\": \"rejected\",\n          \"comment\": \"Hay errores en las facturas de compras del d\u00eda 15. Falta incluir factura #001-001-000123456\",\n          \"timestamp\": \"2024-03-06T11:00:00Z\"\n        }\n      ],\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"updated_at\": \"2024-03-06T11:00:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Successfully rejected"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot transition from approved to rejected. Report must be in 'saved' or 'sent' status\",\n  \"code\": \"INVALID_TRANSITION\"\n}",
+                            "name": "Invalid status transition"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"comments\": [\"Comments are required when rejecting a report\"]\n  }\n}",
+                            "name": "Missing comments"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"comments\": [\"Comments must be at least 10 characters\"]\n  }\n}",
+                            "name": "Comments too short"
+                        }
+                    ]
+                },
+                {
+                    "name": "Mark report as declared",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/mark-declared",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/mark-declared",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\"}"
+                        },
+                        "description": "Marks the report as DECLARED in your database.\nThis is a LOCAL action that does NOT interact with SRI services.\n\n**When to use this endpoint:**\n- You declared the report manually on the SRI website\n- You declared through another system or platform\n- You want to skip automatic SRI submission\n- You completed the declaration offline\n\n**What this does:**\n- Changes report status to DECLARED\n- Records the status change in history\n- Marks the period as completed for this taxpayer\n- Does NOT send anything to external services\n\n**Valid transitions:**\n- APPROVED \u2192 DECLARED (skip SRI auto-submission)\n- SRI_SENDED_COMPLETED \u2192 DECLARED (after SRI processing)\n\n**After marking as declared:**\n- Report can still be recalculated if needed\n- PDFs can be uploaded (`\/upload-pdfs` - not yet implemented)\n- Status can transition to SRI_DECLARED_CONFIRMED"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report marked as declared successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"declared\",\n      \"status_label\": \"Declarado\",\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"updated_at\": \"2024-03-20T09:15:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Successfully marked"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot transition from draft to declared. Report must be in 'approved' or 'sri_sended_completed' status\",\n  \"code\": \"INVALID_TRANSITION\"\n}",
+                            "name": "Invalid status transition"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"period\": [\"Period must be in YYYY-MM format (e.g., 2024-03)\"]\n  }\n}",
+                            "name": "Validation error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Send IVA report via email",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/send",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/send",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\",\"emails\":[\"cliente@example.com\",\"contabilidad@empresa.com\"],\"comments\":\"Por favor revisar los totales de ventas y confirmar\"}"
+                        },
+                        "description": "Sends the IVA report via email to the taxpayer or specified recipients for review and approval.\nThis is an EXTERNAL COMMUNICATION action that actually sends emails through SMTP.\n\n**What this endpoint does:**\n1. Validates the report is in SAVED or SENT status\n2. Generates a PDF of the report (if not cached)\n3. Sends email with PDF attachment to specified addresses\n4. Records each recipient in share logs for audit\n5. Changes report status to SENT (if not already)\n6. Registers status change in history\n\n**Email recipients:**\n- If `emails` parameter provided: sends to those addresses\n- If `emails` is empty: uses taxpayer's registered email\n- Maximum 10 email addresses per request\n\n**Valid transitions:**\n- SAVED \u2192 SENT (first send)\n- SENT \u2192 SENT (resend to same or different recipients)\n\n**Email content includes:**\n- PDF report attachment\n- Optional comments\/message\n- Link to view report online\n- Instructions for approval\/rejection\n\n**Note:** This operation may take 5-10 seconds depending on SMTP server response."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report sent successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"sent\",\n      \"status_label\": \"Enviado para revisi\u00f3n\",\n      \"report_comments\": \"Por favor revisar los totales de ventas y confirmar\",\n      \"public_link\": \"https:\/\/app.taxo.ec\/public\/reports\/abc123def\",\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"updated_at\": \"2024-03-06T12:00:00.000000Z\"\n    },\n    \"recipients\": [\"cliente@example.com\", \"contabilidad@empresa.com\"]\n  }\n}",
+                            "name": "Successfully sent"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot send report from status draft. Report must be in 'saved' or 'sent' status\",\n  \"code\": \"INVALID_STATUS\"\n}",
+                            "name": "Invalid status"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"emails\": [\"No email addresses provided and taxpayer has no registered email\"]\n  }\n}",
+                            "name": "No recipients"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"emails\": [\"Cannot send to more than 10 email addresses\"]\n  }\n}",
+                            "name": "Too many emails"
+                        },
+                        {
+                            "header": [],
+                            "code": 503,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Failed to send email: Connection to SMTP server failed\",\n  \"code\": \"EMAIL_SEND_FAILED\"\n}",
+                            "name": "SMTP error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Send report to SRI draft",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/iva-reports\/send-sri-draft",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/iva-reports\/send-sri-draft",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"period\":\"2024-03\"}"
+                        },
+                        "description": "Sends the report to the SRI (Ecuadorian Tax Authority) draft\/borrador system.\nThis creates a DRAFT in the SRI system for validation, NOT a final declaration.\nThis is an EXTERNAL COMMUNICATION action that calls SRI web services.\n\n**Important notes:**\n- This creates a DRAFT (borrador) in SRI, not a final declaration\n- After draft creation, you must finalize it on SRI website\n- The process is asynchronous (uses webhooks or timeout)\n- May take several minutes to complete\n\n**The complete workflow:**\n1. Validates report is APPROVED or ERROR (for retry)\n2. Creates JSON representation of report (Form 104)\n3. Calls SRI API to create draft\n4. Changes status to SRI_SENDED (processing)\n5. Queues timeout job (15 minutes safety net)\n6. Awaits SRI webhook response:\n   - Success \u2192 SRI_SENDED_COMPLETED\n   - Failure \u2192 ERROR\n7. Timeout if no webhook received\n\n**Valid transitions:**\n- APPROVED \u2192 SRI_SENDED (first submission)\n- ERROR \u2192 SRI_SENDED (retry after error)\n\n**After successful SRI draft:**\n- Wait for webhook (usually 2-5 minutes)\n- Check report status via GET endpoint\n- When SRI_SENDED_COMPLETED, mark as declared\n\n**Requirements:**\n- Taxpayer must have valid digital signature configured\n- All report values must be valid\n- SRI services must be operational\n\n**Note:** This operation typically takes 5-10 seconds for the API call,\nplus 2-5 minutes for SRI processing (webhook notification)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Report sent to SRI draft successfully\",\n  \"data\": {\n    \"report\": {\n      \"id\": \"01HZXXX123ABC456\",\n      \"tax_payer_id\": 123,\n      \"period\": \"2024-03-15\",\n      \"periodicity\": \"monthly\",\n      \"status\": \"sri_sended\",\n      \"status_label\": \"Borrador SRI en progreso\",\n      \"total_taxes_to_pay_iva\": 1200.00,\n      \"updated_at\": \"2024-03-07T10:00:00.000000Z\"\n    }\n  }\n}",
+                            "name": "Successfully sent to SRI"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot send to SRI from status saved. Report must be in 'approved' or 'error' status\",\n  \"code\": \"INVALID_STATUS\"\n}",
+                            "name": "Invalid status"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Report not found for period 2024-03\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Report not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Failed to create report JSON: Missing required field\",\n  \"code\": \"JSON_CREATION_FAILED\"\n}",
+                            "name": "JSON creation failed"
+                        },
+                        {
+                            "header": [],
+                            "code": 503,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"SRI service is unavailable or timeout\",\n  \"code\": \"SRI_UNAVAILABLE\"\n}",
+                            "name": "SRI unavailable"
+                        },
+                        {
+                            "header": [],
+                            "code": 503,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"SRI service returned an error\",\n  \"code\": \"SRI_ERROR\",\n  \"errors\": {\n    \"sri_response\": {\n      \"status\": \"error\",\n      \"message\": \"Invalid signature\"\n    }\n  }\n}",
+                            "name": "SRI error response"
                         }
                     ]
                 }

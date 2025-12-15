@@ -8,8 +8,8 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/theme-default.style.css" media="screen">
-    <link rel="stylesheet" href="css/theme-default.print.css" media="print">
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
@@ -32,9 +32,9 @@
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="js/tryitout-5.6.0.js"></script>
+    <script src="../docs/js/tryitout-5.6.0.js"></script>
 
-    <script src="js/theme-default-5.6.0.js"></script>
+    <script src="../docs/js/theme-default-5.6.0.js"></script>
 
 </head>
 
@@ -89,6 +89,43 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-iva-reports" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="iva-reports">
+                    <a href="#iva-reports">IVA Reports</a>
+                </li>
+                                    <ul id="tocify-subheader-iva-reports" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports">
+                                <a href="#iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports">List IVA reports for a taxpayer</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports">
+                                <a href="#iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports">Create a new IVA report</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">
+                                <a href="#iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">Get a specific IVA report</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate">
+                                <a href="#iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate">Recalculate IVA report (Update Report)</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save">
+                                <a href="#iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save">Save IVA report</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve">
+                                <a href="#iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve">Approve IVA report</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject">
+                                <a href="#iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject">Reject IVA report</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared">
+                                <a href="#iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared">Mark report as declared</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-send">
+                                <a href="#iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-send">Send IVA report via email</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft">
+                                <a href="#iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft">Send report to SRI draft</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
             </div>
 
     <ul class="toc-footer" id="toc-footer">
@@ -98,7 +135,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: December 5, 2025</li>
+        <li>Last updated: December 15, 2025</li>
     </ul>
 </div>
 
@@ -1129,7 +1166,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=sales&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1150,7 +1187,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "purchases",
-    "filter[category_type]": "personal_expenses",
+    "filter[category_type]": "sales",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1190,7 +1227,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'purchases',
-            'filter[category_type]' =&gt; 'personal_expenses',
+            'filter[category_type]' =&gt; 'sales',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1213,7 +1250,7 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'purchases',
-  'filter[category_type]': 'personal_expenses',
+  'filter[category_type]': 'sales',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1536,10 +1573,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="personal_expenses"
+               value="sales"
                data-component="query">
     <br>
-<p>Example: <code>personal_expenses</code></p>
+<p>Example: <code>sales</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1580,6 +1617,3408 @@ Must be one of:
 <p>El campo value no debe ser mayor que 255 caracteres. Example: <code>vmqeopfuudtdsufvyvddq</code></p>
             </div>
                 </form>
+
+                <h1 id="iva-reports">IVA Reports</h1>
+
+    <p>API endpoints for managing IVA (Value Added Tax) reports.</p>
+<p>These endpoints allow you to create, manage, and submit IVA tax reports for your taxpayers.
+Each report goes through a workflow from draft to declared status.</p>
+
+                                <h2 id="iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports">List IVA reports for a taxpayer</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves a paginated list of IVA reports for a specific taxpayer.
+You can filter by status, year, periodicity and sort the results.</p>
+<p><strong>Available statuses:</strong></p>
+<ul>
+<li><code>draft</code>: Initial state, being edited</li>
+<li><code>edited</code>: Has manual edits</li>
+<li><code>saved</code>: Ready for review</li>
+<li><code>sent</code>: Sent to taxpayer for approval</li>
+<li><code>approved</code>: Approved and ready for SRI submission</li>
+<li><code>rejected</code>: Rejected, needs corrections</li>
+<li><code>sri_sended</code>: Sent to SRI (in progress)</li>
+<li><code>sri_sended_completed</code>: SRI processing completed</li>
+<li><code>declared</code>: Marked as declared</li>
+<li><code>error</code>: Error during SRI submission</li>
+</ul>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--iva-reports">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports?page=1&amp;per_page=20&amp;status=saved&amp;periodicity=monthly&amp;year=2024&amp;sort=-period" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"page\": 73,
+    \"per_page\": 13,
+    \"status\": \"draft\",
+    \"periodicity\": \"monthly\",
+    \"year\": 16,
+    \"sort\": \"-status\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports"
+);
+
+const params = {
+    "page": "1",
+    "per_page": "20",
+    "status": "saved",
+    "periodicity": "monthly",
+    "year": "2024",
+    "sort": "-period",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "page": 73,
+    "per_page": 13,
+    "status": "draft",
+    "periodicity": "monthly",
+    "year": 16,
+    "sort": "-status"
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'query' =&gt; [
+            'page' =&gt; '1',
+            'per_page' =&gt; '20',
+            'status' =&gt; 'saved',
+            'periodicity' =&gt; 'monthly',
+            'year' =&gt; '2024',
+            'sort' =&gt; '-period',
+        ],
+        'json' =&gt; [
+            'page' =&gt; 73,
+            'per_page' =&gt; 13,
+            'status' =&gt; 'draft',
+            'periodicity' =&gt; 'monthly',
+            'year' =&gt; 16,
+            'sort' =&gt; '-status',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
+payload = {
+    "page": 73,
+    "per_page": 13,
+    "status": "draft",
+    "periodicity": "monthly",
+    "year": 16,
+    "sort": "-status"
+}
+params = {
+  'page': '1',
+  'per_page': '20',
+  'status': 'saved',
+  'periodicity': 'monthly',
+  'year': '2024',
+  'sort': '-period',
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers, json=payload, params=params)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--iva-reports">
+            <blockquote>
+            <p>Example response (200, Success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Reports retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;reports&quot;: [
+            {
+                &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+                &quot;tax_payer_id&quot;: 123,
+                &quot;period&quot;: &quot;2024-03-15&quot;,
+                &quot;periodicity&quot;: &quot;monthly&quot;,
+                &quot;status&quot;: &quot;saved&quot;,
+                &quot;status_label&quot;: &quot;Guardado&quot;,
+                &quot;total_sales_raw_value&quot;: 15000,
+                &quot;total_taxes_to_pay_iva&quot;: 1200.5,
+                &quot;created_at&quot;: &quot;2024-03-01T09:00:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2024-03-05T14:30:00.000000Z&quot;
+            },
+            {
+                &quot;id&quot;: &quot;01HZXXX123ABC789&quot;,
+                &quot;tax_payer_id&quot;: 123,
+                &quot;period&quot;: &quot;2024-02-15&quot;,
+                &quot;periodicity&quot;: &quot;monthly&quot;,
+                &quot;status&quot;: &quot;declared&quot;,
+                &quot;status_label&quot;: &quot;Declarado&quot;,
+                &quot;total_sales_raw_value&quot;: 12500,
+                &quot;total_taxes_to_pay_iva&quot;: 980,
+                &quot;created_at&quot;: &quot;2024-02-01T10:15:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2024-02-20T16:45:00.000000Z&quot;
+            }
+        ]
+    },
+    &quot;meta&quot;: {
+        &quot;pagination&quot;: {
+            &quot;current_page&quot;: 1,
+            &quot;per_page&quot;: 20,
+            &quot;total&quot;: 24,
+            &quot;total_pages&quot;: 2,
+            &quot;from&quot;: 1,
+            &quot;to&quot;: 20
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Invalid filter):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;status&quot;: [
+            &quot;Invalid status value&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--iva-reports" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--iva-reports"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--iva-reports"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--iva-reports" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--iva-reports">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--iva-reports" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--iva-reports', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--iva-reports"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--iva-reports');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--iva-reports"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--iva-reports');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--iva-reports"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number for pagination. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="20"
+               data-component="query">
+    <br>
+<p>Items per page (1-100). Example: <code>20</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="saved"
+               data-component="query">
+    <br>
+<p>Filter by report status. Example: <code>saved</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>periodicity</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="periodicity"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="monthly"
+               data-component="query">
+    <br>
+<p>Filter by periodicity (monthly, biannual). Example: <code>monthly</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>year</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="year"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="2024"
+               data-component="query">
+    <br>
+<p>Filter by year. Example: <code>2024</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="-period"
+               data-component="query">
+    <br>
+<p>Sort field. Prefix with - for descending. Example: <code>-period</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="73"
+               data-component="body">
+    <br>
+<p>El campo value debe ser al menos 1. Example: <code>73</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="13"
+               data-component="body">
+    <br>
+<p>El campo value debe ser al menos 1. El campo value no debe ser mayor que 100. Example: <code>13</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="draft"
+               data-component="body">
+    <br>
+<p>Example: <code>draft</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>draft</code></li> <li><code>edited</code></li> <li><code>saved</code></li> <li><code>sent</code></li> <li><code>approved</code></li> <li><code>rejected</code></li> <li><code>declared</code></li> <li><code>sri_declared_confirmed</code></li> <li><code>sri_sended</code></li> <li><code>sri_sended_completed</code></li> <li><code>error</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>periodicity</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="periodicity"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="monthly"
+               data-component="body">
+    <br>
+<p>Example: <code>monthly</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>monthly</code></li> <li><code>biannual</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>year</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="year"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="16"
+               data-component="body">
+    <br>
+<p>El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="-status"
+               data-component="body">
+    <br>
+<p>Example: <code>-status</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>period</code></li> <li><code>-period</code></li> <li><code>status</code></li> <li><code>-status</code></li> <li><code>created_at</code></li> <li><code>-created_at</code></li></ul>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports">Create a new IVA report</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Creates a new IVA report for the specified period if it doesn't already exist.
+The report is created in DRAFT status with all values calculated automatically from:</p>
+<ul>
+<li>Sales invoices and credit notes</li>
+<li>Purchase bills and credit notes</li>
+<li>Withholding documents</li>
+</ul>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>If a report already exists for the period, it returns the existing one (idempotent)</li>
+<li>The period is converted to a full date based on taxpayer's periodicity</li>
+<li>Monthly taxpayers: YYYY-MM → YYYY-MM-15</li>
+<li>Biannual taxpayers: Only YYYY-06 or YYYY-12 allowed</li>
+<li>This process may take 3-5 seconds as it calculates from all documents</li>
+</ul>
+<p><strong>Workflow:</strong></p>
+<ol>
+<li>Validates period format</li>
+<li>Checks if report already exists</li>
+<li>Queries all documents for the period</li>
+<li>Calculates sales, purchases, and tax totals</li>
+<li>Creates report in DRAFT status</li>
+<li>Records initial status in history</li>
+</ol>
+
+<span id="example-requests-POSTapi-v1-taxpayers--taxNumber--iva-reports">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
+payload = {
+    "period": "2024-03"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers--taxNumber--iva-reports">
+            <blockquote>
+            <p>Example response (200, Report already exists):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report already exists for this period&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;saved&quot;,
+            &quot;status_label&quot;: &quot;Guardado&quot;,
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;created_at&quot;: &quot;2024-03-01T09:00:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2024-03-05T14:30:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (201, Report created successfully):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report created successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;draft&quot;,
+            &quot;status_label&quot;: &quot;Borrador&quot;,
+            &quot;local_sales_different_0_rate_raw_value&quot;: 10000,
+            &quot;local_sales_different_0_rate_iva&quot;: 1200,
+            &quot;total_sales_raw_value&quot;: 15000,
+            &quot;total_sales_iva&quot;: 1800,
+            &quot;purchases_different_0_rate_with_right_iva&quot;: 600,
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;total_invoices_issued&quot;: 45,
+            &quot;created_at&quot;: &quot;2024-03-01T09:00:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2024-03-01T09:00:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Invalid period format):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;period&quot;: [
+            &quot;Period must be in YYYY-MM format (e.g., 2024-03)&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Invalid period for biannual):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;period&quot;: [
+            &quot;For biannual periodicity, period must be YYYY-06 or YYYY-12&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers--taxNumber--iva-reports" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers--taxNumber--iva-reports"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers--taxNumber--iva-reports"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers--taxNumber--iva-reports" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers--taxNumber--iva-reports">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers--taxNumber--iva-reports" data-method="POST"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers--taxNumber--iva-reports"
+                    onclick="tryItOut('POSTapi-v1-taxpayers--taxNumber--iva-reports');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers--taxNumber--iva-reports"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers--taxNumber--iva-reports"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">Get a specific IVA report</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves detailed information for a specific IVA report identified by period.
+Returns all calculated fields including sales, purchases, tax credits, and final tax amount.</p>
+<p>The period parameter is automatically converted to the full date based on the taxpayer's periodicity:</p>
+<ul>
+<li>Monthly: YYYY-MM becomes YYYY-MM-15</li>
+<li>Biannual: YYYY-06 becomes YYYY-06-15 (first semester) or YYYY-12 becomes YYYY-12-15 (second semester)</li>
+</ul>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/2024-03" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/2024-03"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/2024-03';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/2024-03'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">
+            <blockquote>
+            <p>Example response (200, Success):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;saved&quot;,
+            &quot;status_label&quot;: &quot;Guardado&quot;,
+            &quot;public_link&quot;: &quot;https://app.taxo.ec/public/reports/abc123&quot;,
+            &quot;comments&quot;: null,
+            &quot;report_comments&quot;: &quot;Reporte revisado&quot;,
+            &quot;vat_declaration_pdf&quot;: null,
+            &quot;vat_payment_receipt_pdf&quot;: null,
+            &quot;local_sales_different_0_rate_raw_value&quot;: 10000,
+            &quot;local_sales_different_0_rate_iva&quot;: 1200,
+            &quot;total_sales_raw_value&quot;: 15000,
+            &quot;total_sales_iva&quot;: 1800,
+            &quot;purchases_different_0_rate_with_right_raw_value&quot;: 5000,
+            &quot;purchases_different_0_rate_with_right_iva&quot;: 600,
+            &quot;total_acquisitions_and_payments_raw_value&quot;: 6500,
+            &quot;total_acquisitions_and_payments_iva&quot;: 780,
+            &quot;purchases_tax_credit_applicable_period_iva&quot;: 780,
+            &quot;tax_caused_iva&quot;: 1800,
+            &quot;total_tax_credit_period_iva&quot;: 780,
+            &quot;subtotal_to_pay_iva&quot;: 1020,
+            &quot;total_taxes_to_pay_iva&quot;: 1020,
+            &quot;total_invoices_issued&quot;: 45,
+            &quot;total_invoices_canceled&quot;: 2,
+            &quot;documents_generated_period&quot;: 128,
+            &quot;created_at&quot;: &quot;2024-03-01T09:00:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2024-03-05T14:30:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Invalid period format):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;period&quot;: [
+            &quot;Invalid period format. Expected YYYY-MM (e.g., 2024-03)&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--iva-reports--period-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--iva-reports--period-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--iva-reports--period-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--iva-reports--period-" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/{period}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--iva-reports--period-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--iva-reports--period-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--iva-reports--period-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/{period}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
+               value="2024-03"
+               data-component="url">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate">Recalculate IVA report (Update Report)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Resets the report to DRAFT status and recalculates all values from current documents.
+This is the API equivalent of the &quot;Actualizar reporte&quot; button in the UI.</p>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>New invoices/bills were added after creating the report</li>
+<li>Documents were corrected or updated</li>
+<li>Need to refresh calculations with latest data</li>
+<li>Reset report from any state back to draft</li>
+</ul>
+<p><strong>What this endpoint does:</strong></p>
+<ol>
+<li>Validates the report exists for the period</li>
+<li>Clears uploaded PDF files (vat_declaration_pdf, vat_payment_receipt_pdf)</li>
+<li>Transitions report status to DRAFT (allowed from any state)</li>
+<li>Queries all documents for the period again</li>
+<li>Recalculates all sales, purchases, and tax totals</li>
+<li>Records the status change in history</li>
+</ol>
+<p><strong>Warning:</strong> This action will overwrite any manual edits made to the report.</p>
+
+<span id="example-requests-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/recalculate" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/recalculate"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/recalculate';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/recalculate'
+payload = {
+    "period": "2024-03"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate">
+            <blockquote>
+            <p>Example response (200, Successfully recalculated):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report recalculated successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;draft&quot;,
+            &quot;status_label&quot;: &quot;Borrador&quot;,
+            &quot;vat_declaration_pdf&quot;: null,
+            &quot;vat_payment_receipt_pdf&quot;: null,
+            &quot;total_sales_raw_value&quot;: 16500,
+            &quot;total_sales_iva&quot;: 1980,
+            &quot;total_taxes_to_pay_iva&quot;: 1350.75,
+            &quot;total_invoices_issued&quot;: 52,
+            &quot;updated_at&quot;: &quot;2024-03-10T15:45:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid transition (should not happen)):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot transition from sri_sended to draft&quot;,
+    &quot;code&quot;: &quot;INVALID_TRANSITION&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Invalid period format):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;period&quot;: [
+            &quot;Period must be in YYYY-MM format (e.g., 2024-03)&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate" data-method="POST"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/recalculate"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+                    onclick="tryItOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/recalculate</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save">Save IVA report</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Saves the report by changing its status from DRAFT/EDITED to SAVED.
+A saved report is locked from further edits and ready for approval workflow.
+Optionally adds comments to document any observations or notes.</p>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>After reviewing calculated values in draft</li>
+<li>Before sending to taxpayer for approval</li>
+<li>When report data is final and correct</li>
+</ul>
+<p><strong>Valid transitions:</strong></p>
+<ul>
+<li>DRAFT → SAVED</li>
+<li>EDITED → SAVED</li>
+</ul>
+<p><strong>After saving, you can:</strong></p>
+<ul>
+<li>Send report via email for approval (<code>/send</code>)</li>
+<li>Directly approve as accountant (<code>/approve</code>)</li>
+<li>Reject if issues found (<code>/reject</code>)</li>
+</ul>
+
+<span id="example-requests-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PATCH \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/save" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\",
+    \"comments\": \"Reporte revisado, valores correctos\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/save"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03",
+    "comments": "Reporte revisado, valores correctos"
+};
+
+fetch(url, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/save';
+$response = $client-&gt;patch(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+            'comments' =&gt; 'Reporte revisado, valores correctos',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/save'
+payload = {
+    "period": "2024-03",
+    "comments": "Reporte revisado, valores correctos"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('PATCH', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save">
+            <blockquote>
+            <p>Example response (200, Successfully saved):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report saved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;saved&quot;,
+            &quot;status_label&quot;: &quot;Guardado&quot;,
+            &quot;report_comments&quot;: &quot;Reporte revisado, valores correctos&quot;,
+            &quot;total_sales_raw_value&quot;: 15000,
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;updated_at&quot;: &quot;2024-03-05T14:30:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid status):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot transition from approved to saved&quot;,
+    &quot;code&quot;: &quot;INVALID_TRANSITION&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;comments&quot;: [
+            &quot;Comments cannot exceed 1000 characters&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save" data-method="PATCH"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/save"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-save', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+                    onclick="tryItOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-save');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+                    onclick="cancelTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-save');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/save</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>comments</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="comments"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="Reporte revisado, valores correctos"
+               data-component="body">
+    <br>
+<p>Optional comments about the report (max 1000 chars). Example: <code>Reporte revisado, valores correctos</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve">Approve IVA report</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Approves the report, changing its status to APPROVED.
+This indicates the report has been reviewed and validated by an accountant
+and is ready for submission to the SRI (Tax Authority).</p>
+<p><strong>Approval means:</strong></p>
+<ul>
+<li>All values have been verified</li>
+<li>Report is accurate and complete</li>
+<li>Ready for tax authority submission</li>
+<li>No further changes from taxpayer needed</li>
+</ul>
+<p><strong>Valid transitions:</strong></p>
+<ul>
+<li>SAVED → APPROVED (direct approval without sending)</li>
+<li>SENT → APPROVED (after taxpayer received via email)</li>
+</ul>
+<p><strong>After approval, you can:</strong></p>
+<ul>
+<li>Send to SRI draft (<code>/send-sri-draft</code>)</li>
+<li>Mark as manually declared (<code>/mark-declared</code>)</li>
+<li>Reset if needed (<code>/recalculate</code>)</li>
+</ul>
+
+<span id="example-requests-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PATCH \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/approve" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\",
+    \"comments\": \"Valores verificados, aprobado para envío al SRI\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/approve"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03",
+    "comments": "Valores verificados, aprobado para envío al SRI"
+};
+
+fetch(url, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/approve';
+$response = $client-&gt;patch(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+            'comments' =&gt; 'Valores verificados, aprobado para envío al SRI',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/approve'
+payload = {
+    "period": "2024-03",
+    "comments": "Valores verificados, aprobado para envío al SRI"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('PATCH', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve">
+            <blockquote>
+            <p>Example response (200, Successfully approved):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report approved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;approved&quot;,
+            &quot;status_label&quot;: &quot;Aprobado&quot;,
+            &quot;comments&quot;: [
+                {
+                    &quot;status&quot;: &quot;approved&quot;,
+                    &quot;comment&quot;: &quot;Valores verificados, aprobado para env&iacute;o al SRI&quot;,
+                    &quot;timestamp&quot;: &quot;2024-03-06T10:30:00Z&quot;
+                }
+            ],
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;updated_at&quot;: &quot;2024-03-06T10:30:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid status transition):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot transition from draft to approved. Report must be in &#039;saved&#039; or &#039;sent&#039; status&quot;,
+    &quot;code&quot;: &quot;INVALID_TRANSITION&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;period&quot;: [
+            &quot;Period must be in YYYY-MM format (e.g., 2024-03)&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve" data-method="PATCH"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/approve"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+                    onclick="tryItOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+                    onclick="cancelTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/approve</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>comments</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="comments"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="Valores verificados, aprobado para envío al SRI"
+               data-component="body">
+    <br>
+<p>Optional approval comments or notes (max 1000 chars). Example: <code>Valores verificados, aprobado para envío al SRI</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject">Reject IVA report</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Rejects the report, changing its status to REJECTED.
+This action requires detailed comments explaining why the report was rejected.
+Used when errors or inconsistencies are found during review.</p>
+<p><strong>Rejection means:</strong></p>
+<ul>
+<li>Report has errors or inconsistencies</li>
+<li>Corrections are needed before approval</li>
+<li>Report must be recalculated or edited</li>
+<li>Clear feedback must be provided</li>
+</ul>
+<p><strong>Valid transitions:</strong></p>
+<ul>
+<li>SAVED → REJECTED</li>
+<li>SENT → REJECTED (taxpayer or accountant found issues)</li>
+</ul>
+<p><strong>After rejection:</strong></p>
+<ul>
+<li>Report must be recalculated (<code>/recalculate</code>)</li>
+<li>Then saved, reviewed, and re-approved</li>
+</ul>
+<p><strong>Important:</strong> Comments are REQUIRED (minimum 10 characters) to document the rejection reason.</p>
+
+<span id="example-requests-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PATCH \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/reject" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\",
+    \"comments\": \"Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/reject"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03",
+    "comments": "Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456"
+};
+
+fetch(url, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/reject';
+$response = $client-&gt;patch(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+            'comments' =&gt; 'Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/reject'
+payload = {
+    "period": "2024-03",
+    "comments": "Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('PATCH', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject">
+            <blockquote>
+            <p>Example response (200, Successfully rejected):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report rejected successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;rejected&quot;,
+            &quot;status_label&quot;: &quot;Rechazado&quot;,
+            &quot;comments&quot;: [
+                {
+                    &quot;status&quot;: &quot;rejected&quot;,
+                    &quot;comment&quot;: &quot;Hay errores en las facturas de compras del d&iacute;a 15. Falta incluir factura #001-001-000123456&quot;,
+                    &quot;timestamp&quot;: &quot;2024-03-06T11:00:00Z&quot;
+                }
+            ],
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;updated_at&quot;: &quot;2024-03-06T11:00:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid status transition):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot transition from approved to rejected. Report must be in &#039;saved&#039; or &#039;sent&#039; status&quot;,
+    &quot;code&quot;: &quot;INVALID_TRANSITION&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Missing comments):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;comments&quot;: [
+            &quot;Comments are required when rejecting a report&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Comments too short):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;comments&quot;: [
+            &quot;Comments must be at least 10 characters&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject" data-method="PATCH"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/reject"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+                    onclick="tryItOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+                    onclick="cancelTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/reject</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>comments</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="comments"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456"
+               data-component="body">
+    <br>
+<p>Detailed reason for rejection (10-1000 chars). Example: <code>Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared">Mark report as declared</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Marks the report as DECLARED in your database.
+This is a LOCAL action that does NOT interact with SRI services.</p>
+<p><strong>When to use this endpoint:</strong></p>
+<ul>
+<li>You declared the report manually on the SRI website</li>
+<li>You declared through another system or platform</li>
+<li>You want to skip automatic SRI submission</li>
+<li>You completed the declaration offline</li>
+</ul>
+<p><strong>What this does:</strong></p>
+<ul>
+<li>Changes report status to DECLARED</li>
+<li>Records the status change in history</li>
+<li>Marks the period as completed for this taxpayer</li>
+<li>Does NOT send anything to external services</li>
+</ul>
+<p><strong>Valid transitions:</strong></p>
+<ul>
+<li>APPROVED → DECLARED (skip SRI auto-submission)</li>
+<li>SRI_SENDED_COMPLETED → DECLARED (after SRI processing)</li>
+</ul>
+<p><strong>After marking as declared:</strong></p>
+<ul>
+<li>Report can still be recalculated if needed</li>
+<li>PDFs can be uploaded (<code>/upload-pdfs</code> - not yet implemented)</li>
+<li>Status can transition to SRI_DECLARED_CONFIRMED</li>
+</ul>
+
+<span id="example-requests-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request PATCH \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/mark-declared" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/mark-declared"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03"
+};
+
+fetch(url, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/mark-declared';
+$response = $client-&gt;patch(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/mark-declared'
+payload = {
+    "period": "2024-03"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('PATCH', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared">
+            <blockquote>
+            <p>Example response (200, Successfully marked):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report marked as declared successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;declared&quot;,
+            &quot;status_label&quot;: &quot;Declarado&quot;,
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;updated_at&quot;: &quot;2024-03-20T09:15:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid status transition):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot transition from draft to declared. Report must be in &#039;approved&#039; or &#039;sri_sended_completed&#039; status&quot;,
+    &quot;code&quot;: &quot;INVALID_TRANSITION&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;period&quot;: [
+            &quot;Period must be in YYYY-MM format (e.g., 2024-03)&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared" data-method="PATCH"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/mark-declared"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+                    onclick="tryItOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+                    onclick="cancelTryOut('PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-purple">PATCH</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/mark-declared</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-send">Send IVA report via email</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Sends the IVA report via email to the taxpayer or specified recipients for review and approval.
+This is an EXTERNAL COMMUNICATION action that actually sends emails through SMTP.</p>
+<p><strong>What this endpoint does:</strong></p>
+<ol>
+<li>Validates the report is in SAVED or SENT status</li>
+<li>Generates a PDF of the report (if not cached)</li>
+<li>Sends email with PDF attachment to specified addresses</li>
+<li>Records each recipient in share logs for audit</li>
+<li>Changes report status to SENT (if not already)</li>
+<li>Registers status change in history</li>
+</ol>
+<p><strong>Email recipients:</strong></p>
+<ul>
+<li>If <code>emails</code> parameter provided: sends to those addresses</li>
+<li>If <code>emails</code> is empty: uses taxpayer's registered email</li>
+<li>Maximum 10 email addresses per request</li>
+</ul>
+<p><strong>Valid transitions:</strong></p>
+<ul>
+<li>SAVED → SENT (first send)</li>
+<li>SENT → SENT (resend to same or different recipients)</li>
+</ul>
+<p><strong>Email content includes:</strong></p>
+<ul>
+<li>PDF report attachment</li>
+<li>Optional comments/message</li>
+<li>Link to view report online</li>
+<li>Instructions for approval/rejection</li>
+</ul>
+<p><strong>Note:</strong> This operation may take 5-10 seconds depending on SMTP server response.</p>
+
+<span id="example-requests-POSTapi-v1-taxpayers--taxNumber--iva-reports-send">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\",
+    \"emails\": [
+        \"cliente@example.com\",
+        \"contabilidad@empresa.com\"
+    ],
+    \"comments\": \"Por favor revisar los totales de ventas y confirmar\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03",
+    "emails": [
+        "cliente@example.com",
+        "contabilidad@empresa.com"
+    ],
+    "comments": "Por favor revisar los totales de ventas y confirmar"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+            'emails' =&gt; [
+                'cliente@example.com',
+                'contabilidad@empresa.com',
+            ],
+            'comments' =&gt; 'Por favor revisar los totales de ventas y confirmar',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send'
+payload = {
+    "period": "2024-03",
+    "emails": [
+        "cliente@example.com",
+        "contabilidad@empresa.com"
+    ],
+    "comments": "Por favor revisar los totales de ventas y confirmar"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers--taxNumber--iva-reports-send">
+            <blockquote>
+            <p>Example response (200, Successfully sent):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report sent successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;sent&quot;,
+            &quot;status_label&quot;: &quot;Enviado para revisi&oacute;n&quot;,
+            &quot;report_comments&quot;: &quot;Por favor revisar los totales de ventas y confirmar&quot;,
+            &quot;public_link&quot;: &quot;https://app.taxo.ec/public/reports/abc123def&quot;,
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;updated_at&quot;: &quot;2024-03-06T12:00:00.000000Z&quot;
+        },
+        &quot;recipients&quot;: [
+            &quot;cliente@example.com&quot;,
+            &quot;contabilidad@empresa.com&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid status):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot send report from status draft. Report must be in &#039;saved&#039; or &#039;sent&#039; status&quot;,
+    &quot;code&quot;: &quot;INVALID_STATUS&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, No recipients):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;emails&quot;: [
+            &quot;No email addresses provided and taxpayer has no registered email&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Too many emails):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;emails&quot;: [
+            &quot;Cannot send to more than 10 email addresses&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (503, SMTP error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Failed to send email: Connection to SMTP server failed&quot;,
+    &quot;code&quot;: &quot;EMAIL_SEND_FAILED&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers--taxNumber--iva-reports-send" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers--taxNumber--iva-reports-send"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers--taxNumber--iva-reports-send" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers--taxNumber--iva-reports-send">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers--taxNumber--iva-reports-send" data-method="POST"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/send"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-send', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+                    onclick="tryItOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-send');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-send');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/send</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>emails</code></b>&nbsp;&nbsp;
+<small>string[]</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="emails[0]"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               data-component="body">
+        <input type="text" style="display: none"
+               name="emails[1]"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               data-component="body">
+    <br>
+<p>Optional array of email addresses (max 10).</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>comments</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="comments"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="Por favor revisar los totales de ventas y confirmar"
+               data-component="body">
+    <br>
+<p>Optional message/comments to include in email (max 1000 chars). Example: <code>Por favor revisar los totales de ventas y confirmar</code></p>
+        </div>
+        </form>
+
+                    <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft">Send report to SRI draft</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Sends the report to the SRI (Ecuadorian Tax Authority) draft/borrador system.
+This creates a DRAFT in the SRI system for validation, NOT a final declaration.
+This is an EXTERNAL COMMUNICATION action that calls SRI web services.</p>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li>This creates a DRAFT (borrador) in SRI, not a final declaration</li>
+<li>After draft creation, you must finalize it on SRI website</li>
+<li>The process is asynchronous (uses webhooks or timeout)</li>
+<li>May take several minutes to complete</li>
+</ul>
+<p><strong>The complete workflow:</strong></p>
+<ol>
+<li>Validates report is APPROVED or ERROR (for retry)</li>
+<li>Creates JSON representation of report (Form 104)</li>
+<li>Calls SRI API to create draft</li>
+<li>Changes status to SRI_SENDED (processing)</li>
+<li>Queues timeout job (15 minutes safety net)</li>
+<li>Awaits SRI webhook response:
+<ul>
+<li>Success → SRI_SENDED_COMPLETED</li>
+<li>Failure → ERROR</li>
+</ul></li>
+<li>Timeout if no webhook received</li>
+</ol>
+<p><strong>Valid transitions:</strong></p>
+<ul>
+<li>APPROVED → SRI_SENDED (first submission)</li>
+<li>ERROR → SRI_SENDED (retry after error)</li>
+</ul>
+<p><strong>After successful SRI draft:</strong></p>
+<ul>
+<li>Wait for webhook (usually 2-5 minutes)</li>
+<li>Check report status via GET endpoint</li>
+<li>When SRI_SENDED_COMPLETED, mark as declared</li>
+</ul>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>Taxpayer must have valid digital signature configured</li>
+<li>All report values must be valid</li>
+<li>SRI services must be operational</li>
+</ul>
+<p><strong>Note:</strong> This operation typically takes 5-10 seconds for the API call,
+plus 2-5 minutes for SRI processing (webhook notification).</p>
+
+<span id="example-requests-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send-sri-draft" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"period\": \"2024-03\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send-sri-draft"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+let body = {
+    "period": "2024-03"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send-sri-draft';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'json' =&gt; [
+            'period' =&gt; '2024-03',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send-sri-draft'
+payload = {
+    "period": "2024-03"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft">
+            <blockquote>
+            <p>Example response (200, Successfully sent to SRI):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Report sent to SRI draft successfully&quot;,
+    &quot;data&quot;: {
+        &quot;report&quot;: {
+            &quot;id&quot;: &quot;01HZXXX123ABC456&quot;,
+            &quot;tax_payer_id&quot;: 123,
+            &quot;period&quot;: &quot;2024-03-15&quot;,
+            &quot;periodicity&quot;: &quot;monthly&quot;,
+            &quot;status&quot;: &quot;sri_sended&quot;,
+            &quot;status_label&quot;: &quot;Borrador SRI en progreso&quot;,
+            &quot;total_taxes_to_pay_iva&quot;: 1200,
+            &quot;updated_at&quot;: &quot;2024-03-07T10:00:00.000000Z&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (400, Invalid status):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot send to SRI from status saved. Report must be in &#039;approved&#039; or &#039;error&#039; status&quot;,
+    &quot;code&quot;: &quot;INVALID_STATUS&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Report not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Report not found for period 2024-03&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, JSON creation failed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Failed to create report JSON: Missing required field&quot;,
+    &quot;code&quot;: &quot;JSON_CREATION_FAILED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (503, SRI unavailable):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;SRI service is unavailable or timeout&quot;,
+    &quot;code&quot;: &quot;SRI_UNAVAILABLE&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (503, SRI error response):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;SRI service returned an error&quot;,
+    &quot;code&quot;: &quot;SRI_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;sri_response&quot;: {
+            &quot;status&quot;: &quot;error&quot;,
+            &quot;message&quot;: &quot;Invalid signature&quot;
+        }
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft" data-method="POST"
+      data-path="api/v1/taxpayers/{taxNumber}/iva-reports/send-sri-draft"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+                    onclick="tryItOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/iva-reports/send-sri-draft</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>period</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="period"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="2024-03"
+               data-component="body">
+    <br>
+<p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
+        </div>
+        </form>
 
             
 
