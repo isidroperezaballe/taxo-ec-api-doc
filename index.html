@@ -8,8 +8,8 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/theme-default.style.css" media="screen">
-    <link rel="stylesheet" href="css/theme-default.print.css" media="print">
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
@@ -32,9 +32,9 @@
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="js/tryitout-5.6.0.js"></script>
+    <script src="../docs/js/tryitout-5.6.0.js"></script>
 
-    <script src="js/theme-default-5.6.0.js"></script>
+    <script src="../docs/js/theme-default-5.6.0.js"></script>
 
 </head>
 
@@ -43,7 +43,7 @@
 <a href="#" id="nav-button">
     <span>
         MENU
-        <img src="images/navbar.png" alt="navbar-image"/>
+        <img src="../docs/images/navbar.png" alt="navbar-image"/>
     </span>
 </a>
 <div class="tocify-wrapper">
@@ -135,7 +135,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: December 15, 2025</li>
+        <li>Last updated: December 24, 2025</li>
     </ul>
 </div>
 
@@ -1166,7 +1166,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=sales&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=non_deductible_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1187,7 +1187,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "purchases",
-    "filter[category_type]": "sales",
+    "filter[category_type]": "non_deductible_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1227,7 +1227,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'purchases',
-            'filter[category_type]' =&gt; 'sales',
+            'filter[category_type]' =&gt; 'non_deductible_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1250,7 +1250,7 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'purchases',
-  'filter[category_type]': 'sales',
+  'filter[category_type]': 'non_deductible_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1573,10 +1573,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="sales"
+               value="non_deductible_expenses"
                data-component="query">
     <br>
-<p>Example: <code>sales</code></p>
+<p>Example: <code>non_deductible_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1630,8 +1630,20 @@ Each report goes through a workflow from draft to declared status.</p>
 <small class="badge badge-darkred">requires authentication</small>
 </p>
 
-<p>Retrieves a paginated list of IVA reports for a specific taxpayer.
-You can filter by status, year, periodicity and sort the results.</p>
+<p>Retrieves a paginated list of IVA reports for a specific taxpayer.</p>
+<p><strong>IMPORTANT:</strong> This is a GET request. All parameters must be sent as query string parameters in the URL.
+Do NOT send a request body.</p>
+<p><strong>Example URL:</strong></p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/iva-reports?page=1&amp;per_page=20&amp;status=saved&amp;sort=-period</code></pre>
+<p><strong>Available filters (all optional, sent as query params in URL):</strong></p>
+<ul>
+<li><code>page</code>: Page number for pagination (default: 1)</li>
+<li><code>per_page</code>: Items per page, 1-100 (default: 20)</li>
+<li><code>status</code>: Filter by report status</li>
+<li><code>periodicity</code>: Filter by periodicity (monthly, biannual)</li>
+<li><code>year</code>: Filter by year</li>
+<li><code>sort</code>: Sort field. Prefix with <code>-</code> for descending (e.g., <code>-period</code>, <code>status</code>)</li>
+</ul>
 <p><strong>Available statuses:</strong></p>
 <ul>
 <li><code>draft</code>: Initial state, being edited</li>
@@ -1652,37 +1664,17 @@ You can filter by status, year, periodicity and sort the results.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports?page=1&amp;per_page=20&amp;status=saved&amp;periodicity=monthly&amp;year=2024&amp;sort=-period" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
-    --data "{
-    \"page\": 73,
-    \"per_page\": 13,
-    \"status\": \"draft\",
-    \"periodicity\": \"monthly\",
-    \"year\": 16,
-    \"sort\": \"-status\"
-}"
-</code></pre></div>
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports"
 );
-
-const params = {
-    "page": "1",
-    "per_page": "20",
-    "status": "saved",
-    "periodicity": "monthly",
-    "year": "2024",
-    "sort": "-period",
-};
-Object.keys(params)
-    .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
@@ -1691,19 +1683,9 @@ const headers = {
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
-let body = {
-    "page": 73,
-    "per_page": 13,
-    "status": "draft",
-    "periodicity": "monthly",
-    "year": 16,
-    "sort": "-status"
-};
-
 fetch(url, {
     method: "GET",
     headers,
-    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -1719,22 +1701,6 @@ $response = $client-&gt;get(
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
-        'query' =&gt; [
-            'page' =&gt; '1',
-            'per_page' =&gt; '20',
-            'status' =&gt; 'saved',
-            'periodicity' =&gt; 'monthly',
-            'year' =&gt; '2024',
-            'sort' =&gt; '-period',
-        ],
-        'json' =&gt; [
-            'page' =&gt; 73,
-            'per_page' =&gt; 13,
-            'status' =&gt; 'draft',
-            'periodicity' =&gt; 'monthly',
-            'year' =&gt; 16,
-            'sort' =&gt; '-status',
-        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -1746,22 +1712,6 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
-payload = {
-    "page": 73,
-    "per_page": 13,
-    "status": "draft",
-    "periodicity": "monthly",
-    "year": 16,
-    "sort": "-status"
-}
-params = {
-  'page': '1',
-  'per_page': '20',
-  'status': 'saved',
-  'periodicity': 'monthly',
-  'year': '2024',
-  'sort': '-period',
-}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
   'Content-Type': 'application/json',
@@ -1769,7 +1719,7 @@ headers = {
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
 
-response = requests.request('GET', url, headers=headers, json=payload, params=params)
+response = requests.request('GET', url, headers=headers)
 response.json()</code></pre></div>
 
 </span>
@@ -1978,10 +1928,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="1"
+               value=""
                data-component="query">
     <br>
-<p>Page number for pagination. Example: <code>1</code></p>
+<p>Page number for pagination.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -1990,10 +1940,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="20"
+               value=""
                data-component="query">
     <br>
-<p>Items per page (1-100). Example: <code>20</code></p>
+<p>Items per page (1-100).</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
@@ -2002,10 +1952,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="saved"
+               value=""
                data-component="query">
     <br>
-<p>Filter by report status. Example: <code>saved</code></p>
+<p>Filter by report status.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>periodicity</code></b>&nbsp;&nbsp;
@@ -2014,10 +1964,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="periodicity"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="monthly"
+               value=""
                data-component="query">
     <br>
-<p>Filter by periodicity (monthly, biannual). Example: <code>monthly</code></p>
+<p>Filter by periodicity (monthly, biannual).</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>year</code></b>&nbsp;&nbsp;
@@ -2026,10 +1976,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="year"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="2024"
+               value=""
                data-component="query">
     <br>
-<p>Filter by year. Example: <code>2024</code></p>
+<p>Filter by year.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
@@ -2038,91 +1988,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="-period"
+               value=""
                data-component="query">
     <br>
-<p>Sort field. Prefix with - for descending. Example: <code>-period</code></p>
+<p>Sort field. Prefix with - for descending.</p>
             </div>
-                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="73"
-               data-component="body">
-    <br>
-<p>El campo value debe ser al menos 1. Example: <code>73</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="13"
-               data-component="body">
-    <br>
-<p>El campo value debe ser al menos 1. El campo value no debe ser mayor que 100. Example: <code>13</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="draft"
-               data-component="body">
-    <br>
-<p>Example: <code>draft</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>draft</code></li> <li><code>edited</code></li> <li><code>saved</code></li> <li><code>sent</code></li> <li><code>approved</code></li> <li><code>rejected</code></li> <li><code>declared</code></li> <li><code>sri_declared_confirmed</code></li> <li><code>sri_sended</code></li> <li><code>sri_sended_completed</code></li> <li><code>error</code></li></ul>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>periodicity</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="periodicity"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="monthly"
-               data-component="body">
-    <br>
-<p>Example: <code>monthly</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>monthly</code></li> <li><code>biannual</code></li></ul>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>year</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="year"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="16"
-               data-component="body">
-    <br>
-<p>El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026. Example: <code>16</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="-status"
-               data-component="body">
-    <br>
-<p>Example: <code>-status</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>period</code></li> <li><code>-period</code></li> <li><code>status</code></li> <li><code>-status</code></li> <li><code>created_at</code></li> <li><code>-created_at</code></li></ul>
-        </div>
-        </form>
+                </form>
 
                     <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports">Create a new IVA report</h2>
 
@@ -2464,10 +2335,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <p>Retrieves detailed information for a specific IVA report identified by period.
 Returns all calculated fields including sales, purchases, tax credits, and final tax amount.</p>
-<p>The period parameter is automatically converted to the full date based on the taxpayer's periodicity:</p>
+<p><strong>IMPORTANT:</strong> This is a GET request. Do NOT send a request body.</p>
+<p><strong>Example URL:</strong></p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/iva-reports/2024-03</code></pre>
+<p><strong>Period Format:</strong>
+The period parameter uses YYYY-MM format and is automatically converted to the full date
+based on the taxpayer's periodicity:</p>
 <ul>
-<li>Monthly: YYYY-MM becomes YYYY-MM-15</li>
-<li>Biannual: YYYY-06 becomes YYYY-06-15 (first semester) or YYYY-12 becomes YYYY-12-15 (second semester)</li>
+<li><strong>Monthly</strong>: <code>2024-03</code> becomes <code>2024-03-15</code></li>
+<li><strong>Biannual</strong>: <code>2024-06</code> becomes <code>2024-06-15</code> (first semester) or <code>2024-12</code> becomes <code>2024-12-15</code> (second semester)</li>
 </ul>
 
 <span id="example-requests-GETapi-v1-taxpayers--taxNumber--iva-reports--period-">

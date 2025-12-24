@@ -992,12 +992,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: sales
+          example: non_deductible_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: sales
+            example: non_deductible_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -1266,68 +1266,68 @@ paths:
     get:
       summary: 'List IVA reports for a taxpayer'
       operationId: listIVAReportsForATaxpayer
-      description: "Retrieves a paginated list of IVA reports for a specific taxpayer.\nYou can filter by status, year, periodicity and sort the results.\n\n**Available statuses:**\n- `draft`: Initial state, being edited\n- `edited`: Has manual edits\n- `saved`: Ready for review\n- `sent`: Sent to taxpayer for approval\n- `approved`: Approved and ready for SRI submission\n- `rejected`: Rejected, needs corrections\n- `sri_sended`: Sent to SRI (in progress)\n- `sri_sended_completed`: SRI processing completed\n- `declared`: Marked as declared\n- `error`: Error during SRI submission"
+      description: "Retrieves a paginated list of IVA reports for a specific taxpayer.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URL:**\n```\nGET /api/v1/taxpayers/1726051285001/iva-reports?page=1&per_page=20&status=saved&sort=-period\n```\n\n**Available filters (all optional, sent as query params in URL):**\n- `page`: Page number for pagination (default: 1)\n- `per_page`: Items per page, 1-100 (default: 20)\n- `status`: Filter by report status\n- `periodicity`: Filter by periodicity (monthly, biannual)\n- `year`: Filter by year\n- `sort`: Sort field. Prefix with `-` for descending (e.g., `-period`, `status`)\n\n**Available statuses:**\n- `draft`: Initial state, being edited\n- `edited`: Has manual edits\n- `saved`: Ready for review\n- `sent`: Sent to taxpayer for approval\n- `approved`: Approved and ready for SRI submission\n- `rejected`: Rejected, needs corrections\n- `sri_sended`: Sent to SRI (in progress)\n- `sri_sended_completed`: SRI processing completed\n- `declared`: Marked as declared\n- `error`: Error during SRI submission"
       parameters:
         -
           in: query
           name: page
           description: 'Page number for pagination.'
-          example: 1
+          example: null
           required: false
           schema:
             type: integer
             description: 'Page number for pagination.'
-            example: 1
+            example: null
         -
           in: query
           name: per_page
           description: 'Items per page (1-100).'
-          example: 20
+          example: null
           required: false
           schema:
             type: integer
             description: 'Items per page (1-100).'
-            example: 20
+            example: null
         -
           in: query
           name: status
           description: 'Filter by report status.'
-          example: saved
+          example: null
           required: false
           schema:
             type: string
             description: 'Filter by report status.'
-            example: saved
+            example: null
         -
           in: query
           name: periodicity
           description: 'Filter by periodicity (monthly, biannual).'
-          example: monthly
+          example: null
           required: false
           schema:
             type: string
             description: 'Filter by periodicity (monthly, biannual).'
-            example: monthly
+            example: null
         -
           in: query
           name: year
           description: 'Filter by year.'
-          example: 2024
+          example: null
           required: false
           schema:
             type: integer
             description: 'Filter by year.'
-            example: 2024
+            example: null
         -
           in: query
           name: sort
           description: 'Sort field. Prefix with - for descending.'
-          example: '-period'
+          example: null
           required: false
           schema:
             type: string
             description: 'Sort field. Prefix with - for descending.'
-            example: '-period'
+            example: null
         -
           in: header
           name: x-api-key
@@ -1550,59 +1550,6 @@ paths:
                           type: string
       tags:
         - 'IVA Reports'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: integer
-                  description: 'El campo value debe ser al menos 1.'
-                  example: 73
-                per_page:
-                  type: integer
-                  description: 'El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
-                  example: 13
-                status:
-                  type: string
-                  description: ''
-                  example: draft
-                  enum:
-                    - draft
-                    - edited
-                    - saved
-                    - sent
-                    - approved
-                    - rejected
-                    - declared
-                    - sri_declared_confirmed
-                    - sri_sended
-                    - sri_sended_completed
-                    - error
-                periodicity:
-                  type: string
-                  description: ''
-                  example: monthly
-                  enum:
-                    - monthly
-                    - biannual
-                year:
-                  type: integer
-                  description: 'El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026.'
-                  example: 16
-                sort:
-                  type: string
-                  description: ''
-                  example: '-status'
-                  enum:
-                    - period
-                    - '-period'
-                    - status
-                    - '-status'
-                    - created_at
-                    - '-created_at'
     post:
       summary: 'Create a new IVA report'
       operationId: createANewIVAReport
@@ -1879,7 +1826,7 @@ paths:
     get:
       summary: 'Get a specific IVA report'
       operationId: getASpecificIVAReport
-      description: "Retrieves detailed information for a specific IVA report identified by period.\nReturns all calculated fields including sales, purchases, tax credits, and final tax amount.\n\nThe period parameter is automatically converted to the full date based on the taxpayer's periodicity:\n- Monthly: YYYY-MM becomes YYYY-MM-15\n- Biannual: YYYY-06 becomes YYYY-06-15 (first semester) or YYYY-12 becomes YYYY-12-15 (second semester)"
+      description: "Retrieves detailed information for a specific IVA report identified by period.\nReturns all calculated fields including sales, purchases, tax credits, and final tax amount.\n\n**IMPORTANT:** This is a GET request. Do NOT send a request body.\n\n**Example URL:**\n```\nGET /api/v1/taxpayers/1726051285001/iva-reports/2024-03\n```\n\n**Period Format:**\nThe period parameter uses YYYY-MM format and is automatically converted to the full date\nbased on the taxpayer's periodicity:\n- **Monthly**: `2024-03` becomes `2024-03-15`\n- **Biannual**: `2024-06` becomes `2024-06-15` (first semester) or `2024-12` becomes `2024-12-15` (second semester)"
       parameters:
         -
           in: header
