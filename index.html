@@ -1621,8 +1621,197 @@ Must be one of:
                 <h1 id="iva-reports">IVA Reports</h1>
 
     <p>API endpoints for managing IVA (Value Added Tax) reports.</p>
-<p>These endpoints allow you to create, manage, and submit IVA tax reports for your taxpayers.
-Each report goes through a workflow from draft to declared status.</p>
+<h2>Report Lifecycle &amp; State Machine</h2>
+<p>Each IVA report follows a state machine with controlled transitions. Understanding the states and allowed transitions is critical for proper API usage.</p>
+<h3>Report States</h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Code</th>
+<th>Description</th>
+<th>Can Edit?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Draft</td>
+<td><code>draft</code></td>
+<td>Initial state, automatically created</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td>Edited</td>
+<td><code>edited</code></td>
+<td>Has manual modifications</td>
+<td>✅ Yes</td>
+</tr>
+<tr>
+<td>Saved</td>
+<td><code>saved</code></td>
+<td>Ready for review/approval</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>Sent</td>
+<td><code>sent</code></td>
+<td>Sent to taxpayer for approval</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>Approved</td>
+<td><code>approved</code></td>
+<td>Approved, ready for SRI submission</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>Rejected</td>
+<td><code>rejected</code></td>
+<td>Rejected, requires corrections</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>SRI Sended</td>
+<td><code>sri_sended</code></td>
+<td>Being sent to SRI</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>SRI Completed</td>
+<td><code>sri_sended_completed</code></td>
+<td>SRI processing completed</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>Declared</td>
+<td><code>declared</code></td>
+<td>Successfully declared in SRI</td>
+<td>❌ No</td>
+</tr>
+<tr>
+<td>Error</td>
+<td><code>error</code></td>
+<td>Error during SRI submission</td>
+<td>❌ No</td>
+</tr>
+</tbody>
+</table>
+<h3>State Transitions Matrix</h3>
+<table>
+<thead>
+<tr>
+<th>From State</th>
+<th>Allowed Transitions</th>
+<th>Endpoints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>draft</code></td>
+<td>→ <code>edited</code>, <code>saved</code></td>
+<td><code>/save</code></td>
+</tr>
+<tr>
+<td><code>edited</code></td>
+<td>→ <code>draft</code>, <code>saved</code></td>
+<td><code>/recalculate</code>, <code>/save</code></td>
+</tr>
+<tr>
+<td><code>saved</code></td>
+<td>→ <code>draft</code>, <code>sent</code>, <code>approved</code>, <code>rejected</code>, <code>sri_sended</code></td>
+<td><code>/recalculate</code>, <code>/send</code>, <code>/approve</code>, <code>/reject</code>, <code>/send-sri-draft</code></td>
+</tr>
+<tr>
+<td><code>sent</code></td>
+<td>→ <code>draft</code>, <code>approved</code>, <code>rejected</code></td>
+<td><code>/recalculate</code>, <code>/approve</code>, <code>/reject</code></td>
+</tr>
+<tr>
+<td><code>approved</code></td>
+<td>→ <code>draft</code>, <code>sri_sended</code>, <code>declared</code></td>
+<td><code>/recalculate</code>, <code>/send-sri-draft</code>, <code>/mark-declared</code></td>
+</tr>
+<tr>
+<td><code>rejected</code></td>
+<td>→ <code>draft</code></td>
+<td><code>/recalculate</code></td>
+</tr>
+<tr>
+<td><code>sri_sended</code></td>
+<td>→ <code>sri_sended_completed</code>, <code>error</code></td>
+<td>(automatic)</td>
+</tr>
+<tr>
+<td><code>sri_sended_completed</code></td>
+<td>→ <code>draft</code>, <code>approved</code>, <code>rejected</code>, <code>declared</code></td>
+<td><code>/recalculate</code>, <code>/approve</code>, <code>/reject</code>, <code>/mark-declared</code></td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>→ <code>draft</code>, <code>sri_sended</code></td>
+<td><code>/recalculate</code>, <code>/send-sri-draft</code></td>
+</tr>
+<tr>
+<td><code>declared</code></td>
+<td>→ <code>draft</code></td>
+<td><code>/recalculate</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Common Workflows</h3>
+<h4>Workflow 1: Direct Approval (no taxpayer review)</h4>
+<pre><code>1. POST   /iva-reports                    → Creates report (draft)
+2. GET    /iva-reports/{period}           → Review calculated values
+3. PATCH  /iva-reports/save               → Lock for review (saved)
+4. PATCH  /iva-reports/approve            → Approve report (approved)
+5. POST   /iva-reports/send-sri-draft     → Submit to SRI (sri_sended → sri_sended_completed)
+6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)</code></pre>
+<h4>Workflow 2: With Taxpayer Approval</h4>
+<pre><code>1. POST   /iva-reports                    → Creates report (draft)
+2. PATCH  /iva-reports/save               → Lock for review (saved)
+3. POST   /iva-reports/send               → Email to taxpayer (sent)
+4. [Taxpayer reviews and approves via link]
+5. POST   /iva-reports/send-sri-draft     → Submit to SRI (approved → sri_sended)
+6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)</code></pre>
+<h4>Workflow 3: SRI Draft First, Then Approval</h4>
+<pre><code>1. POST   /iva-reports                    → Creates report (draft)
+2. PATCH  /iva-reports/save               → Lock for review (saved)
+3. POST   /iva-reports/send-sri-draft     → Submit draft to SRI (sri_sended → sri_sended_completed)
+4. POST   /iva-reports/send               → Email to taxpayer (sent)
+5. [Taxpayer approves via link]
+6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)</code></pre>
+<h4>Workflow 4: Rejection &amp; Correction</h4>
+<pre><code>1. POST   /iva-reports                    → Creates report (draft)
+2. PATCH  /iva-reports/save               → Lock for review (saved)
+3. POST   /iva-reports/send               → Email to taxpayer (sent)
+4. PATCH  /iva-reports/reject             → Reject with comments (rejected)
+5. POST   /iva-reports/recalculate        → Reset to draft (draft)
+6. [Add missing documents, correct errors]
+7. PATCH  /iva-reports/save               → Save again (saved)
+8. PATCH  /iva-reports/approve            → Approve (approved)</code></pre>
+<h3>Endpoints That Don't Require Transitions</h3>
+<p>These endpoints can be called at any time regardless of state:</p>
+<ul>
+<li><strong><code>GET /iva-reports</code></strong> - List all reports</li>
+<li><strong><code>GET /iva-reports/{period}</code></strong> - View specific report details</li>
+<li><strong><code>POST /iva-reports</code></strong> - Create new report (always starts in <code>draft</code>)</li>
+<li><strong><code>POST /iva-reports/recalculate</code></strong> - Reset report to <code>draft</code> (allowed from most states)</li>
+</ul>
+<h3>Important Notes</h3>
+<ol>
+<li><strong>Report Identification</strong>: Reports are uniquely identified by <code>taxpayer_id</code>, <code>period</code>, and <code>team_id</code></li>
+<li><strong>Period Format</strong>: Use <code>YYYY-MM</code> format (e.g., <code>2024-03</code>). The system auto-calculates the exact date based on taxpayer's periodicity</li>
+<li><strong>Automatic Calculations</strong>: Reports are automatically calculated from issued/received documents when created</li>
+<li><strong>State Validation</strong>: All state-changing endpoints validate transitions. Invalid transitions return <code>400 INVALID_TRANSITION</code></li>
+<li><strong>Idempotency</strong>: Some endpoints are idempotent (e.g., <code>/save</code> from <code>saved</code> state, <code>/send</code> from <code>sent</code> state)</li>
+</ol>
+<h3>Error Handling</h3>
+<ul>
+<li><strong><code>400 INVALID_TRANSITION</code></strong>: Attempted invalid state transition</li>
+<li><strong><code>404 NOT_FOUND</code></strong>: Report or taxpayer not found</li>
+<li><strong><code>422 VALIDATION_ERROR</code></strong>: Invalid input parameters</li>
+<li><strong><code>503 EMAIL_SEND_FAILED</code></strong>: Email service unavailable (only <code>/send</code> endpoint)</li>
+</ul>
 
                                 <h2 id="iva-reports-GETapi-v1-taxpayers--taxNumber--iva-reports">List IVA reports for a taxpayer</h2>
 
@@ -1672,10 +1861,10 @@ Do NOT send a request body.</p>
     --data "{
     \"page\": 73,
     \"per_page\": 13,
-    \"status\": \"draft\",
+    \"status\": \"error\",
     \"periodicity\": \"biannual\",
     \"year\": 16,
-    \"sort\": \"status\"
+    \"sort\": \"created_at\"
 }"
 </code></pre></div>
 
@@ -1695,10 +1884,10 @@ const headers = {
 let body = {
     "page": 73,
     "per_page": 13,
-    "status": "draft",
+    "status": "error",
     "periodicity": "biannual",
     "year": 16,
-    "sort": "status"
+    "sort": "created_at"
 };
 
 fetch(url, {
@@ -1723,10 +1912,10 @@ $response = $client-&gt;get(
         'json' =&gt; [
             'page' =&gt; 73,
             'per_page' =&gt; 13,
-            'status' =&gt; 'draft',
+            'status' =&gt; 'error',
             'periodicity' =&gt; 'biannual',
             'year' =&gt; 16,
-            'sort' =&gt; 'status',
+            'sort' =&gt; 'created_at',
         ],
     ]
 );
@@ -1742,10 +1931,10 @@ url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
 payload = {
     "page": 73,
     "per_page": 13,
-    "status": "draft",
+    "status": "error",
     "periodicity": "biannual",
     "year": 16,
-    "sort": "status"
+    "sort": "created_at"
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
@@ -2060,10 +2249,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="draft"
+               value="error"
                data-component="body">
     <br>
-<p>Example: <code>draft</code></p>
+<p>Example: <code>error</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>draft</code></li> <li><code>edited</code></li> <li><code>saved</code></li> <li><code>sent</code></li> <li><code>approved</code></li> <li><code>rejected</code></li> <li><code>declared</code></li> <li><code>sri_declared_confirmed</code></li> <li><code>sri_sended</code></li> <li><code>sri_sended_completed</code></li> <li><code>error</code></li></ul>
         </div>
@@ -2100,10 +2289,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="status"
+               value="created_at"
                data-component="body">
     <br>
-<p>Example: <code>status</code></p>
+<p>Example: <code>created_at</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>period</code></li> <li><code>-period</code></li> <li><code>status</code></li> <li><code>-status</code></li> <li><code>created_at</code></li> <li><code>-created_at</code></li></ul>
         </div>
