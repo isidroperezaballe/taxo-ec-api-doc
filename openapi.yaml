@@ -992,12 +992,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: non_deductible_expenses
+          example: commercial_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: non_deductible_expenses
+            example: commercial_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -1550,6 +1550,59 @@ paths:
                           type: string
       tags:
         - 'IVA Reports'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  description: 'El campo value debe ser al menos 1.'
+                  example: 73
+                per_page:
+                  type: integer
+                  description: 'El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+                  example: 13
+                status:
+                  type: string
+                  description: ''
+                  example: draft
+                  enum:
+                    - draft
+                    - edited
+                    - saved
+                    - sent
+                    - approved
+                    - rejected
+                    - declared
+                    - sri_declared_confirmed
+                    - sri_sended
+                    - sri_sended_completed
+                    - error
+                periodicity:
+                  type: string
+                  description: ''
+                  example: biannual
+                  enum:
+                    - monthly
+                    - biannual
+                year:
+                  type: integer
+                  description: 'El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026.'
+                  example: 16
+                sort:
+                  type: string
+                  description: ''
+                  example: status
+                  enum:
+                    - period
+                    - '-period'
+                    - status
+                    - '-status'
+                    - created_at
+                    - '-created_at'
     post:
       summary: 'Create a new IVA report'
       operationId: createANewIVAReport
@@ -2404,7 +2457,7 @@ paths:
                   code: VALIDATION_ERROR
                   errors:
                     comments:
-                      - 'Comments cannot exceed 1000 characters'
+                      - 'Comments cannot exceed 500 characters'
                 properties:
                   status:
                     type: string
@@ -2421,7 +2474,7 @@ paths:
                       comments:
                         type: array
                         example:
-                          - 'Comments cannot exceed 1000 characters'
+                          - 'Comments cannot exceed 500 characters'
                         items:
                           type: string
       tags:
@@ -2439,7 +2492,7 @@ paths:
                   example: 2024-03
                 comments:
                   type: string
-                  description: 'Optional comments about the report (max 1000 chars).'
+                  description: 'Optional comments about the report (max 500 chars).'
                   example: 'Reporte revisado, valores correctos'
                   nullable: true
               required:
@@ -2641,7 +2694,7 @@ paths:
                   example: 2024-03
                 comments:
                   type: string
-                  description: 'Optional approval comments or notes (max 1000 chars).'
+                  description: 'Optional approval comments or notes (max 500 chars).'
                   example: 'Valores verificados, aprobado para envío al SRI'
                   nullable: true
               required:
@@ -2875,7 +2928,7 @@ paths:
                   example: 2024-03
                 comments:
                   type: string
-                  description: 'Detailed reason for rejection (10-1000 chars).'
+                  description: 'Detailed reason for rejection (10-500 chars).'
                   example: 'Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456'
               required:
                 - period
@@ -3304,7 +3357,7 @@ paths:
                     type: string
                 comments:
                   type: string
-                  description: 'Optional message/comments to include in email (max 1000 chars).'
+                  description: 'Optional message/comments to include in email (max 500 chars).'
                   example: 'Por favor revisar los totales de ventas y confirmar'
                   nullable: true
               required:

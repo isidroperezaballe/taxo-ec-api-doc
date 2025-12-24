@@ -1166,7 +1166,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=non_deductible_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=commercial_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1187,7 +1187,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "purchases",
-    "filter[category_type]": "non_deductible_expenses",
+    "filter[category_type]": "commercial_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1227,7 +1227,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'purchases',
-            'filter[category_type]' =&gt; 'non_deductible_expenses',
+            'filter[category_type]' =&gt; 'commercial_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1250,7 +1250,7 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'purchases',
-  'filter[category_type]': 'non_deductible_expenses',
+  'filter[category_type]': 'commercial_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1573,10 +1573,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="non_deductible_expenses"
+               value="commercial_expenses"
                data-component="query">
     <br>
-<p>Example: <code>non_deductible_expenses</code></p>
+<p>Example: <code>commercial_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1668,7 +1668,16 @@ Do NOT send a request body.</p>
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --data "{
+    \"page\": 73,
+    \"per_page\": 13,
+    \"status\": \"draft\",
+    \"periodicity\": \"biannual\",
+    \"year\": 16,
+    \"sort\": \"status\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -1683,9 +1692,19 @@ const headers = {
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
+let body = {
+    "page": 73,
+    "per_page": 13,
+    "status": "draft",
+    "periodicity": "biannual",
+    "year": 16,
+    "sort": "status"
+};
+
 fetch(url, {
     method: "GET",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -1701,6 +1720,14 @@ $response = $client-&gt;get(
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
+        'json' =&gt; [
+            'page' =&gt; 73,
+            'per_page' =&gt; 13,
+            'status' =&gt; 'draft',
+            'periodicity' =&gt; 'biannual',
+            'year' =&gt; 16,
+            'sort' =&gt; 'status',
+        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -1712,6 +1739,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
+payload = {
+    "page": 73,
+    "per_page": 13,
+    "status": "draft",
+    "periodicity": "biannual",
+    "year": 16,
+    "sort": "status"
+}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
   'Content-Type': 'application/json',
@@ -1719,7 +1754,7 @@ headers = {
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
 
-response = requests.request('GET', url, headers=headers)
+response = requests.request('GET', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
@@ -1993,7 +2028,86 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Sort field. Prefix with - for descending.</p>
             </div>
-                </form>
+                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="73"
+               data-component="body">
+    <br>
+<p>El campo value debe ser al menos 1. Example: <code>73</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="13"
+               data-component="body">
+    <br>
+<p>El campo value debe ser al menos 1. El campo value no debe ser mayor que 100. Example: <code>13</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="draft"
+               data-component="body">
+    <br>
+<p>Example: <code>draft</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>draft</code></li> <li><code>edited</code></li> <li><code>saved</code></li> <li><code>sent</code></li> <li><code>approved</code></li> <li><code>rejected</code></li> <li><code>declared</code></li> <li><code>sri_declared_confirmed</code></li> <li><code>sri_sended</code></li> <li><code>sri_sended_completed</code></li> <li><code>error</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>periodicity</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="periodicity"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="biannual"
+               data-component="body">
+    <br>
+<p>Example: <code>biannual</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>monthly</code></li> <li><code>biannual</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>year</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="year"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="16"
+               data-component="body">
+    <br>
+<p>El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026. Example: <code>16</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
+               value="status"
+               data-component="body">
+    <br>
+<p>Example: <code>status</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>period</code></li> <li><code>-period</code></li> <li><code>status</code></li> <li><code>-status</code></li> <li><code>created_at</code></li> <li><code>-created_at</code></li></ul>
+        </div>
+        </form>
 
                     <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports">Create a new IVA report</h2>
 
@@ -3084,7 +3198,7 @@ response.json()</code></pre></div>
     &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
     &quot;errors&quot;: {
         &quot;comments&quot;: [
-            &quot;Comments cannot exceed 1000 characters&quot;
+            &quot;Comments cannot exceed 500 characters&quot;
         ]
     }
 }</code>
@@ -3221,7 +3335,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Reporte revisado, valores correctos"
                data-component="body">
     <br>
-<p>Optional comments about the report (max 1000 chars). Example: <code>Reporte revisado, valores correctos</code></p>
+<p>Optional comments about the report (max 500 chars). Example: <code>Reporte revisado, valores correctos</code></p>
         </div>
         </form>
 
@@ -3538,7 +3652,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Valores verificados, aprobado para envío al SRI"
                data-component="body">
     <br>
-<p>Optional approval comments or notes (max 1000 chars). Example: <code>Valores verificados, aprobado para envío al SRI</code></p>
+<p>Optional approval comments or notes (max 500 chars). Example: <code>Valores verificados, aprobado para envío al SRI</code></p>
         </div>
         </form>
 
@@ -3871,7 +3985,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456"
                data-component="body">
     <br>
-<p>Detailed reason for rejection (10-1000 chars). Example: <code>Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456</code></p>
+<p>Detailed reason for rejection (10-500 chars). Example: <code>Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456</code></p>
         </div>
         </form>
 
@@ -4553,7 +4667,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value="Por favor revisar los totales de ventas y confirmar"
                data-component="body">
     <br>
-<p>Optional message/comments to include in email (max 1000 chars). Example: <code>Por favor revisar los totales de ventas y confirmar</code></p>
+<p>Optional message/comments to include in email (max 500 chars). Example: <code>Por favor revisar los totales de ventas y confirmar</code></p>
         </div>
         </form>
 

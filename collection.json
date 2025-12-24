@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "b7c83a14-bf21-423d-b989-a1b868640326",
+        "_postman_id": "26be62aa-0922-4205-8c5d-7ff7eae8f3c5",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -323,7 +323,7 @@
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "non_deductible_expenses",
+                                    "value": "commercial_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -346,7 +346,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=non_deductible_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=commercial_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -476,7 +476,10 @@
                                 "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"page\":73,\"per_page\":13,\"status\":\"draft\",\"periodicity\":\"biannual\",\"year\":16,\"sort\":\"status\"}"
+                        },
                         "description": "Retrieves a paginated list of IVA reports for a specific taxpayer.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URL:**\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/iva-reports?page=1&per_page=20&status=saved&sort=-period\n```\n\n**Available filters (all optional, sent as query params in URL):**\n- `page`: Page number for pagination (default: 1)\n- `per_page`: Items per page, 1-100 (default: 20)\n- `status`: Filter by report status\n- `periodicity`: Filter by periodicity (monthly, biannual)\n- `year`: Filter by year\n- `sort`: Sort field. Prefix with `-` for descending (e.g., `-period`, `status`)\n\n**Available statuses:**\n- `draft`: Initial state, being edited\n- `edited`: Has manual edits\n- `saved`: Ready for review\n- `sent`: Sent to taxpayer for approval\n- `approved`: Approved and ready for SRI submission\n- `rejected`: Rejected, needs corrections\n- `sri_sended`: Sent to SRI (in progress)\n- `sri_sended_completed`: SRI processing completed\n- `declared`: Marked as declared\n- `error`: Error during SRI submission"
                     },
                     "response": [
@@ -770,7 +773,7 @@
                         {
                             "header": [],
                             "code": 422,
-                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"comments\": [\"Comments cannot exceed 1000 characters\"]\n  }\n}",
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"comments\": [\"Comments cannot exceed 500 characters\"]\n  }\n}",
                             "name": "Validation error"
                         }
                     ]
