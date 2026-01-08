@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "86272804-70c5-429b-9f6f-e7e86719e1bf",
+        "_postman_id": "38c1d8be-f3f1-49a1-ab67-5e2baf9283a5",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -141,10 +141,7 @@
                                 "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"taxpayerId\":\"1726051285001\"}"
-                        },
+                        "body": null,
                         "description": "Creates a new taxpayer in your organization after validating that the tax identifier exists\nin the TWS (Tax Web Services) registry. Accepts RUC (13 digits), C\u00e9dula (10 digits), or Passport.\n\nThis endpoint will:\n1. Validate the taxpayer doesn't already exist in your organization\n2. Query the TWS registry API to verify the identifier is valid and active\n3. Create the taxpayer with all available data from TWS\n4. Automatically create default categories for document classification\n5. Set up auto-categorization rules\n\n**Note:** This process may take 5-10 seconds as it queries external services."
                     },
                     "response": [
@@ -317,13 +314,13 @@
                                 },
                                 {
                                     "key": "filter.document_type",
-                                    "value": "purchases",
+                                    "value": "sales",
                                     "description": "",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "commercial_expenses",
+                                    "value": "personal_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -346,7 +343,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=commercial_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=personal_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -476,10 +473,7 @@
                                 "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"page\":73,\"per_page\":13,\"status\":\"error\",\"periodicity\":\"biannual\",\"year\":16,\"sort\":\"created_at\"}"
-                        },
+                        "body": null,
                         "description": "Retrieves a paginated list of IVA reports for a specific taxpayer.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URL:**\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/iva-reports?page=1&per_page=20&status=saved&sort=-period\n```\n\n**Available filters (all optional, sent as query params in URL):**\n- `page`: Page number for pagination (default: 1)\n- `per_page`: Items per page, 1-100 (default: 20)\n- `status`: Filter by report status\n- `periodicity`: Filter by periodicity (monthly, biannual)\n- `year`: Filter by year\n- `sort`: Sort field. Prefix with `-` for descending (e.g., `-period`, `status`)\n\n**Available statuses:**\n- `draft`: Initial state, being edited\n- `edited`: Has manual edits\n- `saved`: Ready for review\n- `sent`: Sent to taxpayer for approval\n- `approved`: Approved and ready for SRI submission\n- `rejected`: Rejected, needs corrections\n- `sri_sended`: Sent to SRI (in progress)\n- `sri_sended_completed`: SRI processing completed\n- `declared`: Marked as declared\n- `error`: Error during SRI submission"
                     },
                     "response": [
@@ -1130,6 +1124,528 @@
                             "code": 503,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"SRI service returned an error\",\n  \"code\": \"SRI_ERROR\",\n  \"errors\": {\n    \"sri_response\": {\n      \"status\": \"error\",\n      \"message\": \"Invalid signature\"\n    }\n  }\n}",
                             "name": "SRI error response"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Received Documents",
+            "description": "\nAPI endpoints for managing received documents (purchase documents from suppliers).\n\n## Document Types\n\nReceived documents include:\n- **Invoices (Facturas de Compra)**: Standard purchase invoices from suppliers\n- **Credit Notes**: Applied to invoices\n- **Withholdings**: Tax withholding documents\n\n## Filtering & Categorization\n\n### Date Filtering\n- **Default**: Current month if no dates provided\n- **start_date**: Filter from this date (YYYY-MM-DD)\n- **end_date**: Filter until this date (YYYY-MM-DD)\n\n### Category Filtering\n\nThe system supports two types of categorization:\n\n1. **Document-level categorization (mono-category)**: All items in the document share the same category\n2. **Item-level categorization (multi-category)**: Each line item has its own category\n\n**How Category Filters Work:**\n\nBoth category filters search at the **item level** (bill_items table). If **any item** in a document \nmatches the filter criteria, the **entire document** is included in the results.\n\n**Example:**\n```\nDocument #001:\n  - Item 1: Category \"Office Supplies\" (id: 123)\n  - Item 2: Category \"Services\" (id: 456)\n  - Item 3: Category \"Office Supplies\" (id: 123)\n\nFilter: category_id[]=123\nResult: \u2713 Document #001 is included (has items with category 123)\n```\n\n**Category filters:**\n\n- `category_id[]`: Filter by specific category ID(s) - array parameter (can pass multiple)\n  \n  **Searches in:** `bill_items.tax_payer_category_id` (line item categories)\n  \n  **Note:** To obtain the available category IDs for a taxpayer, use the categories endpoint:\n  `GET \/api\/v1\/taxpayers\/{taxNumber}\/categories`\n  \n  Each taxpayer has their own custom categories. You must retrieve the category IDs \n  from this endpoint before filtering by `category_id[]`.\n  \n- `category_type`: Filter by expense type - single value parameter\n  \n  **Searches in:** `bills.category_types` (JSON field that summarizes item categories)\n  \n  **Available values:**\n  - `commercial_expenses`: Business-related expenses (Actividad Comercial)\n  - `personal_expenses`: Personal expenses (Gasto Personal)\n  - `non_deductible_expenses`: Non-deductible expenses (No Deducible)\n\n### Deductibility Filtering\n- `deductible_type`: Filter by tax deductibility - single value parameter\n  - `deductible`: Tax-deductible expenses (Con derecho a cr\u00e9dito tributario)\n  - `non_deductible`: Non-deductible expenses (Sin derecho a cr\u00e9dito tributario)\n\n### Status Filtering\n- `status`: Filter by document status - single value parameter\n  - `AUTORIZADO`: Authorized\/valid documents\n  - `ANULADO`: Voided documents\n\n### Search & Other Filters\n- `search`: Search in provider name, RUC, email, phone, document number, or access key\n- `uncategorized`: Filter uncategorized documents (boolean: true\/false)\n- `origin`: Filter by document origin\/source system - single value parameter\n  - `tws`: Documents automatically processed by Taxo Web Services from SRI\n  - `xml-import`: Documents manually imported from XML files\n  - `physical-upload`: Physical documents uploaded\/entered manually by user\n\n**Note:** Most filters accept a single value.\nOnly `category_id` accepts multiple values using array notation `category_id[]=123&category_id[]=456`.\n\n## Sorting\n\nDefault sort: `-date_only,-bill_number` (newest first, then by number descending)\n\nAvailable sort fields (prefix with `-` for descending):\n- `date_only`: Document date\n- `bill_number`: Document number\n- `contact_name`: Provider name\n- `sub_total`: Subtotal amount\n- `total`: Total amount\n\n**Example:** `sort=-total,date_only` (highest total first, then oldest date)\n\n\n## Important Notes\n\n1. **Consistent Results**: This API uses the same services and repositories as the UI, ensuring identical results\n2. **Performance**: The endpoint uses optimized queries with lazy loading for related data\n3. **Pagination**: Results are paginated (default 20 items per page, max 100)\n4. **Timezone**: All dates are in UTC. Document dates (`billed_at`) show local Ecuador time",
+            "item": [
+                {
+                    "name": "List received documents for a taxpayer",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for filtering (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "page",
+                                    "value": "",
+                                    "description": "Page number for pagination. Default: 1.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "",
+                                    "description": "Items per page (1-100). Default: 20.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "sort",
+                                    "value": "",
+                                    "description": "Sort field. Prefix with - for descending. Default: -date_only,-bill_number.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_id%5B%5D",
+                                    "value": "",
+                                    "description": "Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET \/api\/v1\/taxpayers\/{taxNumber}\/categories.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_type",
+                                    "value": "",
+                                    "description": "Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "deductible_type",
+                                    "value": "",
+                                    "description": "Filter by tax deductibility. Must be one of: deductible, non_deductible.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "",
+                                    "description": "Filter by document status. Must be one of: AUTORIZADO, ANULADO.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "",
+                                    "description": "Search in provider name, document number, access key, RUC, email, or phone.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "uncategorized",
+                                    "value": "",
+                                    "description": "Filter only uncategorized documents.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "origin",
+                                    "value": "",
+                                    "description": "Filter by document origin\/source system. Must be one of: tws, xml-import, physical-upload.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received?start_date=&end_date=&page=&per_page=&sort=&category_id%5B%5D=&category_type=&deductible_type=&status=&search=&uncategorized=&origin=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves a paginated list of received documents (purchase invoices) for a specific taxpayer.\nThis endpoint returns the same data as the UI received documents listing.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URLs:**\n\nBasic query with date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=20\n```\n\nWith filters for commercial deductible expenses:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO\n```\n\n**Filter Format:** All filters use top-level query parameters (consistent with TaxPayers and IVA Reports endpoints).\n\n**Filtering Examples:**\n\nFilter by category type (commercial expenses only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_type=commercial_expenses\n```\n\nFilter by deductibility (only deductible):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?deductible_type=deductible\n```\n\nFilter by specific categories (multiple IDs allowed):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_id[]=123&category_id[]=456\n```\n*Note: First retrieve available categories from GET \/api\/v1\/taxpayers\/{taxNumber}\/categories*\n\nFilter by status (authorized documents only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?status=AUTORIZADO\n```\n\nSearch providers:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?search=PROVEEDOR\n```\n\nFilter only uncategorized:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?uncategorized=true\n```\n\nFilter by origin (electronic documents only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?origin=tws\n```\n\nMultiple filters combined (real use case):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?start_date=2024-01-01&end_date=2024-01-31&category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO&sort=-total\n```"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents retrieved successfully\",\n  \"data\": {\n    \"bills\": [\n      {\n        \"id\": 12345,\n        \"ulid\": \"01HZXXX123ABC456\",\n        \"bill_number\": \"001-001-000001234\",\n        \"access_key\": \"0101202401172605128500110010010000012341234567813\",\n        \"billed_at\": \"2024-01-15T14:30:00.000000Z\",\n        \"date_only\": \"2024-01-15\",\n        \"bill_status\": \"AUTORIZADO\",\n        \"is_physical\": false,\n        \"is_sale_note\": false,\n        \"is_locked\": false,\n        \"lock_reason\": null,\n        \"origin\": \"tws\",\n        \"document_type\": \"electronic\",\n        \"issuer\": {\n          \"tax_number\": \"1234567890001\",\n          \"business_name\": \"PROVEEDOR DEMO S.A.\",\n          \"trade_name\": \"PROVEEDOR DEMO\",\n          \"address\": \"Av. Principal 123 y Secundaria\",\n          \"email\": \"proveedor@example.com\"\n        },\n        \"payment\": {\n          \"payment_method\": \"01\",\n          \"payment_amount\": 112.00\n        },\n        \"totals\": {\n          \"subtotal_vat_zero\": 0.00,\n          \"subtotal_vat_twelve\": 100.00,\n          \"subtotal_vat_fifteen\": 0.00,\n          \"sub_total\": 100.00,\n          \"sub_total_show\": 100.00,\n          \"discount\": 0.00,\n          \"total\": 112.00\n        },\n        \"taxes\": {\n          \"vat_twelve\": 12.00,\n          \"vat_fifteen\": 0.00,\n          \"total_tax\": 12.00\n        },\n        \"categories\": [\n          {\n            \"id\": 45,\n            \"category_id\": 12,\n            \"name\": \"Servicios Profesionales\",\n            \"color\": \"bg-blue-500\",\n            \"icon\": \"M12 6v6m0 0v6m0-6h6m-6 0H6\",\n            \"count\": 1\n          }\n        ],\n        \"category_types\": [\n          {\n            \"category_type\": \"commercial_expenses\",\n            \"count\": 1\n          }\n        ],\n        \"deductible_types\": [\n          {\n            \"deductible_type\": \"deductible\",\n            \"count\": 1\n          }\n        ],\n        \"categorized_by\": [\"manual\"],\n        \"has_credit_notes\": false,\n        \"has_withholdings\": false,\n        \"voided_at\": null,\n        \"voided_origin\": null,\n        \"created_at\": \"2024-01-15T14:35:00.000000Z\",\n        \"updated_at\": \"2024-01-15T14:35:00.000000Z\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"pagination\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 45,\n      \"total_pages\": 3,\n      \"from\": 1,\n      \"to\": 20\n    },\n    \"filters_applied\": {\n      \"start_date\": \"2024-01-01\",\n      \"end_date\": \"2024-01-31\",\n      \"category_type\": \"commercial_expenses\",\n      \"deductible_type\": \"deductible\",\n      \"status\": \"AUTORIZADO\",\n      \"sort\": \"-date_only,-bill_number\"\n    }\n  }\n}",
+                            "name": "Success - with bills"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents retrieved successfully\",\n  \"data\": {\n    \"bills\": []\n  },\n  \"meta\": {\n    \"pagination\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 0,\n      \"total_pages\": 0,\n      \"from\": 0,\n      \"to\": 0\n    },\n    \"filters_applied\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\",\n      \"sort\": \"-date_only,-bill_number\"\n    }\n  }\n}",
+                            "name": "Success - no bills found"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format\"],\n    \"per_page\": [\"The per page must not be greater than 100\"]\n  }\n}",
+                            "name": "Invalid filter"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get accumulated totals for received documents",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/accumulated",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for filtering (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_id%5B%5D",
+                                    "value": "",
+                                    "description": "Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET \/api\/v1\/taxpayers\/{taxNumber}\/categories.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_type",
+                                    "value": "",
+                                    "description": "Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "deductible_type",
+                                    "value": "",
+                                    "description": "Filter by tax deductibility. Must be one of: deductible, non_deductible.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "",
+                                    "description": "Filter by document status. Must be one of: AUTORIZADO, ANULADO.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "",
+                                    "description": "Search in provider name, document number, access key, RUC, email, or phone.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "uncategorized",
+                                    "value": "",
+                                    "description": "Filter only uncategorized documents.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "origin",
+                                    "value": "",
+                                    "description": "Filter by document origin\/source system. Must be one of: tws, xml-import, physical-upload.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/accumulated?start_date=&end_date=&category_id%5B%5D=&category_type=&deductible_type=&status=&search=&uncategorized=&origin=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves aggregated totals and statistics for received documents based on the applied filters.\nThis endpoint complements the received documents listing endpoint by providing calculated totals.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate (15%, 14%, 13%, 12%, 5%, 0%, exempt, not subject)\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used\n\n**Use Cases:**\n\n- Display statistics cards in dashboard (like UI)\n- Generate financial reports\n- Validate VAT calculations\n- Monitor categorization progress\n- Calculate tax deductions\n\n**Example URLs:**\n\nGet totals for current month:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/accumulated\n```\n\nGet totals for specific date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/accumulated?start_date=2024-01-01&end_date=2024-01-31\n```\n\nGet totals for commercial deductible expenses:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/accumulated?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as the bills listing endpoint:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in provider name, RUC, document number, etc.\n- `uncategorized`: Only uncategorized documents (true\/false)\n- `origin`: Document origin (electronic, physical)\n\n**Note:** Pagination parameters (page, per_page) and sort are ignored as this endpoint returns a single aggregated result."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents accumulated totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_vat_fifteen_sum\": 75.29,\n      \"discount_vat_fifteen_sum\": 0,\n      \"vat_fifteen_sum\": 11.28,\n      \"subtotal_vat_fourteen_sum\": 0,\n      \"discount_vat_fourteen_sum\": 0,\n      \"vat_fourteen_sum\": 0,\n      \"subtotal_vat_thirteen_sum\": 0,\n      \"discount_vat_thirteen_sum\": 0,\n      \"vat_thirteen_sum\": 0,\n      \"subtotal_vat_twelve_sum\": 0,\n      \"discount_vat_twelve_sum\": 0,\n      \"vat_twelve_sum\": 0,\n      \"subtotal_vat_five_sum\": 0,\n      \"discount_vat_five_sum\": 0,\n      \"vat_five_sum\": 0,\n      \"subtotal_vat_special_sum\": 0,\n      \"discount_vat_special_sum\": 0,\n      \"vat_special_sum\": 0,\n      \"subtotal_vat_zero_sum\": 0,\n      \"discount_vat_zero_sum\": 0,\n      \"subtotal_vat_exempt_sum\": 0,\n      \"discount_vat_exempt_sum\": 0,\n      \"subtotal_vat_not_subject_sum\": 0,\n      \"discount_vat_not_subject_sum\": 0,\n      \"sub_total_sum\": 75.29,\n      \"tip_sum\": 0,\n      \"subsidy_sum\": 0,\n      \"discount_sum\": 0,\n      \"total_sum\": 86.57,\n      \"subtotal_header\": 75.29,\n      \"taxes_header\": 11.28,\n      \"subtotal_taxes_header\": 86.57,\n      \"total_header\": 86.57,\n      \"document_count\": 3,\n      \"categorized_document_count\": 3,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Current month totals"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents accumulated totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_vat_fifteen_sum\": 50.00,\n      \"vat_fifteen_sum\": 7.50,\n      \"subtotal_vat_zero_sum\": 25.00,\n      \"sub_total_sum\": 75.00,\n      \"total_sum\": 82.50,\n      \"subtotal_header\": 75.00,\n      \"taxes_header\": 7.50,\n      \"total_header\": 82.50,\n      \"document_count\": 5,\n      \"categorized_document_count\": 5,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-01-01\",\n        \"end_date\": \"2024-01-31\"\n      },\n      \"category_type\": \"commercial_expenses\",\n      \"deductible_type\": \"deductible\"\n    }\n  }\n}",
+                            "name": "Success - Filtered by category type"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Not Found - Taxpayer does not exist"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"category_type\": [\"Invalid category type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving accumulated totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get count of all received documents types",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/count",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for counting (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for counting (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/count?start_date=&end_date=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves document counts across all received document types (purchases, credit notes, withholdings)\nfor a specific taxpayer and time period.\n\nThis endpoint aggregates data from three tables:\n- **bills**: Purchase invoices (Facturas de Compra)\n- **purchase_credit_notes**: Credit notes applied to purchases (Notas de Cr\u00e9dito)\n- **purchase_withholdings**: Withholding documents (Retenciones)\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Default Behavior:**\n- If no date range is specified, returns counts for the current month\n- Only counts documents that belong to the authenticated taxpayer and team\n\n**Use Cases:**\n- Dashboard statistics showing total documents received\n- Monthly\/period document volume analysis\n- Document type distribution reports\n- Compliance verification (ensuring all document types are being processed)\n\n**Example URLs:**\n\nGet counts for current month:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/count\n```\n\nGet counts for specific period:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/count?start_date=2024-01-01&end_date=2024-01-31\n```\n\nGet counts for entire year:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/count?start_date=2024-01-01&end_date=2024-12-31\n```"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents count retrieved successfully\",\n  \"data\": {\n    \"counts\": {\n      \"invoices\": 45,\n      \"credit_notes\": 3,\n      \"withholdings\": 12,\n      \"total\": 60\n    },\n    \"period\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\"\n    }\n  }\n}",
+                            "name": "Success - Current month"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents count retrieved successfully\",\n  \"data\": {\n    \"counts\": {\n      \"invoices\": 150,\n      \"credit_notes\": 8,\n      \"withholdings\": 45,\n      \"total\": 203\n    },\n    \"period\": {\n      \"start_date\": \"2024-01-01\",\n      \"end_date\": \"2024-03-31\"\n    }\n  }\n}",
+                            "name": "Success - Custom period"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Received documents count retrieved successfully\",\n  \"data\": {\n    \"counts\": {\n      \"invoices\": 0,\n      \"credit_notes\": 0,\n      \"withholdings\": 0,\n      \"total\": 0\n    },\n    \"period\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\"\n    }\n  }\n}",
+                            "name": "Success - No documents"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Not Found - Taxpayer does not exist"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"end_date\": [\"The end date must be equal to or after the start date.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document counts\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get accumulated totals for a specific supplier (Provider)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/suppliers\/:contactTaxNumber\/totals",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for filtering (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_id%5B%5D",
+                                    "value": "",
+                                    "description": "Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET \/api\/v1\/taxpayers\/{taxNumber}\/categories.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_type",
+                                    "value": "",
+                                    "description": "Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "deductible_type",
+                                    "value": "",
+                                    "description": "Filter by tax deductibility. Must be one of: deductible, non_deductible.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "",
+                                    "description": "Filter by document status. Must be one of: AUTORIZADO, ANULADO.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "",
+                                    "description": "Search in provider name, document number, access key, etc.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "uncategorized",
+                                    "value": "",
+                                    "description": "Filter only uncategorized documents.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "origin",
+                                    "value": "",
+                                    "description": "Filter by document origin\/source system. Must be one of: tws, xml-import, physical-upload.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/suppliers\/:contactTaxNumber\/totals?start_date=&end_date=&category_id%5B%5D=&category_type=&deductible_type=&status=&search=&uncategorized=&origin=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "contactTaxNumber",
+                                    "key": "contactTaxNumber",
+                                    "value": "1790000000001",
+                                    "description": "The supplier's tax number (RUC\/CI)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).\nThis endpoint filters all documents by the supplier's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including supplier filter)\n\n**Use Cases:**\n\n- Analyze spending with a specific supplier\n- Supplier performance reports\n- Validate supplier invoices and totals\n- Tax deduction analysis per supplier\n- Supplier comparison reports\n\n**Example URLs:**\n\nGet totals for specific supplier (current month):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals\n```\n\nGet totals for specific supplier and date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet commercial expenses totals from specific supplier:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `\/received\/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in document details\n- `uncategorized`: Only uncategorized documents (true\/false)\n- `origin`: Document origin (electronic, physical)\n\n**Plus:** Automatically filters by `contact_tax_number` from URL parameter"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Supplier totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_vat_fifteen_sum\": 1250.50,\n      \"vat_fifteen_sum\": 187.58,\n      \"sub_total_sum\": 1250.50,\n      \"total_sum\": 1438.08,\n      \"subtotal_header\": 1250.50,\n      \"taxes_header\": 187.58,\n      \"total_header\": 1438.08,\n      \"document_count\": 12,\n      \"categorized_document_count\": 12,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      },\n      \"supplier\": {\n        \"contact_tax_number\": \"1790000000001\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Supplier totals"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Supplier totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_header\": 0.00,\n      \"taxes_header\": 0.00,\n      \"total_header\": 0.00,\n      \"document_count\": 0,\n      \"categorized_document_count\": 0,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      },\n      \"supplier\": {\n        \"contact_tax_number\": \"1790000000001\"\n      }\n    }\n  }\n}",
+                            "name": "Success - No documents from supplier"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Not Found - Taxpayer does not exist"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"category_type\": [\"Invalid category type.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving supplier totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
                         }
                     ]
                 }

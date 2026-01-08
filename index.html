@@ -8,8 +8,8 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/theme-default.style.css" media="screen">
-    <link rel="stylesheet" href="css/theme-default.print.css" media="print">
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
@@ -32,9 +32,9 @@
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="js/tryitout-5.6.0.js"></script>
+    <script src="../docs/js/tryitout-5.6.0.js"></script>
 
-    <script src="js/theme-default-5.6.0.js"></script>
+    <script src="../docs/js/theme-default-5.6.0.js"></script>
 
 </head>
 
@@ -43,7 +43,7 @@
 <a href="#" id="nav-button">
     <span>
         MENU
-        <img src="images/navbar.png" alt="navbar-image"/>
+        <img src="../docs/images/navbar.png" alt="navbar-image"/>
     </span>
 </a>
 <div class="tocify-wrapper">
@@ -126,6 +126,25 @@
                             </li>
                                                                         </ul>
                             </ul>
+                    <ul id="tocify-header-received-documents" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="received-documents">
+                    <a href="#received-documents">Received Documents</a>
+                </li>
+                                    <ul id="tocify-subheader-received-documents" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received">List received documents for a taxpayer</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-accumulated">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-accumulated">Get accumulated totals for received documents</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-count">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-count">Get count of all received documents types</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">Get accumulated totals for a specific supplier (Provider)</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
             </div>
 
     <ul class="toc-footer" id="toc-footer">
@@ -135,7 +154,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: December 24, 2025</li>
+        <li>Last updated: January 8, 2026</li>
     </ul>
 </div>
 
@@ -588,11 +607,7 @@ in the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 dig
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
-    --data "{
-    \"taxpayerId\": \"1726051285001\"
-}"
-</code></pre></div>
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -607,14 +622,9 @@ const headers = {
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
-let body = {
-    "taxpayerId": "1726051285001"
-};
-
 fetch(url, {
     method: "POST",
     headers,
-    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -630,9 +640,6 @@ $response = $client-&gt;post(
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
-        'json' =&gt; [
-            'taxpayerId' =&gt; '1726051285001',
-        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -644,9 +651,6 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers'
-payload = {
-    "taxpayerId": "1726051285001"
-}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
   'Content-Type': 'application/json',
@@ -654,7 +658,7 @@ headers = {
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
 
-response = requests.request('POST', url, headers=headers, json=payload)
+response = requests.request('POST', url, headers=headers)
 response.json()</code></pre></div>
 
 </span>
@@ -874,20 +878,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
             </div>
-                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>taxpayerId</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="taxpayerId"                data-endpoint="POSTapi-v1-taxpayers"
-               value="1726051285001"
-               data-component="body">
-    <br>
-<p>Ecuadorian tax identifier. Can be: RUC (13 digits), Cédula (10 digits), or Passport (alphanumeric). Must match the regex /^[a-zA-Z0-9-]+$/. El campo value debe ser de al menos 5 caracteres. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
-        </div>
-        </form>
+                        </form>
 
                     <h2 id="taxpayers-GETapi-v1-taxpayers--taxNumber-">Get a specific taxpayer</h2>
 
@@ -1166,7 +1157,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=commercial_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
@@ -1186,8 +1177,8 @@ const params = {
     "enabled": "1",
     "editable": "1",
     "search": "Alimentación",
-    "filter[document_type]": "purchases",
-    "filter[category_type]": "commercial_expenses",
+    "filter[document_type]": "sales",
+    "filter[category_type]": "personal_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1226,8 +1217,8 @@ $response = $client-&gt;get(
             'enabled' =&gt; '1',
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
-            'filter[document_type]' =&gt; 'purchases',
-            'filter[category_type]' =&gt; 'commercial_expenses',
+            'filter[document_type]' =&gt; 'sales',
+            'filter[category_type]' =&gt; 'personal_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1249,8 +1240,8 @@ params = {
   'enabled': '1',
   'editable': '1',
   'search': 'Alimentación',
-  'filter[document_type]': 'purchases',
-  'filter[category_type]': 'commercial_expenses',
+  'filter[document_type]': 'sales',
+  'filter[category_type]': 'personal_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1559,10 +1550,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="purchases"
+               value="sales"
                data-component="query">
     <br>
-<p>Example: <code>purchases</code></p>
+<p>Example: <code>sales</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1573,10 +1564,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="commercial_expenses"
+               value="personal_expenses"
                data-component="query">
     <br>
-<p>Example: <code>commercial_expenses</code></p>
+<p>Example: <code>personal_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1857,16 +1848,7 @@ Do NOT send a request body.</p>
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
-    --data "{
-    \"page\": 73,
-    \"per_page\": 13,
-    \"status\": \"error\",
-    \"periodicity\": \"biannual\",
-    \"year\": 16,
-    \"sort\": \"created_at\"
-}"
-</code></pre></div>
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -1881,19 +1863,9 @@ const headers = {
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
-let body = {
-    "page": 73,
-    "per_page": 13,
-    "status": "error",
-    "periodicity": "biannual",
-    "year": 16,
-    "sort": "created_at"
-};
-
 fetch(url, {
     method: "GET",
     headers,
-    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -1909,14 +1881,6 @@ $response = $client-&gt;get(
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
-        'json' =&gt; [
-            'page' =&gt; 73,
-            'per_page' =&gt; 13,
-            'status' =&gt; 'error',
-            'periodicity' =&gt; 'biannual',
-            'year' =&gt; 16,
-            'sort' =&gt; 'created_at',
-        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -1928,14 +1892,6 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
-payload = {
-    "page": 73,
-    "per_page": 13,
-    "status": "error",
-    "periodicity": "biannual",
-    "year": 16,
-    "sort": "created_at"
-}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
   'Content-Type': 'application/json',
@@ -1943,7 +1899,7 @@ headers = {
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
 
-response = requests.request('GET', url, headers=headers, json=payload)
+response = requests.request('GET', url, headers=headers)
 response.json()</code></pre></div>
 
 </span>
@@ -2217,86 +2173,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Sort field. Prefix with - for descending.</p>
             </div>
-                        <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
-        <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="73"
-               data-component="body">
-    <br>
-<p>El campo value debe ser al menos 1. Example: <code>73</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="13"
-               data-component="body">
-    <br>
-<p>El campo value debe ser al menos 1. El campo value no debe ser mayor que 100. Example: <code>13</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="error"
-               data-component="body">
-    <br>
-<p>Example: <code>error</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>draft</code></li> <li><code>edited</code></li> <li><code>saved</code></li> <li><code>sent</code></li> <li><code>approved</code></li> <li><code>rejected</code></li> <li><code>declared</code></li> <li><code>sri_declared_confirmed</code></li> <li><code>sri_sended</code></li> <li><code>sri_sended_completed</code></li> <li><code>error</code></li></ul>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>periodicity</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="periodicity"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="biannual"
-               data-component="body">
-    <br>
-<p>Example: <code>biannual</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>monthly</code></li> <li><code>biannual</code></li></ul>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>year</code></b>&nbsp;&nbsp;
-<small>integer</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="number" style="display: none"
-               step="any"               name="year"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="16"
-               data-component="body">
-    <br>
-<p>El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026. Example: <code>16</code></p>
-        </div>
-                <div style=" padding-left: 28px;  clear: unset;">
-            <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
-<small>string</small>&nbsp;
-<i>optional</i> &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="created_at"
-               data-component="body">
-    <br>
-<p>Example: <code>created_at</code></p>
-Must be one of:
-<ul style="list-style-type: square;"><li><code>period</code></li> <li><code>-period</code></li> <li><code>status</code></li> <li><code>-status</code></li> <li><code>created_at</code></li> <li><code>-created_at</code></li></ul>
-        </div>
-        </form>
+                </form>
 
                     <h2 id="iva-reports-POSTapi-v1-taxpayers--taxNumber--iva-reports">Create a new IVA report</h2>
 
@@ -5198,6 +5075,2008 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Period in YYYY-MM format. Example: <code>2024-03</code></p>
         </div>
         </form>
+
+                <h1 id="received-documents">Received Documents</h1>
+
+    <p>API endpoints for managing received documents (purchase documents from suppliers).</p>
+<h2>Document Types</h2>
+<p>Received documents include:</p>
+<ul>
+<li><strong>Invoices (Facturas de Compra)</strong>: Standard purchase invoices from suppliers</li>
+<li><strong>Credit Notes</strong>: Applied to invoices</li>
+<li><strong>Withholdings</strong>: Tax withholding documents</li>
+</ul>
+<h2>Filtering &amp; Categorization</h2>
+<h3>Date Filtering</h3>
+<ul>
+<li><strong>Default</strong>: Current month if no dates provided</li>
+<li><strong>start_date</strong>: Filter from this date (YYYY-MM-DD)</li>
+<li><strong>end_date</strong>: Filter until this date (YYYY-MM-DD)</li>
+</ul>
+<h3>Category Filtering</h3>
+<p>The system supports two types of categorization:</p>
+<ol>
+<li><strong>Document-level categorization (mono-category)</strong>: All items in the document share the same category</li>
+<li><strong>Item-level categorization (multi-category)</strong>: Each line item has its own category</li>
+</ol>
+<p><strong>How Category Filters Work:</strong></p>
+<p>Both category filters search at the <strong>item level</strong> (bill_items table). If <strong>any item</strong> in a document
+matches the filter criteria, the <strong>entire document</strong> is included in the results.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Document #001:
+  - Item 1: Category "Office Supplies" (id: 123)
+  - Item 2: Category "Services" (id: 456)
+  - Item 3: Category "Office Supplies" (id: 123)
+
+Filter: category_id[]=123
+Result: ✓ Document #001 is included (has items with category 123)</code></pre>
+<p><strong>Category filters:</strong></p>
+<ul>
+<li>
+<p><code>category_id[]</code>: Filter by specific category ID(s) - array parameter (can pass multiple)</p>
+<p><strong>Searches in:</strong> <code>bill_items.tax_payer_category_id</code> (line item categories)</p>
+<p><strong>Note:</strong> To obtain the available category IDs for a taxpayer, use the categories endpoint:
+<code>GET /api/v1/taxpayers/{taxNumber}/categories</code></p>
+<p>Each taxpayer has their own custom categories. You must retrieve the category IDs
+from this endpoint before filtering by <code>category_id[]</code>.</p>
+</li>
+<li>
+<p><code>category_type</code>: Filter by expense type - single value parameter</p>
+<p><strong>Searches in:</strong> <code>bills.category_types</code> (JSON field that summarizes item categories)</p>
+<p><strong>Available values:</strong></p>
+<ul>
+<li><code>commercial_expenses</code>: Business-related expenses (Actividad Comercial)</li>
+<li><code>personal_expenses</code>: Personal expenses (Gasto Personal)</li>
+<li><code>non_deductible_expenses</code>: Non-deductible expenses (No Deducible)</li>
+</ul>
+</li>
+</ul>
+<h3>Deductibility Filtering</h3>
+<ul>
+<li><code>deductible_type</code>: Filter by tax deductibility - single value parameter
+<ul>
+<li><code>deductible</code>: Tax-deductible expenses (Con derecho a crédito tributario)</li>
+<li><code>non_deductible</code>: Non-deductible expenses (Sin derecho a crédito tributario)</li>
+</ul></li>
+</ul>
+<h3>Status Filtering</h3>
+<ul>
+<li><code>status</code>: Filter by document status - single value parameter
+<ul>
+<li><code>AUTORIZADO</code>: Authorized/valid documents</li>
+<li><code>ANULADO</code>: Voided documents</li>
+</ul></li>
+</ul>
+<h3>Search &amp; Other Filters</h3>
+<ul>
+<li><code>search</code>: Search in provider name, RUC, email, phone, document number, or access key</li>
+<li><code>uncategorized</code>: Filter uncategorized documents (boolean: true/false)</li>
+<li><code>origin</code>: Filter by document origin/source system - single value parameter
+<ul>
+<li><code>tws</code>: Documents automatically processed by Taxo Web Services from SRI</li>
+<li><code>xml-import</code>: Documents manually imported from XML files</li>
+<li><code>physical-upload</code>: Physical documents uploaded/entered manually by user</li>
+</ul></li>
+</ul>
+<p><strong>Note:</strong> Most filters accept a single value.
+Only <code>category_id</code> accepts multiple values using array notation <code>category_id[]=123&amp;category_id[]=456</code>.</p>
+<h2>Sorting</h2>
+<p>Default sort: <code>-date_only,-bill_number</code> (newest first, then by number descending)</p>
+<p>Available sort fields (prefix with <code>-</code> for descending):</p>
+<ul>
+<li><code>date_only</code>: Document date</li>
+<li><code>bill_number</code>: Document number</li>
+<li><code>contact_name</code>: Provider name</li>
+<li><code>sub_total</code>: Subtotal amount</li>
+<li><code>total</code>: Total amount</li>
+</ul>
+<p><strong>Example:</strong> <code>sort=-total,date_only</code> (highest total first, then oldest date)</p>
+<h2>Important Notes</h2>
+<ol>
+<li><strong>Consistent Results</strong>: This API uses the same services and repositories as the UI, ensuring identical results</li>
+<li><strong>Performance</strong>: The endpoint uses optimized queries with lazy loading for related data</li>
+<li><strong>Pagination</strong>: Results are paginated (default 20 items per page, max 100)</li>
+<li><strong>Timezone</strong>: All dates are in UTC. Document dates (<code>billed_at</code>) show local Ecuador time</li>
+</ol>
+
+                                <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received">List received documents for a taxpayer</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves a paginated list of received documents (purchase invoices) for a specific taxpayer.
+This endpoint returns the same data as the UI received documents listing.</p>
+<p><strong>IMPORTANT:</strong> This is a GET request. All parameters must be sent as query string parameters in the URL.
+Do NOT send a request body.</p>
+<p><strong>Example URLs:</strong></p>
+<p>Basic query with date range:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&amp;end_date=2024-01-31&amp;page=1&amp;per_page=20</code></pre>
+<p>With filters for commercial deductible expenses:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?category_type=commercial_expenses&amp;deductible_type=deductible&amp;status=AUTORIZADO</code></pre>
+<p><strong>Filter Format:</strong> All filters use top-level query parameters (consistent with TaxPayers and IVA Reports endpoints).</p>
+<p><strong>Filtering Examples:</strong></p>
+<p>Filter by category type (commercial expenses only):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?category_type=commercial_expenses</code></pre>
+<p>Filter by deductibility (only deductible):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?deductible_type=deductible</code></pre>
+<p>Filter by specific categories (multiple IDs allowed):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?category_id[]=123&amp;category_id[]=456</code></pre>
+<p><em>Note: First retrieve available categories from GET /api/v1/taxpayers/{taxNumber}/categories</em></p>
+<p>Filter by status (authorized documents only):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?status=AUTORIZADO</code></pre>
+<p>Search providers:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?search=PROVEEDOR</code></pre>
+<p>Filter only uncategorized:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?uncategorized=true</code></pre>
+<p>Filter by origin (electronic documents only):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?origin=tws</code></pre>
+<p>Multiple filters combined (real use case):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&amp;end_date=2024-01-31&amp;category_type=commercial_expenses&amp;deductible_type=deductible&amp;status=AUTORIZADO&amp;sort=-total</code></pre>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received">
+            <blockquote>
+            <p>Example response (200, Success - with bills):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;bills&quot;: [
+            {
+                &quot;id&quot;: 12345,
+                &quot;ulid&quot;: &quot;01HZXXX123ABC456&quot;,
+                &quot;bill_number&quot;: &quot;001-001-000001234&quot;,
+                &quot;access_key&quot;: &quot;0101202401172605128500110010010000012341234567813&quot;,
+                &quot;billed_at&quot;: &quot;2024-01-15T14:30:00.000000Z&quot;,
+                &quot;date_only&quot;: &quot;2024-01-15&quot;,
+                &quot;bill_status&quot;: &quot;AUTORIZADO&quot;,
+                &quot;is_physical&quot;: false,
+                &quot;is_sale_note&quot;: false,
+                &quot;is_locked&quot;: false,
+                &quot;lock_reason&quot;: null,
+                &quot;origin&quot;: &quot;tws&quot;,
+                &quot;document_type&quot;: &quot;electronic&quot;,
+                &quot;issuer&quot;: {
+                    &quot;tax_number&quot;: &quot;1234567890001&quot;,
+                    &quot;business_name&quot;: &quot;PROVEEDOR DEMO S.A.&quot;,
+                    &quot;trade_name&quot;: &quot;PROVEEDOR DEMO&quot;,
+                    &quot;address&quot;: &quot;Av. Principal 123 y Secundaria&quot;,
+                    &quot;email&quot;: &quot;proveedor@example.com&quot;
+                },
+                &quot;payment&quot;: {
+                    &quot;payment_method&quot;: &quot;01&quot;,
+                    &quot;payment_amount&quot;: 112
+                },
+                &quot;totals&quot;: {
+                    &quot;subtotal_vat_zero&quot;: 0,
+                    &quot;subtotal_vat_twelve&quot;: 100,
+                    &quot;subtotal_vat_fifteen&quot;: 0,
+                    &quot;sub_total&quot;: 100,
+                    &quot;sub_total_show&quot;: 100,
+                    &quot;discount&quot;: 0,
+                    &quot;total&quot;: 112
+                },
+                &quot;taxes&quot;: {
+                    &quot;vat_twelve&quot;: 12,
+                    &quot;vat_fifteen&quot;: 0,
+                    &quot;total_tax&quot;: 12
+                },
+                &quot;categories&quot;: [
+                    {
+                        &quot;id&quot;: 45,
+                        &quot;category_id&quot;: 12,
+                        &quot;name&quot;: &quot;Servicios Profesionales&quot;,
+                        &quot;color&quot;: &quot;bg-blue-500&quot;,
+                        &quot;icon&quot;: &quot;M12 6v6m0 0v6m0-6h6m-6 0H6&quot;,
+                        &quot;count&quot;: 1
+                    }
+                ],
+                &quot;category_types&quot;: [
+                    {
+                        &quot;category_type&quot;: &quot;commercial_expenses&quot;,
+                        &quot;count&quot;: 1
+                    }
+                ],
+                &quot;deductible_types&quot;: [
+                    {
+                        &quot;deductible_type&quot;: &quot;deductible&quot;,
+                        &quot;count&quot;: 1
+                    }
+                ],
+                &quot;categorized_by&quot;: [
+                    &quot;manual&quot;
+                ],
+                &quot;has_credit_notes&quot;: false,
+                &quot;has_withholdings&quot;: false,
+                &quot;voided_at&quot;: null,
+                &quot;voided_origin&quot;: null,
+                &quot;created_at&quot;: &quot;2024-01-15T14:35:00.000000Z&quot;,
+                &quot;updated_at&quot;: &quot;2024-01-15T14:35:00.000000Z&quot;
+            }
+        ]
+    },
+    &quot;meta&quot;: {
+        &quot;pagination&quot;: {
+            &quot;current_page&quot;: 1,
+            &quot;per_page&quot;: 20,
+            &quot;total&quot;: 45,
+            &quot;total_pages&quot;: 3,
+            &quot;from&quot;: 1,
+            &quot;to&quot;: 20
+        },
+        &quot;filters_applied&quot;: {
+            &quot;start_date&quot;: &quot;2024-01-01&quot;,
+            &quot;end_date&quot;: &quot;2024-01-31&quot;,
+            &quot;category_type&quot;: &quot;commercial_expenses&quot;,
+            &quot;deductible_type&quot;: &quot;deductible&quot;,
+            &quot;status&quot;: &quot;AUTORIZADO&quot;,
+            &quot;sort&quot;: &quot;-date_only,-bill_number&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - no bills found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;bills&quot;: []
+    },
+    &quot;meta&quot;: {
+        &quot;pagination&quot;: {
+            &quot;current_page&quot;: 1,
+            &quot;per_page&quot;: 20,
+            &quot;total&quot;: 0,
+            &quot;total_pages&quot;: 0,
+            &quot;from&quot;: 0,
+            &quot;to&quot;: 0
+        },
+        &quot;filters_applied&quot;: {
+            &quot;start_date&quot;: &quot;2024-12-01&quot;,
+            &quot;end_date&quot;: &quot;2024-12-31&quot;,
+            &quot;sort&quot;: &quot;-date_only,-bill_number&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;,
+    &quot;code&quot;: &quot;UNAUTHORIZED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Invalid filter):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;start_date&quot;: [
+            &quot;The start date field must be a valid date in YYYY-MM-DD format&quot;
+        ],
+        &quot;per_page&quot;: [
+            &quot;The per page must not be greater than 100&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>start_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>end_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="end_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>End date for filtering (YYYY-MM-DD). Defaults to last day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Page number for pagination. Default: 1.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Items per page (1-100). Default: 20.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>sort</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="sort"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Sort field. Prefix with - for descending. Default: -date_only,-bill_number.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_id[]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="category_id.0"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET /api/v1/taxpayers/{taxNumber}/categories.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>deductible_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="deductible_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by tax deductibility. Must be one of: deductible, non_deductible.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by document status. Must be one of: AUTORIZADO, ANULADO.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Search in provider name, document number, access key, RUC, email, or phone.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>uncategorized</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="GETapi-v1-taxpayers--taxNumber--received" style="display: none">
+            <input type="radio" name="uncategorized"
+                   value="1"
+                   data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-v1-taxpayers--taxNumber--received" style="display: none">
+            <input type="radio" name="uncategorized"
+                   value="0"
+                   data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Filter only uncategorized documents.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>origin</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="origin"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.</p>
+            </div>
+                </form>
+
+                    <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received-accumulated">Get accumulated totals for received documents</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves aggregated totals and statistics for received documents based on the applied filters.
+This endpoint complements the received documents listing endpoint by providing calculated totals.</p>
+<p><strong>IMPORTANT:</strong> This is a GET request. All parameters must be sent as query string parameters in the URL.
+Do NOT send a request body.</p>
+<p><strong>What This Endpoint Returns:</strong></p>
+<ul>
+<li><strong>Subtotals by VAT rate</strong>: Detailed breakdown of subtotals for each VAT rate (15%, 14%, 13%, 12%, 5%, 0%, exempt, not subject)</li>
+<li><strong>VAT amounts</strong>: Total VAT collected at each rate</li>
+<li><strong>Discounts</strong>: Discounts applied at each VAT rate</li>
+<li><strong>Header totals</strong>: Simplified totals (subtotal, taxes, total)</li>
+<li><strong>Document counts</strong>: Total documents, categorized, uncategorized, voided</li>
+<li><strong>Applied filters</strong>: Summary of which filters were used</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Display statistics cards in dashboard (like UI)</li>
+<li>Generate financial reports</li>
+<li>Validate VAT calculations</li>
+<li>Monitor categorization progress</li>
+<li>Calculate tax deductions</li>
+</ul>
+<p><strong>Example URLs:</strong></p>
+<p>Get totals for current month:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/accumulated</code></pre>
+<p>Get totals for specific date range:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/accumulated?start_date=2024-01-01&amp;end_date=2024-01-31</code></pre>
+<p>Get totals for commercial deductible expenses:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/accumulated?category_type=commercial_expenses&amp;deductible_type=deductible</code></pre>
+<p><strong>Filters:</strong></p>
+<p>This endpoint accepts the <strong>same filters</strong> as the bills listing endpoint:</p>
+<ul>
+<li><code>start_date</code>, <code>end_date</code>: Date range (defaults to current month)</li>
+<li><code>category_id[]</code>: Specific category IDs (array)</li>
+<li><code>category_type</code>: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)</li>
+<li><code>deductible_type</code>: Tax deductibility (deductible, non_deductible)</li>
+<li><code>status</code>: Document status (AUTORIZADO, ANULADO)</li>
+<li><code>search</code>: Search in provider name, RUC, document number, etc.</li>
+<li><code>uncategorized</code>: Only uncategorized documents (true/false)</li>
+<li><code>origin</code>: Document origin (electronic, physical)</li>
+</ul>
+<p><strong>Note:</strong> Pagination parameters (page, per_page) and sort are ignored as this endpoint returns a single aggregated result.</p>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received-accumulated">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/accumulated" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/accumulated"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/accumulated';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/accumulated'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received-accumulated">
+            <blockquote>
+            <p>Example response (200, Success - Current month totals):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents accumulated totals retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;totals&quot;: {
+            &quot;subtotal_vat_fifteen_sum&quot;: 75.29,
+            &quot;discount_vat_fifteen_sum&quot;: 0,
+            &quot;vat_fifteen_sum&quot;: 11.28,
+            &quot;subtotal_vat_fourteen_sum&quot;: 0,
+            &quot;discount_vat_fourteen_sum&quot;: 0,
+            &quot;vat_fourteen_sum&quot;: 0,
+            &quot;subtotal_vat_thirteen_sum&quot;: 0,
+            &quot;discount_vat_thirteen_sum&quot;: 0,
+            &quot;vat_thirteen_sum&quot;: 0,
+            &quot;subtotal_vat_twelve_sum&quot;: 0,
+            &quot;discount_vat_twelve_sum&quot;: 0,
+            &quot;vat_twelve_sum&quot;: 0,
+            &quot;subtotal_vat_five_sum&quot;: 0,
+            &quot;discount_vat_five_sum&quot;: 0,
+            &quot;vat_five_sum&quot;: 0,
+            &quot;subtotal_vat_special_sum&quot;: 0,
+            &quot;discount_vat_special_sum&quot;: 0,
+            &quot;vat_special_sum&quot;: 0,
+            &quot;subtotal_vat_zero_sum&quot;: 0,
+            &quot;discount_vat_zero_sum&quot;: 0,
+            &quot;subtotal_vat_exempt_sum&quot;: 0,
+            &quot;discount_vat_exempt_sum&quot;: 0,
+            &quot;subtotal_vat_not_subject_sum&quot;: 0,
+            &quot;discount_vat_not_subject_sum&quot;: 0,
+            &quot;sub_total_sum&quot;: 75.29,
+            &quot;tip_sum&quot;: 0,
+            &quot;subsidy_sum&quot;: 0,
+            &quot;discount_sum&quot;: 0,
+            &quot;total_sum&quot;: 86.57,
+            &quot;subtotal_header&quot;: 75.29,
+            &quot;taxes_header&quot;: 11.28,
+            &quot;subtotal_taxes_header&quot;: 86.57,
+            &quot;total_header&quot;: 86.57,
+            &quot;document_count&quot;: 3,
+            &quot;categorized_document_count&quot;: 3,
+            &quot;uncategorized_document_count&quot;: 0,
+            &quot;voided_document_count&quot;: 0
+        }
+    },
+    &quot;meta&quot;: {
+        &quot;filters_applied&quot;: {
+            &quot;date_range&quot;: {
+                &quot;start_date&quot;: &quot;2024-12-01&quot;,
+                &quot;end_date&quot;: &quot;2024-12-31&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - Filtered by category type):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents accumulated totals retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;totals&quot;: {
+            &quot;subtotal_vat_fifteen_sum&quot;: 50,
+            &quot;vat_fifteen_sum&quot;: 7.5,
+            &quot;subtotal_vat_zero_sum&quot;: 25,
+            &quot;sub_total_sum&quot;: 75,
+            &quot;total_sum&quot;: 82.5,
+            &quot;subtotal_header&quot;: 75,
+            &quot;taxes_header&quot;: 7.5,
+            &quot;total_header&quot;: 82.5,
+            &quot;document_count&quot;: 5,
+            &quot;categorized_document_count&quot;: 5,
+            &quot;uncategorized_document_count&quot;: 0,
+            &quot;voided_document_count&quot;: 0
+        }
+    },
+    &quot;meta&quot;: {
+        &quot;filters_applied&quot;: {
+            &quot;date_range&quot;: {
+                &quot;start_date&quot;: &quot;2024-01-01&quot;,
+                &quot;end_date&quot;: &quot;2024-01-31&quot;
+            },
+            &quot;category_type&quot;: &quot;commercial_expenses&quot;,
+            &quot;deductible_type&quot;: &quot;deductible&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized - Invalid API Key):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key&quot;,
+    &quot;code&quot;: &quot;INVALID_API_KEY&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Forbidden - Taxpayer not accessible):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;You do not have access to this taxpayer&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_ACCESS_DENIED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Not Found - Taxpayer does not exist):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;start_date&quot;: [
+            &quot;The start date field must be a valid date in YYYY-MM-DD format.&quot;
+        ],
+        &quot;category_type&quot;: [
+            &quot;Invalid category type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving accumulated totals&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received-accumulated" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received-accumulated"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received-accumulated"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received-accumulated" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received-accumulated">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received-accumulated" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received/accumulated"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received-accumulated', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received-accumulated"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received-accumulated');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received-accumulated"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received-accumulated');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received-accumulated"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/accumulated</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>start_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>end_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="end_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>End date for filtering (YYYY-MM-DD). Defaults to last day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_id[]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="category_id.0"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET /api/v1/taxpayers/{taxNumber}/categories.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>deductible_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="deductible_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by tax deductibility. Must be one of: deductible, non_deductible.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by document status. Must be one of: AUTORIZADO, ANULADO.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Search in provider name, document number, access key, RUC, email, or phone.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>uncategorized</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated" style="display: none">
+            <input type="radio" name="uncategorized"
+                   value="1"
+                   data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated" style="display: none">
+            <input type="radio" name="uncategorized"
+                   value="0"
+                   data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Filter only uncategorized documents.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>origin</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="origin"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.</p>
+            </div>
+                </form>
+
+                    <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received-count">Get count of all received documents types</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves document counts across all received document types (purchases, credit notes, withholdings)
+for a specific taxpayer and time period.</p>
+<p>This endpoint aggregates data from three tables:</p>
+<ul>
+<li><strong>bills</strong>: Purchase invoices (Facturas de Compra)</li>
+<li><strong>purchase_credit_notes</strong>: Credit notes applied to purchases (Notas de Crédito)</li>
+<li><strong>purchase_withholdings</strong>: Withholding documents (Retenciones)</li>
+</ul>
+<p><strong>IMPORTANT:</strong> This is a GET request. All parameters must be sent as query string parameters in the URL.
+Do NOT send a request body.</p>
+<p><strong>Default Behavior:</strong></p>
+<ul>
+<li>If no date range is specified, returns counts for the current month</li>
+<li>Only counts documents that belong to the authenticated taxpayer and team</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Dashboard statistics showing total documents received</li>
+<li>Monthly/period document volume analysis</li>
+<li>Document type distribution reports</li>
+<li>Compliance verification (ensuring all document types are being processed)</li>
+</ul>
+<p><strong>Example URLs:</strong></p>
+<p>Get counts for current month:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/count</code></pre>
+<p>Get counts for specific period:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/count?start_date=2024-01-01&amp;end_date=2024-01-31</code></pre>
+<p>Get counts for entire year:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/count?start_date=2024-01-01&amp;end_date=2024-12-31</code></pre>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received-count">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/count" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/count"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/count';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/count'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received-count">
+            <blockquote>
+            <p>Example response (200, Success - Current month):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents count retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;counts&quot;: {
+            &quot;invoices&quot;: 45,
+            &quot;credit_notes&quot;: 3,
+            &quot;withholdings&quot;: 12,
+            &quot;total&quot;: 60
+        },
+        &quot;period&quot;: {
+            &quot;start_date&quot;: &quot;2024-12-01&quot;,
+            &quot;end_date&quot;: &quot;2024-12-31&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - Custom period):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents count retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;counts&quot;: {
+            &quot;invoices&quot;: 150,
+            &quot;credit_notes&quot;: 8,
+            &quot;withholdings&quot;: 45,
+            &quot;total&quot;: 203
+        },
+        &quot;period&quot;: {
+            &quot;start_date&quot;: &quot;2024-01-01&quot;,
+            &quot;end_date&quot;: &quot;2024-03-31&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - No documents):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Received documents count retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;counts&quot;: {
+            &quot;invoices&quot;: 0,
+            &quot;credit_notes&quot;: 0,
+            &quot;withholdings&quot;: 0,
+            &quot;total&quot;: 0
+        },
+        &quot;period&quot;: {
+            &quot;start_date&quot;: &quot;2024-12-01&quot;,
+            &quot;end_date&quot;: &quot;2024-12-31&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized - Invalid API Key):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key&quot;,
+    &quot;code&quot;: &quot;INVALID_API_KEY&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Forbidden - Taxpayer not accessible):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;You do not have access to this taxpayer&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_ACCESS_DENIED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Not Found - Taxpayer does not exist):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;start_date&quot;: [
+            &quot;The start date field must be a valid date in YYYY-MM-DD format.&quot;
+        ],
+        &quot;end_date&quot;: [
+            &quot;The end date must be equal to or after the start date.&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving document counts&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received-count" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received-count"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received-count"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received-count" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received-count">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received-count" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received/count"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received-count', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received-count"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received-count');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received-count"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received-count');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received-count"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/count</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>start_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value=""
+               data-component="query">
+    <br>
+<p>Start date for counting (YYYY-MM-DD). Defaults to first day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>end_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="end_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
+               value=""
+               data-component="query">
+    <br>
+<p>End date for counting (YYYY-MM-DD). Defaults to last day of current month.</p>
+            </div>
+                </form>
+
+                    <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">Get accumulated totals for a specific supplier (Provider)</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).
+This endpoint filters all documents by the supplier's tax number and applies additional filters.</p>
+<p><strong>IMPORTANT:</strong> This is a GET request. All parameters must be sent as query string parameters in the URL.
+Do NOT send a request body.</p>
+<p><strong>What This Endpoint Returns:</strong></p>
+<ul>
+<li><strong>Subtotals by VAT rate</strong>: Detailed breakdown of subtotals for each VAT rate</li>
+<li><strong>VAT amounts</strong>: Total VAT collected at each rate</li>
+<li><strong>Discounts</strong>: Discounts applied at each VAT rate</li>
+<li><strong>Header totals</strong>: Simplified totals (subtotal, taxes, total)</li>
+<li><strong>Document counts</strong>: Total documents, categorized, uncategorized, voided</li>
+<li><strong>Applied filters</strong>: Summary of which filters were used (including supplier filter)</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>Analyze spending with a specific supplier</li>
+<li>Supplier performance reports</li>
+<li>Validate supplier invoices and totals</li>
+<li>Tax deduction analysis per supplier</li>
+<li>Supplier comparison reports</li>
+</ul>
+<p><strong>Example URLs:</strong></p>
+<p>Get totals for specific supplier (current month):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals</code></pre>
+<p>Get totals for specific supplier and date range:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?start_date=2024-01-01&amp;end_date=2024-12-31</code></pre>
+<p>Get commercial expenses totals from specific supplier:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?category_type=commercial_expenses&amp;deductible_type=deductible</code></pre>
+<p><strong>Filters:</strong></p>
+<p>This endpoint accepts the <strong>same filters</strong> as <code>/received/accumulated</code>:</p>
+<ul>
+<li><code>start_date</code>, <code>end_date</code>: Date range (defaults to current month)</li>
+<li><code>category_id[]</code>: Specific category IDs (array)</li>
+<li><code>category_type</code>: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)</li>
+<li><code>deductible_type</code>: Tax deductibility (deductible, non_deductible)</li>
+<li><code>status</code>: Document status (AUTORIZADO, ANULADO)</li>
+<li><code>search</code>: Search in document details</li>
+<li><code>uncategorized</code>: Only uncategorized documents (true/false)</li>
+<li><code>origin</code>: Document origin (electronic, physical)</li>
+</ul>
+<p><strong>Plus:</strong> Automatically filters by <code>contact_tax_number</code> from URL parameter</p>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">
+            <blockquote>
+            <p>Example response (200, Success - Supplier totals):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Supplier totals retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;totals&quot;: {
+            &quot;subtotal_vat_fifteen_sum&quot;: 1250.5,
+            &quot;vat_fifteen_sum&quot;: 187.58,
+            &quot;sub_total_sum&quot;: 1250.5,
+            &quot;total_sum&quot;: 1438.08,
+            &quot;subtotal_header&quot;: 1250.5,
+            &quot;taxes_header&quot;: 187.58,
+            &quot;total_header&quot;: 1438.08,
+            &quot;document_count&quot;: 12,
+            &quot;categorized_document_count&quot;: 12,
+            &quot;uncategorized_document_count&quot;: 0,
+            &quot;voided_document_count&quot;: 0
+        }
+    },
+    &quot;meta&quot;: {
+        &quot;filters_applied&quot;: {
+            &quot;date_range&quot;: {
+                &quot;start_date&quot;: &quot;2024-12-01&quot;,
+                &quot;end_date&quot;: &quot;2024-12-31&quot;
+            },
+            &quot;supplier&quot;: {
+                &quot;contact_tax_number&quot;: &quot;1790000000001&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - No documents from supplier):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Supplier totals retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;totals&quot;: {
+            &quot;subtotal_header&quot;: 0,
+            &quot;taxes_header&quot;: 0,
+            &quot;total_header&quot;: 0,
+            &quot;document_count&quot;: 0,
+            &quot;categorized_document_count&quot;: 0,
+            &quot;uncategorized_document_count&quot;: 0,
+            &quot;voided_document_count&quot;: 0
+        }
+    },
+    &quot;meta&quot;: {
+        &quot;filters_applied&quot;: {
+            &quot;date_range&quot;: {
+                &quot;start_date&quot;: &quot;2024-12-01&quot;,
+                &quot;end_date&quot;: &quot;2024-12-31&quot;
+            },
+            &quot;supplier&quot;: {
+                &quot;contact_tax_number&quot;: &quot;1790000000001&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized - Invalid API Key):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key&quot;,
+    &quot;code&quot;: &quot;INVALID_API_KEY&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (403, Forbidden - Taxpayer not accessible):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;You do not have access to this taxpayer&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_ACCESS_DENIED&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Not Found - Taxpayer does not exist):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;code&quot;: &quot;TAXPAYER_NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;start_date&quot;: [
+            &quot;The start date field must be a valid date in YYYY-MM-DD format.&quot;
+        ],
+        &quot;category_type&quot;: [
+            &quot;Invalid category type.&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving supplier totals&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received/suppliers/{contactTaxNumber}/totals"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/suppliers/{contactTaxNumber}/totals</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>contactTaxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="contactTaxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value="1790000000001"
+               data-component="url">
+    <br>
+<p>The supplier's tax number (RUC/CI). Example: <code>1790000000001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>start_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>end_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="end_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>End date for filtering (YYYY-MM-DD). Defaults to last day of current month.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_id[]</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="category_id.0"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>category_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>deductible_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="deductible_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by tax deductibility. Must be one of: deductible, non_deductible.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>status</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="status"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by document status. Must be one of: AUTORIZADO, ANULADO.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>search</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="search"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Search in provider name, document number, access key, etc.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>uncategorized</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals" style="display: none">
+            <input type="radio" name="uncategorized"
+                   value="1"
+                   data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals" style="display: none">
+            <input type="radio" name="uncategorized"
+                   value="0"
+                   data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Filter only uncategorized documents.</p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>origin</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="origin"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
+               value=""
+               data-component="query">
+    <br>
+<p>Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.</p>
+            </div>
+                </form>
 
             
 

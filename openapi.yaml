@@ -13,6 +13,9 @@ tags:
   -
     name: 'IVA Reports'
     description: "\nAPI endpoints for managing IVA (Value Added Tax) reports.\n\n## Report Lifecycle & State Machine\n\nEach IVA report follows a state machine with controlled transitions. Understanding the states and allowed transitions is critical for proper API usage.\n\n### Report States\n\n| State | Code | Description | Can Edit? |\n|-------|------|-------------|-----------|\n| Draft | `draft` | Initial state, automatically created | ✅ Yes |\n| Edited | `edited` | Has manual modifications | ✅ Yes |\n| Saved | `saved` | Ready for review/approval | ❌ No |\n| Sent | `sent` | Sent to taxpayer for approval | ❌ No |\n| Approved | `approved` | Approved, ready for SRI submission | ❌ No |\n| Rejected | `rejected` | Rejected, requires corrections | ❌ No |\n| SRI Sended | `sri_sended` | Being sent to SRI | ❌ No |\n| SRI Completed | `sri_sended_completed` | SRI processing completed | ❌ No |\n| Declared | `declared` | Successfully declared in SRI | ❌ No |\n| Error | `error` | Error during SRI submission | ❌ No |\n\n### State Transitions Matrix\n\n| From State | Allowed Transitions | Endpoints |\n|------------|---------------------|-----------|\n| `draft` | → `edited`, `saved` | `/save` |\n| `edited` | → `draft`, `saved` | `/recalculate`, `/save` |\n| `saved` | → `draft`, `sent`, `approved`, `rejected`, `sri_sended` | `/recalculate`, `/send`, `/approve`, `/reject`, `/send-sri-draft` |\n| `sent` | → `draft`, `approved`, `rejected` | `/recalculate`, `/approve`, `/reject` |\n| `approved` | → `draft`, `sri_sended`, `declared` | `/recalculate`, `/send-sri-draft`, `/mark-declared` |\n| `rejected` | → `draft` | `/recalculate` |\n| `sri_sended` | → `sri_sended_completed`, `error` | (automatic) |\n| `sri_sended_completed` | → `draft`, `approved`, `rejected`, `declared` | `/recalculate`, `/approve`, `/reject`, `/mark-declared` |\n| `error` | → `draft`, `sri_sended` | `/recalculate`, `/send-sri-draft` |\n| `declared` | → `draft` | `/recalculate` |\n\n### Common Workflows\n\n#### Workflow 1: Direct Approval (no taxpayer review)\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. GET    /iva-reports/{period}           → Review calculated values\n3. PATCH  /iva-reports/save               → Lock for review (saved)\n4. PATCH  /iva-reports/approve            → Approve report (approved)\n5. POST   /iva-reports/send-sri-draft     → Submit to SRI (sri_sended → sri_sended_completed)\n6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)\n```\n\n#### Workflow 2: With Taxpayer Approval\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. PATCH  /iva-reports/save               → Lock for review (saved)\n3. POST   /iva-reports/send               → Email to taxpayer (sent)\n4. [Taxpayer reviews and approves via link]\n5. POST   /iva-reports/send-sri-draft     → Submit to SRI (approved → sri_sended)\n6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)\n```\n\n#### Workflow 3: SRI Draft First, Then Approval\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. PATCH  /iva-reports/save               → Lock for review (saved)\n3. POST   /iva-reports/send-sri-draft     → Submit draft to SRI (sri_sended → sri_sended_completed)\n4. POST   /iva-reports/send               → Email to taxpayer (sent)\n5. [Taxpayer approves via link]\n6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)\n```\n\n#### Workflow 4: Rejection & Correction\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. PATCH  /iva-reports/save               → Lock for review (saved)\n3. POST   /iva-reports/send               → Email to taxpayer (sent)\n4. PATCH  /iva-reports/reject             → Reject with comments (rejected)\n5. POST   /iva-reports/recalculate        → Reset to draft (draft)\n6. [Add missing documents, correct errors]\n7. PATCH  /iva-reports/save               → Save again (saved)\n8. PATCH  /iva-reports/approve            → Approve (approved)\n```\n\n### Endpoints That Don't Require Transitions\n\nThese endpoints can be called at any time regardless of state:\n\n- **`GET /iva-reports`** - List all reports\n- **`GET /iva-reports/{period}`** - View specific report details\n- **`POST /iva-reports`** - Create new report (always starts in `draft`)\n- **`POST /iva-reports/recalculate`** - Reset report to `draft` (allowed from most states)\n\n### Important Notes\n\n1. **Report Identification**: Reports are uniquely identified by `taxpayer_id`, `period`, and `team_id`\n2. **Period Format**: Use `YYYY-MM` format (e.g., `2024-03`). The system auto-calculates the exact date based on taxpayer's periodicity\n3. **Automatic Calculations**: Reports are automatically calculated from issued/received documents when created\n4. **State Validation**: All state-changing endpoints validate transitions. Invalid transitions return `400 INVALID_TRANSITION`\n5. **Idempotency**: Some endpoints are idempotent (e.g., `/save` from `saved` state, `/send` from `sent` state)\n\n### Error Handling\n\n- **`400 INVALID_TRANSITION`**: Attempted invalid state transition\n- **`404 NOT_FOUND`**: Report or taxpayer not found\n- **`422 VALIDATION_ERROR`**: Invalid input parameters\n- **`503 EMAIL_SEND_FAILED`**: Email service unavailable (only `/send` endpoint)"
+  -
+    name: 'Received Documents'
+    description: "\nAPI endpoints for managing received documents (purchase documents from suppliers).\n\n## Document Types\n\nReceived documents include:\n- **Invoices (Facturas de Compra)**: Standard purchase invoices from suppliers\n- **Credit Notes**: Applied to invoices\n- **Withholdings**: Tax withholding documents\n\n## Filtering & Categorization\n\n### Date Filtering\n- **Default**: Current month if no dates provided\n- **start_date**: Filter from this date (YYYY-MM-DD)\n- **end_date**: Filter until this date (YYYY-MM-DD)\n\n### Category Filtering\n\nThe system supports two types of categorization:\n\n1. **Document-level categorization (mono-category)**: All items in the document share the same category\n2. **Item-level categorization (multi-category)**: Each line item has its own category\n\n**How Category Filters Work:**\n\nBoth category filters search at the **item level** (bill_items table). If **any item** in a document \nmatches the filter criteria, the **entire document** is included in the results.\n\n**Example:**\n```\nDocument #001:\n  - Item 1: Category \"Office Supplies\" (id: 123)\n  - Item 2: Category \"Services\" (id: 456)\n  - Item 3: Category \"Office Supplies\" (id: 123)\n\nFilter: category_id[]=123\nResult: ✓ Document #001 is included (has items with category 123)\n```\n\n**Category filters:**\n\n- `category_id[]`: Filter by specific category ID(s) - array parameter (can pass multiple)\n  \n  **Searches in:** `bill_items.tax_payer_category_id` (line item categories)\n  \n  **Note:** To obtain the available category IDs for a taxpayer, use the categories endpoint:\n  `GET /api/v1/taxpayers/{taxNumber}/categories`\n  \n  Each taxpayer has their own custom categories. You must retrieve the category IDs \n  from this endpoint before filtering by `category_id[]`.\n  \n- `category_type`: Filter by expense type - single value parameter\n  \n  **Searches in:** `bills.category_types` (JSON field that summarizes item categories)\n  \n  **Available values:**\n  - `commercial_expenses`: Business-related expenses (Actividad Comercial)\n  - `personal_expenses`: Personal expenses (Gasto Personal)\n  - `non_deductible_expenses`: Non-deductible expenses (No Deducible)\n\n### Deductibility Filtering\n- `deductible_type`: Filter by tax deductibility - single value parameter\n  - `deductible`: Tax-deductible expenses (Con derecho a crédito tributario)\n  - `non_deductible`: Non-deductible expenses (Sin derecho a crédito tributario)\n\n### Status Filtering\n- `status`: Filter by document status - single value parameter\n  - `AUTORIZADO`: Authorized/valid documents\n  - `ANULADO`: Voided documents\n\n### Search & Other Filters\n- `search`: Search in provider name, RUC, email, phone, document number, or access key\n- `uncategorized`: Filter uncategorized documents (boolean: true/false)\n- `origin`: Filter by document origin/source system - single value parameter\n  - `tws`: Documents automatically processed by Taxo Web Services from SRI\n  - `xml-import`: Documents manually imported from XML files\n  - `physical-upload`: Physical documents uploaded/entered manually by user\n\n**Note:** Most filters accept a single value.\nOnly `category_id` accepts multiple values using array notation `category_id[]=123&category_id[]=456`.\n\n## Sorting\n\nDefault sort: `-date_only,-bill_number` (newest first, then by number descending)\n\nAvailable sort fields (prefix with `-` for descending):\n- `date_only`: Document date\n- `bill_number`: Document number\n- `contact_name`: Provider name\n- `sub_total`: Subtotal amount\n- `total`: Total amount\n\n**Example:** `sort=-total,date_only` (highest total first, then oldest date)\n\n\n## Important Notes\n\n1. **Consistent Results**: This API uses the same services and repositories as the UI, ensuring identical results\n2. **Performance**: The endpoint uses optimized queries with lazy loading for related data\n3. **Pagination**: Results are paginated (default 20 items per page, max 100)\n4. **Timezone**: All dates are in UTC. Document dates (`billed_at`) show local Ecuador time"
 components:
   securitySchemes:
     default:
@@ -630,19 +633,6 @@ paths:
                     example: TWS_SERVICE_TIMEOUT
       tags:
         - Taxpayers
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                taxpayerId:
-                  type: string
-                  description: 'Ecuadorian tax identifier. Can be: RUC (13 digits), Cédula (10 digits), or Passport (alphanumeric). Must match the regex /^[a-zA-Z0-9\-]+$/. El campo value debe ser de al menos 5 caracteres. El campo value no debe ser mayor que 20 caracteres.'
-                  example: '1726051285001'
-              required:
-                - taxpayerId
   '/api/v1/taxpayers/{taxNumber}':
     get:
       summary: 'Get a specific taxpayer'
@@ -978,12 +968,12 @@ paths:
           in: query
           name: filter.document_type
           description: ''
-          example: purchases
+          example: sales
           required: false
           schema:
             type: string
             description: ''
-            example: purchases
+            example: sales
             enum:
               - purchases
               - sales
@@ -992,12 +982,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: commercial_expenses
+          example: personal_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: commercial_expenses
+            example: personal_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -1550,59 +1540,6 @@ paths:
                           type: string
       tags:
         - 'IVA Reports'
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                page:
-                  type: integer
-                  description: 'El campo value debe ser al menos 1.'
-                  example: 73
-                per_page:
-                  type: integer
-                  description: 'El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
-                  example: 13
-                status:
-                  type: string
-                  description: ''
-                  example: error
-                  enum:
-                    - draft
-                    - edited
-                    - saved
-                    - sent
-                    - approved
-                    - rejected
-                    - declared
-                    - sri_declared_confirmed
-                    - sri_sended
-                    - sri_sended_completed
-                    - error
-                periodicity:
-                  type: string
-                  description: ''
-                  example: biannual
-                  enum:
-                    - monthly
-                    - biannual
-                year:
-                  type: integer
-                  description: 'El campo value debe ser al menos 2000. El campo value no debe ser mayor que 2026.'
-                  example: 16
-                sort:
-                  type: string
-                  description: ''
-                  example: created_at
-                  enum:
-                    - period
-                    - '-period'
-                    - status
-                    - '-status'
-                    - created_at
-                    - '-created_at'
     post:
       summary: 'Create a new IVA report'
       operationId: createANewIVAReport
@@ -2494,7 +2431,6 @@ paths:
                   type: string
                   description: 'Optional comments about the report (max 500 chars).'
                   example: 'Reporte revisado, valores correctos'
-                  nullable: true
               required:
                 - period
     parameters:
@@ -2696,7 +2632,6 @@ paths:
                   type: string
                   description: 'Optional approval comments or notes (max 500 chars).'
                   example: 'Valores verificados, aprobado para envío al SRI'
-                  nullable: true
               required:
                 - period
     parameters:
@@ -3359,7 +3294,6 @@ paths:
                   type: string
                   description: 'Optional message/comments to include in email (max 500 chars).'
                   example: 'Por favor revisar los totales de ventas y confirmar'
-                  nullable: true
               required:
                 - period
     parameters:
@@ -3585,6 +3519,1967 @@ paths:
         name: taxNumber
         description: "The taxpayer's RUC number (13 digits)."
         example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received':
+    get:
+      summary: 'List received documents for a taxpayer'
+      operationId: listReceivedDocumentsForATaxpayer
+      description: "Retrieves a paginated list of received documents (purchase invoices) for a specific taxpayer.\nThis endpoint returns the same data as the UI received documents listing.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URLs:**\n\nBasic query with date range:\n```\nGET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=20\n```\n\nWith filters for commercial deductible expenses:\n```\nGET /api/v1/taxpayers/1726051285001/received?category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO\n```\n\n**Filter Format:** All filters use top-level query parameters (consistent with TaxPayers and IVA Reports endpoints).\n\n**Filtering Examples:**\n\nFilter by category type (commercial expenses only):\n```\nGET /api/v1/taxpayers/1726051285001/received?category_type=commercial_expenses\n```\n\nFilter by deductibility (only deductible):\n```\nGET /api/v1/taxpayers/1726051285001/received?deductible_type=deductible\n```\n\nFilter by specific categories (multiple IDs allowed):\n```\nGET /api/v1/taxpayers/1726051285001/received?category_id[]=123&category_id[]=456\n```\n*Note: First retrieve available categories from GET /api/v1/taxpayers/{taxNumber}/categories*\n\nFilter by status (authorized documents only):\n```\nGET /api/v1/taxpayers/1726051285001/received?status=AUTORIZADO\n```\n\nSearch providers:\n```\nGET /api/v1/taxpayers/1726051285001/received?search=PROVEEDOR\n```\n\nFilter only uncategorized:\n```\nGET /api/v1/taxpayers/1726051285001/received?uncategorized=true\n```\n\nFilter by origin (electronic documents only):\n```\nGET /api/v1/taxpayers/1726051285001/received?origin=tws\n```\n\nMultiple filters combined (real use case):\n```\nGET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&end_date=2024-01-31&category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO&sort=-total\n```"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: query
+          name: page
+          description: 'Page number for pagination. Default: 1.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Page number for pagination. Default: 1.'
+            example: null
+        -
+          in: query
+          name: per_page
+          description: 'Items per page (1-100). Default: 20.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Items per page (1-100). Default: 20.'
+            example: null
+        -
+          in: query
+          name: sort
+          description: 'Sort field. Prefix with - for descending. Default: -date_only,-bill_number.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Sort field. Prefix with - for descending. Default: -date_only,-bill_number.'
+            example: null
+        -
+          in: query
+          name: 'category_id[]'
+          description: 'Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+            example: null
+        -
+          in: query
+          name: category_type
+          description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+            example: null
+        -
+          in: query
+          name: deductible_type
+          description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+            example: null
+        -
+          in: query
+          name: status
+          description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+            example: null
+        -
+          in: query
+          name: search
+          description: 'Search in provider name, document number, access key, RUC, email, or phone.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Search in provider name, document number, access key, RUC, email, or phone.'
+            example: null
+        -
+          in: query
+          name: uncategorized
+          description: 'Filter only uncategorized documents.'
+          example: null
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter only uncategorized documents.'
+            example: null
+        -
+          in: query
+          name: origin
+          description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - with bills'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents retrieved successfully'
+                      data:
+                        bills:
+                          -
+                            id: 12345
+                            ulid: 01HZXXX123ABC456
+                            bill_number: 001-001-000001234
+                            access_key: '0101202401172605128500110010010000012341234567813'
+                            billed_at: '2024-01-15T14:30:00.000000Z'
+                            date_only: '2024-01-15'
+                            bill_status: AUTORIZADO
+                            is_physical: false
+                            is_sale_note: false
+                            is_locked: false
+                            lock_reason: null
+                            origin: tws
+                            document_type: electronic
+                            issuer:
+                              tax_number: '1234567890001'
+                              business_name: 'PROVEEDOR DEMO S.A.'
+                              trade_name: 'PROVEEDOR DEMO'
+                              address: 'Av. Principal 123 y Secundaria'
+                              email: proveedor@example.com
+                            payment:
+                              payment_method: '01'
+                              payment_amount: 112.0
+                            totals:
+                              subtotal_vat_zero: 0.0
+                              subtotal_vat_twelve: 100.0
+                              subtotal_vat_fifteen: 0.0
+                              sub_total: 100.0
+                              sub_total_show: 100.0
+                              discount: 0.0
+                              total: 112.0
+                            taxes:
+                              vat_twelve: 12.0
+                              vat_fifteen: 0.0
+                              total_tax: 12.0
+                            categories:
+                              -
+                                id: 45
+                                category_id: 12
+                                name: 'Servicios Profesionales'
+                                color: bg-blue-500
+                                icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6'
+                                count: 1
+                            category_types:
+                              -
+                                category_type: commercial_expenses
+                                count: 1
+                            deductible_types:
+                              -
+                                deductible_type: deductible
+                                count: 1
+                            categorized_by:
+                              - manual
+                            has_credit_notes: false
+                            has_withholdings: false
+                            voided_at: null
+                            voided_origin: null
+                            created_at: '2024-01-15T14:35:00.000000Z'
+                            updated_at: '2024-01-15T14:35:00.000000Z'
+                      meta:
+                        pagination:
+                          current_page: 1
+                          per_page: 20
+                          total: 45
+                          total_pages: 3
+                          from: 1
+                          to: 20
+                        filters_applied:
+                          start_date: '2024-01-01'
+                          end_date: '2024-01-31'
+                          category_type: commercial_expenses
+                          deductible_type: deductible
+                          status: AUTORIZADO
+                          sort: '-date_only,-bill_number'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          bills:
+                            type: array
+                            example:
+                              -
+                                id: 12345
+                                ulid: 01HZXXX123ABC456
+                                bill_number: 001-001-000001234
+                                access_key: '0101202401172605128500110010010000012341234567813'
+                                billed_at: '2024-01-15T14:30:00.000000Z'
+                                date_only: '2024-01-15'
+                                bill_status: AUTORIZADO
+                                is_physical: false
+                                is_sale_note: false
+                                is_locked: false
+                                lock_reason: null
+                                origin: tws
+                                document_type: electronic
+                                issuer:
+                                  tax_number: '1234567890001'
+                                  business_name: 'PROVEEDOR DEMO S.A.'
+                                  trade_name: 'PROVEEDOR DEMO'
+                                  address: 'Av. Principal 123 y Secundaria'
+                                  email: proveedor@example.com
+                                payment:
+                                  payment_method: '01'
+                                  payment_amount: 112
+                                totals:
+                                  subtotal_vat_zero: 0
+                                  subtotal_vat_twelve: 100
+                                  subtotal_vat_fifteen: 0
+                                  sub_total: 100
+                                  sub_total_show: 100
+                                  discount: 0
+                                  total: 112
+                                taxes:
+                                  vat_twelve: 12
+                                  vat_fifteen: 0
+                                  total_tax: 12
+                                categories:
+                                  -
+                                    id: 45
+                                    category_id: 12
+                                    name: 'Servicios Profesionales'
+                                    color: bg-blue-500
+                                    icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6'
+                                    count: 1
+                                category_types:
+                                  -
+                                    category_type: commercial_expenses
+                                    count: 1
+                                deductible_types:
+                                  -
+                                    deductible_type: deductible
+                                    count: 1
+                                categorized_by:
+                                  - manual
+                                has_credit_notes: false
+                                has_withholdings: false
+                                voided_at: null
+                                voided_origin: null
+                                created_at: '2024-01-15T14:35:00.000000Z'
+                                updated_at: '2024-01-15T14:35:00.000000Z'
+                            items:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                  example: 12345
+                                ulid:
+                                  type: string
+                                  example: 01HZXXX123ABC456
+                                bill_number:
+                                  type: string
+                                  example: 001-001-000001234
+                                access_key:
+                                  type: string
+                                  example: '0101202401172605128500110010010000012341234567813'
+                                billed_at:
+                                  type: string
+                                  example: '2024-01-15T14:30:00.000000Z'
+                                date_only:
+                                  type: string
+                                  example: '2024-01-15'
+                                bill_status:
+                                  type: string
+                                  example: AUTORIZADO
+                                is_physical:
+                                  type: boolean
+                                  example: false
+                                is_sale_note:
+                                  type: boolean
+                                  example: false
+                                is_locked:
+                                  type: boolean
+                                  example: false
+                                lock_reason:
+                                  type: string
+                                  example: null
+                                origin:
+                                  type: string
+                                  example: tws
+                                document_type:
+                                  type: string
+                                  example: electronic
+                                issuer:
+                                  type: object
+                                  properties:
+                                    tax_number:
+                                      type: string
+                                      example: '1234567890001'
+                                    business_name:
+                                      type: string
+                                      example: 'PROVEEDOR DEMO S.A.'
+                                    trade_name:
+                                      type: string
+                                      example: 'PROVEEDOR DEMO'
+                                    address:
+                                      type: string
+                                      example: 'Av. Principal 123 y Secundaria'
+                                    email:
+                                      type: string
+                                      example: proveedor@example.com
+                                payment:
+                                  type: object
+                                  properties:
+                                    payment_method:
+                                      type: string
+                                      example: '01'
+                                    payment_amount:
+                                      type: number
+                                      example: 112.0
+                                totals:
+                                  type: object
+                                  properties:
+                                    subtotal_vat_zero:
+                                      type: number
+                                      example: 0.0
+                                    subtotal_vat_twelve:
+                                      type: number
+                                      example: 100.0
+                                    subtotal_vat_fifteen:
+                                      type: number
+                                      example: 0.0
+                                    sub_total:
+                                      type: number
+                                      example: 100.0
+                                    sub_total_show:
+                                      type: number
+                                      example: 100.0
+                                    discount:
+                                      type: number
+                                      example: 0.0
+                                    total:
+                                      type: number
+                                      example: 112.0
+                                taxes:
+                                  type: object
+                                  properties:
+                                    vat_twelve:
+                                      type: number
+                                      example: 12.0
+                                    vat_fifteen:
+                                      type: number
+                                      example: 0.0
+                                    total_tax:
+                                      type: number
+                                      example: 12.0
+                                categories:
+                                  type: array
+                                  example:
+                                    -
+                                      id: 45
+                                      category_id: 12
+                                      name: 'Servicios Profesionales'
+                                      color: bg-blue-500
+                                      icon: 'M12 6v6m0 0v6m0-6h6m-6 0H6'
+                                      count: 1
+                                  items:
+                                    type: object
+                                    properties:
+                                      id: { type: integer, example: 45 }
+                                      category_id: { type: integer, example: 12 }
+                                      name: { type: string, example: 'Servicios Profesionales' }
+                                      color: { type: string, example: bg-blue-500 }
+                                      icon: { type: string, example: 'M12 6v6m0 0v6m0-6h6m-6 0H6' }
+                                      count: { type: integer, example: 1 }
+                                category_types:
+                                  type: array
+                                  example:
+                                    -
+                                      category_type: commercial_expenses
+                                      count: 1
+                                  items:
+                                    type: object
+                                    properties:
+                                      category_type: { type: string, example: commercial_expenses }
+                                      count: { type: integer, example: 1 }
+                                deductible_types:
+                                  type: array
+                                  example:
+                                    -
+                                      deductible_type: deductible
+                                      count: 1
+                                  items:
+                                    type: object
+                                    properties:
+                                      deductible_type: { type: string, example: deductible }
+                                      count: { type: integer, example: 1 }
+                                categorized_by:
+                                  type: array
+                                  example:
+                                    - manual
+                                  items:
+                                    type: string
+                                has_credit_notes:
+                                  type: boolean
+                                  example: false
+                                has_withholdings:
+                                  type: boolean
+                                  example: false
+                                voided_at:
+                                  type: string
+                                  example: null
+                                voided_origin:
+                                  type: string
+                                  example: null
+                                created_at:
+                                  type: string
+                                  example: '2024-01-15T14:35:00.000000Z'
+                                updated_at:
+                                  type: string
+                                  example: '2024-01-15T14:35:00.000000Z'
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              current_page:
+                                type: integer
+                                example: 1
+                              per_page:
+                                type: integer
+                                example: 20
+                              total:
+                                type: integer
+                                example: 45
+                              total_pages:
+                                type: integer
+                                example: 3
+                              from:
+                                type: integer
+                                example: 1
+                              to:
+                                type: integer
+                                example: 20
+                          filters_applied:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-01-01'
+                              end_date:
+                                type: string
+                                example: '2024-01-31'
+                              category_type:
+                                type: string
+                                example: commercial_expenses
+                              deductible_type:
+                                type: string
+                                example: deductible
+                              status:
+                                type: string
+                                example: AUTORIZADO
+                              sort:
+                                type: string
+                                example: '-date_only,-bill_number'
+                  -
+                    description: 'Success - no bills found'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents retrieved successfully'
+                      data:
+                        bills: []
+                      meta:
+                        pagination:
+                          current_page: 1
+                          per_page: 20
+                          total: 0
+                          total_pages: 0
+                          from: 0
+                          to: 0
+                        filters_applied:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                          sort: '-date_only,-bill_number'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          bills:
+                            type: array
+                            example: []
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              current_page:
+                                type: integer
+                                example: 1
+                              per_page:
+                                type: integer
+                                example: 20
+                              total:
+                                type: integer
+                                example: 0
+                              total_pages:
+                                type: integer
+                                example: 0
+                              from:
+                                type: integer
+                                example: 0
+                              to:
+                                type: integer
+                                example: 0
+                          filters_applied:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+                              sort:
+                                type: string
+                                example: '-date_only,-bill_number'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key or organization ID'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key or organization ID'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        422:
+          description: 'Invalid filter'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format'
+                    per_page:
+                      - 'The per page must not be greater than 100'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format'
+                        items:
+                          type: string
+                      per_page:
+                        type: array
+                        example:
+                          - 'The per page must not be greater than 100'
+                        items:
+                          type: string
+      tags:
+        - 'Received Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received/accumulated':
+    get:
+      summary: 'Get accumulated totals for received documents'
+      operationId: getAccumulatedTotalsForReceivedDocuments
+      description: "Retrieves aggregated totals and statistics for received documents based on the applied filters.\nThis endpoint complements the received documents listing endpoint by providing calculated totals.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate (15%, 14%, 13%, 12%, 5%, 0%, exempt, not subject)\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used\n\n**Use Cases:**\n\n- Display statistics cards in dashboard (like UI)\n- Generate financial reports\n- Validate VAT calculations\n- Monitor categorization progress\n- Calculate tax deductions\n\n**Example URLs:**\n\nGet totals for current month:\n```\nGET /api/v1/taxpayers/1726051285001/received/accumulated\n```\n\nGet totals for specific date range:\n```\nGET /api/v1/taxpayers/1726051285001/received/accumulated?start_date=2024-01-01&end_date=2024-01-31\n```\n\nGet totals for commercial deductible expenses:\n```\nGET /api/v1/taxpayers/1726051285001/received/accumulated?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as the bills listing endpoint:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in provider name, RUC, document number, etc.\n- `uncategorized`: Only uncategorized documents (true/false)\n- `origin`: Document origin (electronic, physical)\n\n**Note:** Pagination parameters (page, per_page) and sort are ignored as this endpoint returns a single aggregated result."
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: query
+          name: 'category_id[]'
+          description: 'Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by category ID(s). Can pass multiple values using array notation. To obtain available category IDs for the taxpayer, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+            example: null
+        -
+          in: query
+          name: category_type
+          description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+            example: null
+        -
+          in: query
+          name: deductible_type
+          description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+            example: null
+        -
+          in: query
+          name: status
+          description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+            example: null
+        -
+          in: query
+          name: search
+          description: 'Search in provider name, document number, access key, RUC, email, or phone.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Search in provider name, document number, access key, RUC, email, or phone.'
+            example: null
+        -
+          in: query
+          name: uncategorized
+          description: 'Filter only uncategorized documents.'
+          example: null
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter only uncategorized documents.'
+            example: null
+        -
+          in: query
+          name: origin
+          description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Current month totals'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents accumulated totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_vat_fifteen_sum: 75.29
+                          discount_vat_fifteen_sum: 0
+                          vat_fifteen_sum: 11.28
+                          subtotal_vat_fourteen_sum: 0
+                          discount_vat_fourteen_sum: 0
+                          vat_fourteen_sum: 0
+                          subtotal_vat_thirteen_sum: 0
+                          discount_vat_thirteen_sum: 0
+                          vat_thirteen_sum: 0
+                          subtotal_vat_twelve_sum: 0
+                          discount_vat_twelve_sum: 0
+                          vat_twelve_sum: 0
+                          subtotal_vat_five_sum: 0
+                          discount_vat_five_sum: 0
+                          vat_five_sum: 0
+                          subtotal_vat_special_sum: 0
+                          discount_vat_special_sum: 0
+                          vat_special_sum: 0
+                          subtotal_vat_zero_sum: 0
+                          discount_vat_zero_sum: 0
+                          subtotal_vat_exempt_sum: 0
+                          discount_vat_exempt_sum: 0
+                          subtotal_vat_not_subject_sum: 0
+                          discount_vat_not_subject_sum: 0
+                          sub_total_sum: 75.29
+                          tip_sum: 0
+                          subsidy_sum: 0
+                          discount_sum: 0
+                          total_sum: 86.57
+                          subtotal_header: 75.29
+                          taxes_header: 11.28
+                          subtotal_taxes_header: 86.57
+                          total_header: 86.57
+                          document_count: 3
+                          categorized_document_count: 3
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                      meta:
+                        filters_applied:
+                          date_range:
+                            start_date: '2024-12-01'
+                            end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents accumulated totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_vat_fifteen_sum:
+                                type: number
+                                example: 75.29
+                              discount_vat_fifteen_sum:
+                                type: integer
+                                example: 0
+                              vat_fifteen_sum:
+                                type: number
+                                example: 11.28
+                              subtotal_vat_fourteen_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_fourteen_sum:
+                                type: integer
+                                example: 0
+                              vat_fourteen_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_thirteen_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_thirteen_sum:
+                                type: integer
+                                example: 0
+                              vat_thirteen_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_twelve_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_twelve_sum:
+                                type: integer
+                                example: 0
+                              vat_twelve_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_five_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_five_sum:
+                                type: integer
+                                example: 0
+                              vat_five_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_special_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_special_sum:
+                                type: integer
+                                example: 0
+                              vat_special_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_zero_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_zero_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_exempt_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_exempt_sum:
+                                type: integer
+                                example: 0
+                              subtotal_vat_not_subject_sum:
+                                type: integer
+                                example: 0
+                              discount_vat_not_subject_sum:
+                                type: integer
+                                example: 0
+                              sub_total_sum:
+                                type: number
+                                example: 75.29
+                              tip_sum:
+                                type: integer
+                                example: 0
+                              subsidy_sum:
+                                type: integer
+                                example: 0
+                              discount_sum:
+                                type: integer
+                                example: 0
+                              total_sum:
+                                type: number
+                                example: 86.57
+                              subtotal_header:
+                                type: number
+                                example: 75.29
+                              taxes_header:
+                                type: number
+                                example: 11.28
+                              subtotal_taxes_header:
+                                type: number
+                                example: 86.57
+                              total_header:
+                                type: number
+                                example: 86.57
+                              document_count:
+                                type: integer
+                                example: 3
+                              categorized_document_count:
+                                type: integer
+                                example: 3
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              date_range:
+                                type: object
+                                properties:
+                                  start_date:
+                                    type: string
+                                    example: '2024-12-01'
+                                  end_date:
+                                    type: string
+                                    example: '2024-12-31'
+                  -
+                    description: 'Success - Filtered by category type'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents accumulated totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_vat_fifteen_sum: 50.0
+                          vat_fifteen_sum: 7.5
+                          subtotal_vat_zero_sum: 25.0
+                          sub_total_sum: 75.0
+                          total_sum: 82.5
+                          subtotal_header: 75.0
+                          taxes_header: 7.5
+                          total_header: 82.5
+                          document_count: 5
+                          categorized_document_count: 5
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                      meta:
+                        filters_applied:
+                          date_range:
+                            start_date: '2024-01-01'
+                            end_date: '2024-01-31'
+                          category_type: commercial_expenses
+                          deductible_type: deductible
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents accumulated totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_vat_fifteen_sum:
+                                type: number
+                                example: 50.0
+                              vat_fifteen_sum:
+                                type: number
+                                example: 7.5
+                              subtotal_vat_zero_sum:
+                                type: number
+                                example: 25.0
+                              sub_total_sum:
+                                type: number
+                                example: 75.0
+                              total_sum:
+                                type: number
+                                example: 82.5
+                              subtotal_header:
+                                type: number
+                                example: 75.0
+                              taxes_header:
+                                type: number
+                                example: 7.5
+                              total_header:
+                                type: number
+                                example: 82.5
+                              document_count:
+                                type: integer
+                                example: 5
+                              categorized_document_count:
+                                type: integer
+                                example: 5
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              date_range:
+                                type: object
+                                properties:
+                                  start_date:
+                                    type: string
+                                    example: '2024-01-01'
+                                  end_date:
+                                    type: string
+                                    example: '2024-01-31'
+                              category_type:
+                                type: string
+                                example: commercial_expenses
+                              deductible_type:
+                                type: string
+                                example: deductible
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Not Found - Taxpayer does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                    category_type:
+                      - 'Invalid category type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                        items:
+                          type: string
+                      category_type:
+                        type: array
+                        example:
+                          - 'Invalid category type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving accumulated totals'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving accumulated totals'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Received Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received/count':
+    get:
+      summary: 'Get count of all received documents types'
+      operationId: getCountOfAllReceivedDocumentsTypes
+      description: "Retrieves document counts across all received document types (purchases, credit notes, withholdings)\nfor a specific taxpayer and time period.\n\nThis endpoint aggregates data from three tables:\n- **bills**: Purchase invoices (Facturas de Compra)\n- **purchase_credit_notes**: Credit notes applied to purchases (Notas de Crédito)\n- **purchase_withholdings**: Withholding documents (Retenciones)\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Default Behavior:**\n- If no date range is specified, returns counts for the current month\n- Only counts documents that belong to the authenticated taxpayer and team\n\n**Use Cases:**\n- Dashboard statistics showing total documents received\n- Monthly/period document volume analysis\n- Document type distribution reports\n- Compliance verification (ensuring all document types are being processed)\n\n**Example URLs:**\n\nGet counts for current month:\n```\nGET /api/v1/taxpayers/1726051285001/received/count\n```\n\nGet counts for specific period:\n```\nGET /api/v1/taxpayers/1726051285001/received/count?start_date=2024-01-01&end_date=2024-01-31\n```\n\nGet counts for entire year:\n```\nGET /api/v1/taxpayers/1726051285001/received/count?start_date=2024-01-01&end_date=2024-12-31\n```"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for counting (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for counting (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for counting (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for counting (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Current month'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents count retrieved successfully'
+                      data:
+                        counts:
+                          invoices: 45
+                          credit_notes: 3
+                          withholdings: 12
+                          total: 60
+                        period:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents count retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          counts:
+                            type: object
+                            properties:
+                              invoices:
+                                type: integer
+                                example: 45
+                              credit_notes:
+                                type: integer
+                                example: 3
+                              withholdings:
+                                type: integer
+                                example: 12
+                              total:
+                                type: integer
+                                example: 60
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+                  -
+                    description: 'Success - Custom period'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents count retrieved successfully'
+                      data:
+                        counts:
+                          invoices: 150
+                          credit_notes: 8
+                          withholdings: 45
+                          total: 203
+                        period:
+                          start_date: '2024-01-01'
+                          end_date: '2024-03-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents count retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          counts:
+                            type: object
+                            properties:
+                              invoices:
+                                type: integer
+                                example: 150
+                              credit_notes:
+                                type: integer
+                                example: 8
+                              withholdings:
+                                type: integer
+                                example: 45
+                              total:
+                                type: integer
+                                example: 203
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-01-01'
+                              end_date:
+                                type: string
+                                example: '2024-03-31'
+                  -
+                    description: 'Success - No documents'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Received documents count retrieved successfully'
+                      data:
+                        counts:
+                          invoices: 0
+                          credit_notes: 0
+                          withholdings: 0
+                          total: 0
+                        period:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Received documents count retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          counts:
+                            type: object
+                            properties:
+                              invoices:
+                                type: integer
+                                example: 0
+                              credit_notes:
+                                type: integer
+                                example: 0
+                              withholdings:
+                                type: integer
+                                example: 0
+                              total:
+                                type: integer
+                                example: 0
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Not Found - Taxpayer does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                    end_date:
+                      - 'The end date must be equal to or after the start date.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                        items:
+                          type: string
+                      end_date:
+                        type: array
+                        example:
+                          - 'The end date must be equal to or after the start date.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving document counts'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving document counts'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Received Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received/suppliers/{contactTaxNumber}/totals':
+    get:
+      summary: 'Get accumulated totals for a specific supplier (Provider)'
+      operationId: getAccumulatedTotalsForASpecificSupplierProvider
+      description: "Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).\nThis endpoint filters all documents by the supplier's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including supplier filter)\n\n**Use Cases:**\n\n- Analyze spending with a specific supplier\n- Supplier performance reports\n- Validate supplier invoices and totals\n- Tax deduction analysis per supplier\n- Supplier comparison reports\n\n**Example URLs:**\n\nGet totals for specific supplier (current month):\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals\n```\n\nGet totals for specific supplier and date range:\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet commercial expenses totals from specific supplier:\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `/received/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in document details\n- `uncategorized`: Only uncategorized documents (true/false)\n- `origin`: Document origin (electronic, physical)\n\n**Plus:** Automatically filters by `contact_tax_number` from URL parameter"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: query
+          name: 'category_id[]'
+          description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+            example: null
+        -
+          in: query
+          name: category_type
+          description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+            example: null
+        -
+          in: query
+          name: deductible_type
+          description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+            example: null
+        -
+          in: query
+          name: status
+          description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+            example: null
+        -
+          in: query
+          name: search
+          description: 'Search in provider name, document number, access key, etc.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Search in provider name, document number, access key, etc.'
+            example: null
+        -
+          in: query
+          name: uncategorized
+          description: 'Filter only uncategorized documents.'
+          example: null
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter only uncategorized documents.'
+            example: null
+        -
+          in: query
+          name: origin
+          description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Supplier totals'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Supplier totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_vat_fifteen_sum: 1250.5
+                          vat_fifteen_sum: 187.58
+                          sub_total_sum: 1250.5
+                          total_sum: 1438.08
+                          subtotal_header: 1250.5
+                          taxes_header: 187.58
+                          total_header: 1438.08
+                          document_count: 12
+                          categorized_document_count: 12
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                      meta:
+                        filters_applied:
+                          date_range:
+                            start_date: '2024-12-01'
+                            end_date: '2024-12-31'
+                          supplier:
+                            contact_tax_number: '1790000000001'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Supplier totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_vat_fifteen_sum:
+                                type: number
+                                example: 1250.5
+                              vat_fifteen_sum:
+                                type: number
+                                example: 187.58
+                              sub_total_sum:
+                                type: number
+                                example: 1250.5
+                              total_sum:
+                                type: number
+                                example: 1438.08
+                              subtotal_header:
+                                type: number
+                                example: 1250.5
+                              taxes_header:
+                                type: number
+                                example: 187.58
+                              total_header:
+                                type: number
+                                example: 1438.08
+                              document_count:
+                                type: integer
+                                example: 12
+                              categorized_document_count:
+                                type: integer
+                                example: 12
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              date_range:
+                                type: object
+                                properties:
+                                  start_date:
+                                    type: string
+                                    example: '2024-12-01'
+                                  end_date:
+                                    type: string
+                                    example: '2024-12-31'
+                              supplier:
+                                type: object
+                                properties:
+                                  contact_tax_number:
+                                    type: string
+                                    example: '1790000000001'
+                  -
+                    description: 'Success - No documents from supplier'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Supplier totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_header: 0.0
+                          taxes_header: 0.0
+                          total_header: 0.0
+                          document_count: 0
+                          categorized_document_count: 0
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                      meta:
+                        filters_applied:
+                          date_range:
+                            start_date: '2024-12-01'
+                            end_date: '2024-12-31'
+                          supplier:
+                            contact_tax_number: '1790000000001'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Supplier totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_header:
+                                type: number
+                                example: 0.0
+                              taxes_header:
+                                type: number
+                                example: 0.0
+                              total_header:
+                                type: number
+                                example: 0.0
+                              document_count:
+                                type: integer
+                                example: 0
+                              categorized_document_count:
+                                type: integer
+                                example: 0
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              date_range:
+                                type: object
+                                properties:
+                                  start_date:
+                                    type: string
+                                    example: '2024-12-01'
+                                  end_date:
+                                    type: string
+                                    example: '2024-12-31'
+                              supplier:
+                                type: object
+                                properties:
+                                  contact_tax_number:
+                                    type: string
+                                    example: '1790000000001'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Not Found - Taxpayer does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                    category_type:
+                      - 'Invalid category type.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                        items:
+                          type: string
+                      category_type:
+                        type: array
+                        example:
+                          - 'Invalid category type.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving supplier totals'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving supplier totals'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Received Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: contactTaxNumber
+        description: "The supplier's tax number (RUC/CI)."
+        example: '1790000000001'
         required: true
         schema:
           type: string
