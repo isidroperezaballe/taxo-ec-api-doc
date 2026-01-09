@@ -21,3 +21,6 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+# Backup files from fix-docs-paths script
+*.backup

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "38c1d8be-f3f1-49a1-ab67-5e2baf9283a5",
+        "_postman_id": "274dcdee-84bf-4ded-b2c8-7c54a7ec4348",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -81,10 +81,6 @@
                         "method": "GET",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
@@ -128,10 +124,6 @@
                         },
                         "method": "POST",
                         "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
@@ -214,10 +206,6 @@
                         },
                         "method": "GET",
                         "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
@@ -320,7 +308,7 @@
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "personal_expenses",
+                                    "value": "sales",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -343,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=personal_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=sales&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -355,10 +343,6 @@
                         },
                         "method": "GET",
                         "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
@@ -461,10 +445,6 @@
                         "method": "GET",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
@@ -523,16 +503,16 @@
                         "method": "POST",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -600,10 +580,6 @@
                         "method": "GET",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
@@ -662,16 +638,16 @@
                         "method": "POST",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -727,16 +703,16 @@
                         "method": "PATCH",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -792,16 +768,16 @@
                         "method": "PATCH",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -857,16 +833,16 @@
                         "method": "PATCH",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -928,16 +904,16 @@
                         "method": "PATCH",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -993,16 +969,16 @@
                         "method": "POST",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -1070,16 +1046,16 @@
                         "method": "POST",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
                             {
                                 "key": "x-organization-id",
                                 "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
                         "body": {
@@ -1167,7 +1143,7 @@
                                 {
                                     "key": "sort",
                                     "value": "",
-                                    "description": "Sort field. Prefix with - for descending. Default: -date_only,-bill_number.",
+                                    "description": "Sort field. Allowed values: date_only (document date), contact_name (supplier name), sub_total (subtotal amount), bill_number (document number). Prefix with \"-\" for descending order. You can combine multiple sorts with commas. Examples: \"-date_only\" (newest first), \"contact_name\" (A-Z), \"-sub_total,date_only\" (highest amount first, then by date). Default: -date_only,-bill_number.",
                                     "disabled": true
                                 },
                                 {
@@ -1203,7 +1179,7 @@
                                 {
                                     "key": "uncategorized",
                                     "value": "",
-                                    "description": "Filter only uncategorized documents.",
+                                    "description": "Filter only uncategorized documents. Accepts: true\/false, 1\/0, yes\/no, on\/off.",
                                     "disabled": true
                                 },
                                 {
@@ -1226,10 +1202,6 @@
                         "method": "GET",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
@@ -1239,7 +1211,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Retrieves a paginated list of received documents (purchase invoices) for a specific taxpayer.\nThis endpoint returns the same data as the UI received documents listing.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URLs:**\n\nBasic query with date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=20\n```\n\nWith filters for commercial deductible expenses:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO\n```\n\n**Filter Format:** All filters use top-level query parameters (consistent with TaxPayers and IVA Reports endpoints).\n\n**Filtering Examples:**\n\nFilter by category type (commercial expenses only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_type=commercial_expenses\n```\n\nFilter by deductibility (only deductible):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?deductible_type=deductible\n```\n\nFilter by specific categories (multiple IDs allowed):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_id[]=123&category_id[]=456\n```\n*Note: First retrieve available categories from GET \/api\/v1\/taxpayers\/{taxNumber}\/categories*\n\nFilter by status (authorized documents only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?status=AUTORIZADO\n```\n\nSearch providers:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?search=PROVEEDOR\n```\n\nFilter only uncategorized:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?uncategorized=true\n```\n\nFilter by origin (electronic documents only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?origin=tws\n```\n\nMultiple filters combined (real use case):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?start_date=2024-01-01&end_date=2024-01-31&category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO&sort=-total\n```"
+                        "description": "Retrieves a paginated list of received documents (purchase invoices) for a specific taxpayer.\nThis endpoint returns the same data as the UI received documents listing.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Example URLs:**\n\nBasic query with date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=20\n```\n\nWith filters for commercial deductible expenses:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO\n```\n\n**Important - HTTP Headers:**\n- **Required headers**: `x-api-key`, `x-organization-id`, `Accept: application\/json`\n- **Do NOT send**: `Content-Type: application\/json` (this is a GET request, parameters go in the URL)\n- Sending `Content-Type` header can cause parameter parsing issues in some environments\n\n**Filter Format:** All filters use top-level query parameters (consistent with TaxPayers and IVA Reports endpoints).\n\n**Filtering Examples:**\n\nFilter by category type (commercial expenses only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_type=commercial_expenses\n```\n\nFilter by deductibility (only deductible):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?deductible_type=deductible\n```\n\nFilter by specific categories (multiple IDs allowed):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?category_id[]=123&category_id[]=456\n```\n*Note: First retrieve available categories from GET \/api\/v1\/taxpayers\/{taxNumber}\/categories*\n\nFilter by status (authorized documents only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?status=AUTORIZADO\n```\n\nSearch providers:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?search=PROVEEDOR\n```\n\nFilter only uncategorized:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?uncategorized=true\n```\n\nFilter by origin (electronic documents only):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?origin=tws\n```\n\n**Sorting Examples:**\n\nSort by highest amount first:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?sort=-sub_total\n```\n\nSort by supplier name alphabetically (A-Z):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?sort=contact_name\n```\n\nSort by newest first (default), then by document number:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?sort=-date_only,-bill_number\n```\n\nMultiple filters combined with sorting (real use case):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received?start_date=2024-01-01&end_date=2024-01-31&category_type=commercial_expenses&deductible_type=deductible&status=AUTORIZADO&sort=-sub_total\n```"
                     },
                     "response": [
                         {
@@ -1326,7 +1298,7 @@
                                 {
                                     "key": "uncategorized",
                                     "value": "",
-                                    "description": "Filter only uncategorized documents.",
+                                    "description": "Filter only uncategorized documents. Accepts: true\/false, 1\/0, yes\/no, on\/off.",
                                     "disabled": true
                                 },
                                 {
@@ -1348,10 +1320,6 @@
                         },
                         "method": "GET",
                         "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
@@ -1442,10 +1410,6 @@
                         "method": "GET",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             },
@@ -1509,6 +1473,241 @@
                     ]
                 },
                 {
+                    "name": "Get accumulated retention totals",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/retentions\/accumulated",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "2024-01-01",
+                                    "description": "optional Start date for filtering retentions (YYYY-MM-DD format). Defaults to first day of current month.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "2024-01-31",
+                                    "description": "optional End date for filtering retentions (YYYY-MM-DD format). Defaults to last day of current month.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/retentions\/accumulated?start_date=2024-01-01&end_date=2024-01-31",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's tax identification number (RUC - 13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves aggregated totals of withholding retentions for a specific taxpayer and team\nwithin a date range. Returns amounts withheld for VAT, Income Tax (Rent), and Special Taxes (IGT\/ISD),\nalong with their tax bases and document counts.\n\nThis endpoint is optimized for displaying retention statistics and dashboards.\nIt uses direct database aggregation for efficient calculation of totals even with large datasets.\n\n**Default Period:** If no dates are specified, the current month is used.\n\n**Important Notes:**\n- Only active (non-voided) retentions are included in the monetary totals\n- Voided retentions are counted separately but not included in amounts\n- All amounts are in USD"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Retention totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"vat_withheld\": 450.75,\n      \"rent_withheld\": 1250.00,\n      \"igt_withheld\": 0.00,\n      \"total_withheld\": 1700.75,\n      \"tax_bases\": {\n        \"vat\": 15025.00,\n        \"rent\": 12500.00,\n        \"igt\": 0.00,\n        \"total\": 27525.00\n      }\n    },\n    \"counts\": {\n      \"total_retentions\": 45,\n      \"active_retentions\": 43,\n      \"voided_retentions\": 2\n    },\n    \"period\": {\n      \"start_date\": \"2024-01-01\",\n      \"end_date\": \"2024-01-31\"\n    }\n  },\n  \"meta\": {\n    \"timestamp\": \"2024-01-15T14:30:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Unauthorized\",\n  \"data\": null\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"data\": null\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving retention totals\",\n  \"data\": null\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get details of a specific received document",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/:documentUlid\/details",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/:documentUlid\/details",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "documentUlid",
+                                    "key": "documentUlid",
+                                    "value": "01HQXZ8P9G2K4MNBVCXWERTYU1",
+                                    "description": "The unique ULID identifier of the document."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves full details of a specific received document (purchase invoice, credit note, or withholding retention)\nby its unique ULID identifier. This endpoint returns comprehensive data including all related information\nsuch as items, issuer data, payment information, taxes, totals, and associated files.\n\n**This endpoint provides:**\n- Complete document header information (number, dates, status, access key)\n- All document line items with detailed categorization and tax information\n- Complete issuer\/supplier data (name, tax number, email, phone, address)\n- Payment information (methods, amounts, terms)\n- Detailed tax breakdowns by type (IVA 0%, 12%, 15%, etc.)\n- Document totals and calculations\n- Associated files (PDF, XML) with signed URLs\n- For purchase bills: related credit notes\n- Document status and locking information\n- Categorization data and deductibility types\n- Metadata with taxpayer and team context\n\n**How to obtain the document ULID:**\n\nThe ULID can be obtained from:\n- `GET \/api\/v1\/taxpayers\/{taxNumber}\/received` - Field `id` or `ulid` in each document\n- Any other endpoint that lists received documents\n\n**Document Types:**\n- `purchase` - Purchase invoice\/bill (includes items, payments, taxes, totals, credit notes)\n- `credit_note` - Credit note for purchases (includes items, linked to supporting document)\n- `retention` - Withholding retention (includes withholding items and tax calculations)\n\n**Note:** This endpoint uses optimized API Resources that return only essential data,\nunlike UI endpoints which include full taxpayer and team objects."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"purchase\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU1\",\"type\":\"purchase\",\"document_number\":\"001-001-000000123\",\"status\":\"AUTORIZADO\",\"access_key\":\"1234567890123456789012345678901234567890123456789\",\"issue_date\":\"2024-01-15\",\"authorization_date\":\"2024-01-15 14:30:00\",\"categories\":[\"Servicios B\u00e1sicos\"],\"category_types\":[\"commercial_expenses\"],\"deductible_types\":[\"deductible\"],\"issuer\":{\"name\":\"PROVEEDOR DEMO S.A.\",\"email\":\"proveedor@example.com\",\"tax_number\":\"1790000000001\",\"phone\":\"0999999999\",\"address\":\"Av. Principal 123\",\"forced_to_accounting\":true},\"buyer\":{\"id\":\"1726051285001\",\"id_type\":\"ruc\"},\"payments\":[{\"method\":\"01\",\"amount\":112.00,\"term\":\"0\"}],\"items\":[{\"id\":1,\"description\":\"Servicio de Internet\",\"sku\":\"SRVINT001\",\"quantity\":1,\"price\":100.00,\"discount\":0,\"sub_total\":100.00,\"tax\":12.00,\"tax_type\":\"IVA 12%\",\"total\":112.00,\"category\":{\"id\":5,\"name\":\"Servicios B\u00e1sicos\"},\"deductible_type\":\"deductible\",\"category_message\":null,\"categorized_by\":\"user\"}],\"taxes\":{\"subtotal_vat_twelve\":100.00,\"vat_twelve\":12.00},\"totals\":{\"subtotal\":100.00,\"total\":112.00},\"files\":{\"pdf\":\"https:\/\/s3.amazonaws.com\/...\/document.pdf\",\"xml\":\"https:\/\/s3.amazonaws.com\/...\/document.xml\"},\"credit_notes\":[],\"notes\":\"Observaciones\",\"origin\":\"tws\",\"is_physical\":false,\"is_checked\":true,\"is_locked\":false,\"created_at\":\"2024-01-15T14:30:00+00:00\"},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Purchase Invoice"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"credit_note\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU5\",\"type\":\"credit_note\",\"document_number\":\"001-001-000000124\",\"status\":\"AUTORIZADO\",\"issue_date\":\"2024-01-15\",\"supporting_document\":{\"bill_number\":\"001-001-000000123\",\"emission_date\":\"2024-01-15\"},\"cause\":\"Devoluci\u00f3n de mercader\u00eda\",\"issuer\":{\"name\":\"PROVEEDOR DEMO S.A.\",\"tax_number\":\"1790000000001\"},\"items\":[{\"id\":1,\"description\":\"Producto devuelto\",\"quantity\":1,\"price\":50.00,\"tax\":6.00,\"total\":56.00,\"category\":{\"id\":5,\"name\":\"Inventario\"}}],\"totals\":{\"subtotal\":50.00,\"total\":56.00}},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Credit Note"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"retention\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU6\",\"type\":\"retention\",\"document_number\":\"001-001-000000125\",\"status\":\"AUTORIZADO\",\"fiscal_period\":\"01\/2024\",\"supporting_documents\":{\"numbers\":\"001-001-000000123\",\"dates\":\"15\/01\/2024\"},\"issuer\":{\"name\":\"PROVEEDOR DEMO S.A.\",\"tax_number\":\"1790000000001\"},\"items\":[{\"id\":1,\"invoice_number\":\"001-001-000000123\",\"tax_type\":\"IVA\",\"tax_base\":100.00,\"percentage\":30,\"amount\":30.00}],\"taxes\":{\"vat\":{\"tax_base\":100.00,\"amount\":30.00,\"percentage\":30},\"rent\":{\"tax_base\":0,\"amount\":0,\"percentage\":0},\"igt\":{\"tax_base\":0,\"amount\":0,\"percentage\":0}},\"files\":{\"pdf\":\"https:\/\/s3.amazonaws.com\/...\/retention.pdf\",\"xml\":\"https:\/\/s3.amazonaws.com\/...\/retention.xml\"}},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Withholding Retention"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Document not found or does not belong to this taxpayer\"\n}",
+                            "name": "Document Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\"\n}",
+                            "name": "Taxpayer Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document details\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get status of a specific received document",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/:documentUlid\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/:documentUlid\/status",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "documentUlid",
+                                    "key": "documentUlid",
+                                    "value": "01HQXZ8P9G2K4MNBVCXWERTYU1",
+                                    "description": "The unique ULID identifier of the document. Can be from purchases, credit notes, or retentions."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves the current status of a specific received document (purchase, credit note, or withholding retention)\nby its unique ULID identifier. The system will automatically search across all received document types\nand return the status along with the document type.\n\n**How to obtain the document ULID:**\n\nYou can get the document ULID from these endpoints:\n- `GET \/api\/v1\/taxpayers\/{taxNumber}\/received` - Returns purchase invoices with their ULIDs\n- Any other endpoint that lists received documents\n\nThe ULID field is typically returned as `ulid` in the document listing responses.\n\n**Document Types:**\n- `purchase` - Purchase invoice (from bills table)\n- `credit_note` - Purchase credit note (from purchase_credit_notes table)\n- `retention` - Withholding retention (from purchase_withholdings table)\n\n**Status Values:**\n\nFor purchases, credit notes and retentions:\n- `AUTORIZADO` - Authorized document\n- `ANULADO` - Voided\/Cancelled document\n- Other status values depending on the electronic document system"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"purchase\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Purchase Document"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"credit_note\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Credit Note"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"retention\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Withholding Retention"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key or organization ID\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Document not found or does not belong to this taxpayer\"\n}",
+                            "name": "Document Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\"\n}",
+                            "name": "Taxpayer Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document status\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
                     "name": "Get accumulated totals for a specific supplier (Provider)",
                     "request": {
                         "url": {
@@ -1560,7 +1759,7 @@
                                 {
                                     "key": "uncategorized",
                                     "value": "",
-                                    "description": "Filter only uncategorized documents.",
+                                    "description": "Filter only uncategorized documents. Accepts: true\/false, 1\/0, yes\/no, on\/off.",
                                     "disabled": true
                                 },
                                 {
@@ -1588,10 +1787,6 @@
                         },
                         "method": "GET",
                         "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"

@@ -140,6 +140,15 @@
                                                                                 <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-count">
                                 <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-count">Get count of all received documents types</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated">Get accumulated retention totals</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">Get details of a specific received document</a>
+                            </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status">
+                                <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status">Get status of a specific received document</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">
                                 <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">Get accumulated totals for a specific supplier (Provider)</a>
                             </li>
@@ -217,7 +226,6 @@ You can filter and sort the results using query parameters.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers?page=1&amp;per_page=20&amp;sort=-created_at&amp;search=Empresa+S.A.&amp;status=1&amp;iva_period=MENSUAL&amp;tax_regime_cat=GENERAL&amp;declaration_day=10" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -242,7 +250,6 @@ Object.keys(params)
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -261,7 +268,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -298,7 +304,6 @@ params = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -435,18 +440,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -605,7 +598,6 @@ in the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 dig
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/taxpayers" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -617,7 +609,6 @@ in the TWS (Tax Web Services) registry. Accepts RUC (13 digits), Cédula (10 dig
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -636,7 +627,6 @@ $response = $client-&gt;post(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -653,7 +643,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -843,18 +832,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -897,7 +874,6 @@ The taxpayer must belong to the authenticated organization.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -909,7 +885,6 @@ The taxpayer must belong to the authenticated organization.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -928,7 +903,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -945,7 +919,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -1092,18 +1065,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber-"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -1157,9 +1118,8 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=sales&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -1178,7 +1138,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "sales",
-    "filter[category_type]": "personal_expenses",
+    "filter[category_type]": "sales",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1186,7 +1146,6 @@ Object.keys(params)
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -1205,7 +1164,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -1218,7 +1176,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'sales',
-            'filter[category_type]' =&gt; 'personal_expenses',
+            'filter[category_type]' =&gt; 'sales',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1241,12 +1199,11 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'sales',
-  'filter[category_type]': 'personal_expenses',
+  'filter[category_type]': 'sales',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -1392,18 +1349,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
@@ -1564,10 +1509,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="personal_expenses"
+               value="sales"
                data-component="query">
     <br>
-<p>Example: <code>personal_expenses</code></p>
+<p>Example: <code>sales</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1846,7 +1791,6 @@ Do NOT send a request body.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -1858,7 +1802,6 @@ Do NOT send a request body.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -1877,7 +1820,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -1894,7 +1836,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -2052,18 +1993,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -2214,9 +2143,9 @@ The report is created in DRAFT status with all values calculated automatically f
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\"
 }"
@@ -2230,9 +2159,9 @@ The report is created in DRAFT status with all values calculated automatically f
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -2254,9 +2183,9 @@ $response = $client-&gt;post(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -2277,9 +2206,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('POST', url, headers=headers, json=payload)
@@ -2444,18 +2373,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -2478,6 +2395,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -2534,7 +2463,6 @@ based on the taxpayer's periodicity:</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/2024-03" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -2546,7 +2474,6 @@ based on the taxpayer's periodicity:</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -2565,7 +2492,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -2582,7 +2508,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/2024-03'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -2735,18 +2660,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--iva-reports--period-"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -2831,9 +2744,9 @@ This is the API equivalent of the &quot;Actualizar reporte&quot; button in the U
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/recalculate" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\"
 }"
@@ -2847,9 +2760,9 @@ This is the API equivalent of the &quot;Actualizar reporte&quot; button in the U
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -2871,9 +2784,9 @@ $response = $client-&gt;post(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -2894,9 +2807,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('POST', url, headers=headers, json=payload)
@@ -3031,18 +2944,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -3065,6 +2966,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-recalculate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -3129,9 +3042,9 @@ Optionally adds comments to document any observations or notes.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/save" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\",
     \"comments\": \"Reporte revisado, valores correctos\"
@@ -3146,9 +3059,9 @@ Optionally adds comments to document any observations or notes.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -3171,9 +3084,9 @@ $response = $client-&gt;patch(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -3196,9 +3109,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers, json=payload)
@@ -3330,18 +3243,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -3364,6 +3265,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-save"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -3441,9 +3354,9 @@ and is ready for submission to the SRI (Tax Authority).</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/approve" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\",
     \"comments\": \"Valores verificados, aprobado para envío al SRI\"
@@ -3458,9 +3371,9 @@ and is ready for submission to the SRI (Tax Authority).</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -3483,9 +3396,9 @@ $response = $client-&gt;patch(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -3508,9 +3421,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers, json=payload)
@@ -3647,18 +3560,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -3681,6 +3582,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-approve"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -3758,9 +3671,9 @@ Used when errors or inconsistencies are found during review.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/reject" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\",
     \"comments\": \"Hay errores en las facturas de compras del día 15. Falta incluir factura #001-001-000123456\"
@@ -3775,9 +3688,9 @@ Used when errors or inconsistencies are found during review.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -3800,9 +3713,9 @@ $response = $client-&gt;patch(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -3825,9 +3738,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers, json=payload)
@@ -3980,18 +3893,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -4014,6 +3915,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-reject"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -4097,9 +4010,9 @@ This is a LOCAL action that does NOT interact with SRI services.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/mark-declared" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\"
 }"
@@ -4113,9 +4026,9 @@ This is a LOCAL action that does NOT interact with SRI services.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -4137,9 +4050,9 @@ $response = $client-&gt;patch(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -4160,9 +4073,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers, json=payload)
@@ -4292,18 +4205,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -4326,6 +4227,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-taxpayers--taxNumber--iva-reports-mark-declared"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -4400,9 +4313,9 @@ This is an EXTERNAL COMMUNICATION action that actually sends emails through SMTP
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\",
     \"emails\": [
@@ -4421,9 +4334,9 @@ This is an EXTERNAL COMMUNICATION action that actually sends emails through SMTP
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -4450,9 +4363,9 @@ $response = $client-&gt;post(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -4483,9 +4396,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('POST', url, headers=headers, json=payload)
@@ -4648,18 +4561,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -4682,6 +4583,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -4795,9 +4708,9 @@ plus 2-5 minutes for SRI processing (webhook notification).</p>
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/iva-reports/send-sri-draft" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: application/json" \
     --data "{
     \"period\": \"2024-03\"
 }"
@@ -4811,9 +4724,9 @@ plus 2-5 minutes for SRI processing (webhook notification).</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "application/json",
 };
 
 let body = {
@@ -4835,9 +4748,9 @@ $response = $client-&gt;post(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'application/json',
         ],
         'json' =&gt; [
             'period' =&gt; '2024-03',
@@ -4858,9 +4771,9 @@ payload = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'application/json'
 }
 
 response = requests.request('POST', url, headers=headers, json=payload)
@@ -5013,18 +4926,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -5047,6 +4948,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--iva-reports-send-sri-draft"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
@@ -5194,6 +5107,12 @@ Do NOT send a request body.</p>
 <pre><code>GET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&amp;end_date=2024-01-31&amp;page=1&amp;per_page=20</code></pre>
 <p>With filters for commercial deductible expenses:</p>
 <pre><code>GET /api/v1/taxpayers/1726051285001/received?category_type=commercial_expenses&amp;deductible_type=deductible&amp;status=AUTORIZADO</code></pre>
+<p><strong>Important - HTTP Headers:</strong></p>
+<ul>
+<li><strong>Required headers</strong>: <code>x-api-key</code>, <code>x-organization-id</code>, <code>Accept: application/json</code></li>
+<li><strong>Do NOT send</strong>: <code>Content-Type: application/json</code> (this is a GET request, parameters go in the URL)</li>
+<li>Sending <code>Content-Type</code> header can cause parameter parsing issues in some environments</li>
+</ul>
 <p><strong>Filter Format:</strong> All filters use top-level query parameters (consistent with TaxPayers and IVA Reports endpoints).</p>
 <p><strong>Filtering Examples:</strong></p>
 <p>Filter by category type (commercial expenses only):</p>
@@ -5211,8 +5130,15 @@ Do NOT send a request body.</p>
 <pre><code>GET /api/v1/taxpayers/1726051285001/received?uncategorized=true</code></pre>
 <p>Filter by origin (electronic documents only):</p>
 <pre><code>GET /api/v1/taxpayers/1726051285001/received?origin=tws</code></pre>
-<p>Multiple filters combined (real use case):</p>
-<pre><code>GET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&amp;end_date=2024-01-31&amp;category_type=commercial_expenses&amp;deductible_type=deductible&amp;status=AUTORIZADO&amp;sort=-total</code></pre>
+<p><strong>Sorting Examples:</strong></p>
+<p>Sort by highest amount first:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?sort=-sub_total</code></pre>
+<p>Sort by supplier name alphabetically (A-Z):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?sort=contact_name</code></pre>
+<p>Sort by newest first (default), then by document number:</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?sort=-date_only,-bill_number</code></pre>
+<p>Multiple filters combined with sorting (real use case):</p>
+<pre><code>GET /api/v1/taxpayers/1726051285001/received?start_date=2024-01-01&amp;end_date=2024-01-31&amp;category_type=commercial_expenses&amp;deductible_type=deductible&amp;status=AUTORIZADO&amp;sort=-sub_total</code></pre>
 
 <span id="example-requests-GETapi-v1-taxpayers--taxNumber--received">
 <blockquote>Example request:</blockquote>
@@ -5222,7 +5148,6 @@ Do NOT send a request body.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -5234,7 +5159,6 @@ Do NOT send a request body.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -5253,7 +5177,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -5270,7 +5193,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -5514,18 +5436,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -5621,7 +5531,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                value=""
                data-component="query">
     <br>
-<p>Sort field. Prefix with - for descending. Default: -date_only,-bill_number.</p>
+<p>Sort field. Allowed values: date_only (document date), contact_name (supplier name), sub_total (subtotal amount), bill_number (document number). Prefix with &quot;-&quot; for descending order. You can combine multiple sorts with commas. Examples: &quot;-date_only&quot; (newest first), &quot;contact_name&quot; (A-Z), &quot;-sub_total,date_only&quot; (highest amount first, then by date). Default: -date_only,-bill_number.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>category_id[]</code></b>&nbsp;&nbsp;
@@ -5703,7 +5613,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Filter only uncategorized documents.</p>
+<p>Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>origin</code></b>&nbsp;&nbsp;
@@ -5775,7 +5685,6 @@ Do NOT send a request body.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/accumulated" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -5787,7 +5696,6 @@ Do NOT send a request body.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -5806,7 +5714,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -5823,7 +5730,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/accumulated'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -6053,18 +5959,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-accumulated"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -6206,7 +6100,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Filter only uncategorized documents.</p>
+<p>Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>origin</code></b>&nbsp;&nbsp;
@@ -6266,7 +6160,6 @@ Do NOT send a request body.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/count" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -6278,7 +6171,6 @@ Do NOT send a request body.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -6297,7 +6189,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -6314,7 +6205,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/count'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -6515,18 +6405,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-count"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -6590,6 +6468,1105 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                 </form>
 
+                    <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated">Get accumulated retention totals</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves aggregated totals of withholding retentions for a specific taxpayer and team
+within a date range. Returns amounts withheld for VAT, Income Tax (Rent), and Special Taxes (IGT/ISD),
+along with their tax bases and document counts.</p>
+<p>This endpoint is optimized for displaying retention statistics and dashboards.
+It uses direct database aggregation for efficient calculation of totals even with large datasets.</p>
+<p><strong>Default Period:</strong> If no dates are specified, the current month is used.</p>
+<p><strong>Important Notes:</strong></p>
+<ul>
+<li>Only active (non-voided) retentions are included in the monetary totals</li>
+<li>Voided retentions are counted separately but not included in amounts</li>
+<li>All amounts are in USD</li>
+</ul>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/retentions/accumulated?start_date=2024-01-01&amp;end_date=2024-01-31" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/retentions/accumulated"
+);
+
+const params = {
+    "start_date": "2024-01-01",
+    "end_date": "2024-01-31",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/retentions/accumulated';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+        'query' =&gt; [
+            'start_date' =&gt; '2024-01-01',
+            'end_date' =&gt; '2024-01-31',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/retentions/accumulated'
+params = {
+  'start_date': '2024-01-01',
+  'end_date': '2024-01-31',
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers, params=params)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated">
+            <blockquote>
+            <p>Example response (200):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Retention totals retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;totals&quot;: {
+            &quot;vat_withheld&quot;: 450.75,
+            &quot;rent_withheld&quot;: 1250,
+            &quot;igt_withheld&quot;: 0,
+            &quot;total_withheld&quot;: 1700.75,
+            &quot;tax_bases&quot;: {
+                &quot;vat&quot;: 15025,
+                &quot;rent&quot;: 12500,
+                &quot;igt&quot;: 0,
+                &quot;total&quot;: 27525
+            }
+        },
+        &quot;counts&quot;: {
+            &quot;total_retentions&quot;: 45,
+            &quot;active_retentions&quot;: 43,
+            &quot;voided_retentions&quot;: 2
+        },
+        &quot;period&quot;: {
+            &quot;start_date&quot;: &quot;2024-01-01&quot;,
+            &quot;end_date&quot;: &quot;2024-01-31&quot;
+        }
+    },
+    &quot;meta&quot;: {
+        &quot;timestamp&quot;: &quot;2024-01-15T14:30:00Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Unauthorized&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving retention totals&quot;,
+    &quot;data&quot;: null
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received/retentions/accumulated"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/retentions/accumulated</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's tax identification number (RUC - 13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>start_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="start_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+               value="2024-01-01"
+               data-component="query">
+    <br>
+<p>optional Start date for filtering retentions (YYYY-MM-DD format). Defaults to first day of current month. Example: <code>2024-01-01</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>end_date</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="end_date"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-retentions-accumulated"
+               value="2024-01-31"
+               data-component="query">
+    <br>
+<p>optional End date for filtering retentions (YYYY-MM-DD format). Defaults to last day of current month. Example: <code>2024-01-31</code></p>
+            </div>
+                </form>
+
+                    <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">Get details of a specific received document</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves full details of a specific received document (purchase invoice, credit note, or withholding retention)
+by its unique ULID identifier. This endpoint returns comprehensive data including all related information
+such as items, issuer data, payment information, taxes, totals, and associated files.</p>
+<p><strong>This endpoint provides:</strong></p>
+<ul>
+<li>Complete document header information (number, dates, status, access key)</li>
+<li>All document line items with detailed categorization and tax information</li>
+<li>Complete issuer/supplier data (name, tax number, email, phone, address)</li>
+<li>Payment information (methods, amounts, terms)</li>
+<li>Detailed tax breakdowns by type (IVA 0%, 12%, 15%, etc.)</li>
+<li>Document totals and calculations</li>
+<li>Associated files (PDF, XML) with signed URLs</li>
+<li>For purchase bills: related credit notes</li>
+<li>Document status and locking information</li>
+<li>Categorization data and deductibility types</li>
+<li>Metadata with taxpayer and team context</li>
+</ul>
+<p><strong>How to obtain the document ULID:</strong></p>
+<p>The ULID can be obtained from:</p>
+<ul>
+<li><code>GET /api/v1/taxpayers/{taxNumber}/received</code> - Field <code>id</code> or <code>ulid</code> in each document</li>
+<li>Any other endpoint that lists received documents</li>
+</ul>
+<p><strong>Document Types:</strong></p>
+<ul>
+<li><code>purchase</code> - Purchase invoice/bill (includes items, payments, taxes, totals, credit notes)</li>
+<li><code>credit_note</code> - Credit note for purchases (includes items, linked to supporting document)</li>
+<li><code>retention</code> - Withholding retention (includes withholding items and tax calculations)</li>
+</ul>
+<p><strong>Note:</strong> This endpoint uses optimized API Resources that return only essential data,
+unlike UI endpoints which include full taxpayer and team objects.</p>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/details" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/details"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/details';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/details'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">
+            <blockquote>
+            <p>Example response (200, Success - Purchase Invoice):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Document details retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;document_type&quot;: &quot;purchase&quot;,
+        &quot;document&quot;: {
+            &quot;id&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU1&quot;,
+            &quot;type&quot;: &quot;purchase&quot;,
+            &quot;document_number&quot;: &quot;001-001-000000123&quot;,
+            &quot;status&quot;: &quot;AUTORIZADO&quot;,
+            &quot;access_key&quot;: &quot;1234567890123456789012345678901234567890123456789&quot;,
+            &quot;issue_date&quot;: &quot;2024-01-15&quot;,
+            &quot;authorization_date&quot;: &quot;2024-01-15 14:30:00&quot;,
+            &quot;categories&quot;: [
+                &quot;Servicios B&aacute;sicos&quot;
+            ],
+            &quot;category_types&quot;: [
+                &quot;commercial_expenses&quot;
+            ],
+            &quot;deductible_types&quot;: [
+                &quot;deductible&quot;
+            ],
+            &quot;issuer&quot;: {
+                &quot;name&quot;: &quot;PROVEEDOR DEMO S.A.&quot;,
+                &quot;email&quot;: &quot;proveedor@example.com&quot;,
+                &quot;tax_number&quot;: &quot;1790000000001&quot;,
+                &quot;phone&quot;: &quot;0999999999&quot;,
+                &quot;address&quot;: &quot;Av. Principal 123&quot;,
+                &quot;forced_to_accounting&quot;: true
+            },
+            &quot;buyer&quot;: {
+                &quot;id&quot;: &quot;1726051285001&quot;,
+                &quot;id_type&quot;: &quot;ruc&quot;
+            },
+            &quot;payments&quot;: [
+                {
+                    &quot;method&quot;: &quot;01&quot;,
+                    &quot;amount&quot;: 112,
+                    &quot;term&quot;: &quot;0&quot;
+                }
+            ],
+            &quot;items&quot;: [
+                {
+                    &quot;id&quot;: 1,
+                    &quot;description&quot;: &quot;Servicio de Internet&quot;,
+                    &quot;sku&quot;: &quot;SRVINT001&quot;,
+                    &quot;quantity&quot;: 1,
+                    &quot;price&quot;: 100,
+                    &quot;discount&quot;: 0,
+                    &quot;sub_total&quot;: 100,
+                    &quot;tax&quot;: 12,
+                    &quot;tax_type&quot;: &quot;IVA 12%&quot;,
+                    &quot;total&quot;: 112,
+                    &quot;category&quot;: {
+                        &quot;id&quot;: 5,
+                        &quot;name&quot;: &quot;Servicios B&aacute;sicos&quot;
+                    },
+                    &quot;deductible_type&quot;: &quot;deductible&quot;,
+                    &quot;category_message&quot;: null,
+                    &quot;categorized_by&quot;: &quot;user&quot;
+                }
+            ],
+            &quot;taxes&quot;: {
+                &quot;subtotal_vat_twelve&quot;: 100,
+                &quot;vat_twelve&quot;: 12
+            },
+            &quot;totals&quot;: {
+                &quot;subtotal&quot;: 100,
+                &quot;total&quot;: 112
+            },
+            &quot;files&quot;: {
+                &quot;pdf&quot;: &quot;https://s3.amazonaws.com/.../document.pdf&quot;,
+                &quot;xml&quot;: &quot;https://s3.amazonaws.com/.../document.xml&quot;
+            },
+            &quot;credit_notes&quot;: [],
+            &quot;notes&quot;: &quot;Observaciones&quot;,
+            &quot;origin&quot;: &quot;tws&quot;,
+            &quot;is_physical&quot;: false,
+            &quot;is_checked&quot;: true,
+            &quot;is_locked&quot;: false,
+            &quot;created_at&quot;: &quot;2024-01-15T14:30:00+00:00&quot;
+        },
+        &quot;metadata&quot;: {
+            &quot;taxpayer&quot;: {
+                &quot;id&quot;: 123,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU2&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;
+            },
+            &quot;team&quot;: {
+                &quot;id&quot;: 456,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU3&quot;,
+                &quot;name&quot;: &quot;Mi Empresa S.A.&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - Credit Note):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Document details retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;document_type&quot;: &quot;credit_note&quot;,
+        &quot;document&quot;: {
+            &quot;id&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU5&quot;,
+            &quot;type&quot;: &quot;credit_note&quot;,
+            &quot;document_number&quot;: &quot;001-001-000000124&quot;,
+            &quot;status&quot;: &quot;AUTORIZADO&quot;,
+            &quot;issue_date&quot;: &quot;2024-01-15&quot;,
+            &quot;supporting_document&quot;: {
+                &quot;bill_number&quot;: &quot;001-001-000000123&quot;,
+                &quot;emission_date&quot;: &quot;2024-01-15&quot;
+            },
+            &quot;cause&quot;: &quot;Devoluci&oacute;n de mercader&iacute;a&quot;,
+            &quot;issuer&quot;: {
+                &quot;name&quot;: &quot;PROVEEDOR DEMO S.A.&quot;,
+                &quot;tax_number&quot;: &quot;1790000000001&quot;
+            },
+            &quot;items&quot;: [
+                {
+                    &quot;id&quot;: 1,
+                    &quot;description&quot;: &quot;Producto devuelto&quot;,
+                    &quot;quantity&quot;: 1,
+                    &quot;price&quot;: 50,
+                    &quot;tax&quot;: 6,
+                    &quot;total&quot;: 56,
+                    &quot;category&quot;: {
+                        &quot;id&quot;: 5,
+                        &quot;name&quot;: &quot;Inventario&quot;
+                    }
+                }
+            ],
+            &quot;totals&quot;: {
+                &quot;subtotal&quot;: 50,
+                &quot;total&quot;: 56
+            }
+        },
+        &quot;metadata&quot;: {
+            &quot;taxpayer&quot;: {
+                &quot;id&quot;: 123,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU2&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;
+            },
+            &quot;team&quot;: {
+                &quot;id&quot;: 456,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU3&quot;,
+                &quot;name&quot;: &quot;Mi Empresa S.A.&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - Withholding Retention):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Document details retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;document_type&quot;: &quot;retention&quot;,
+        &quot;document&quot;: {
+            &quot;id&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU6&quot;,
+            &quot;type&quot;: &quot;retention&quot;,
+            &quot;document_number&quot;: &quot;001-001-000000125&quot;,
+            &quot;status&quot;: &quot;AUTORIZADO&quot;,
+            &quot;fiscal_period&quot;: &quot;01/2024&quot;,
+            &quot;supporting_documents&quot;: {
+                &quot;numbers&quot;: &quot;001-001-000000123&quot;,
+                &quot;dates&quot;: &quot;15/01/2024&quot;
+            },
+            &quot;issuer&quot;: {
+                &quot;name&quot;: &quot;PROVEEDOR DEMO S.A.&quot;,
+                &quot;tax_number&quot;: &quot;1790000000001&quot;
+            },
+            &quot;items&quot;: [
+                {
+                    &quot;id&quot;: 1,
+                    &quot;invoice_number&quot;: &quot;001-001-000000123&quot;,
+                    &quot;tax_type&quot;: &quot;IVA&quot;,
+                    &quot;tax_base&quot;: 100,
+                    &quot;percentage&quot;: 30,
+                    &quot;amount&quot;: 30
+                }
+            ],
+            &quot;taxes&quot;: {
+                &quot;vat&quot;: {
+                    &quot;tax_base&quot;: 100,
+                    &quot;amount&quot;: 30,
+                    &quot;percentage&quot;: 30
+                },
+                &quot;rent&quot;: {
+                    &quot;tax_base&quot;: 0,
+                    &quot;amount&quot;: 0,
+                    &quot;percentage&quot;: 0
+                },
+                &quot;igt&quot;: {
+                    &quot;tax_base&quot;: 0,
+                    &quot;amount&quot;: 0,
+                    &quot;percentage&quot;: 0
+                }
+            },
+            &quot;files&quot;: {
+                &quot;pdf&quot;: &quot;https://s3.amazonaws.com/.../retention.pdf&quot;,
+                &quot;xml&quot;: &quot;https://s3.amazonaws.com/.../retention.xml&quot;
+            }
+        },
+        &quot;metadata&quot;: {
+            &quot;taxpayer&quot;: {
+                &quot;id&quot;: 123,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU2&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;
+            },
+            &quot;team&quot;: {
+                &quot;id&quot;: 456,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU3&quot;,
+                &quot;name&quot;: &quot;Mi Empresa S.A.&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized - Invalid API Key):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Document Not Found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Document not found or does not belong to this taxpayer&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer Not Found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving document details&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received/{documentUlid}/details"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received--documentUlid--details', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received--documentUlid--details');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received--documentUlid--details');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/{documentUlid}/details</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>documentUlid</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="documentUlid"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--details"
+               value="01HQXZ8P9G2K4MNBVCXWERTYU1"
+               data-component="url">
+    <br>
+<p>The unique ULID identifier of the document. Example: <code>01HQXZ8P9G2K4MNBVCXWERTYU1</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status">Get status of a specific received document</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Retrieves the current status of a specific received document (purchase, credit note, or withholding retention)
+by its unique ULID identifier. The system will automatically search across all received document types
+and return the status along with the document type.</p>
+<p><strong>How to obtain the document ULID:</strong></p>
+<p>You can get the document ULID from these endpoints:</p>
+<ul>
+<li><code>GET /api/v1/taxpayers/{taxNumber}/received</code> - Returns purchase invoices with their ULIDs</li>
+<li>Any other endpoint that lists received documents</li>
+</ul>
+<p>The ULID field is typically returned as <code>ulid</code> in the document listing responses.</p>
+<p><strong>Document Types:</strong></p>
+<ul>
+<li><code>purchase</code> - Purchase invoice (from bills table)</li>
+<li><code>credit_note</code> - Purchase credit note (from purchase_credit_notes table)</li>
+<li><code>retention</code> - Withholding retention (from purchase_withholdings table)</li>
+</ul>
+<p><strong>Status Values:</strong></p>
+<p>For purchases, credit notes and retentions:</p>
+<ul>
+<li><code>AUTORIZADO</code> - Authorized document</li>
+<li><code>ANULADO</code> - Voided/Cancelled document</li>
+<li>Other status values depending on the electronic document system</li>
+</ul>
+
+<span id="example-requests-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/status" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/status"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/status';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/01HQXZ8P9G2K4MNBVCXWERTYU1/status'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('GET', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status">
+            <blockquote>
+            <p>Example response (200, Success - Purchase Document):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Document status retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;document_id&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU1&quot;,
+        &quot;document_type&quot;: &quot;purchase&quot;,
+        &quot;status&quot;: &quot;AUTORIZADO&quot;,
+        &quot;metadata&quot;: {
+            &quot;taxpayer&quot;: {
+                &quot;id&quot;: 123,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU2&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;
+            },
+            &quot;team&quot;: {
+                &quot;id&quot;: 456,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU3&quot;,
+                &quot;name&quot;: &quot;Mi Empresa S.A.&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - Credit Note):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Document status retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;document_id&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU1&quot;,
+        &quot;document_type&quot;: &quot;credit_note&quot;,
+        &quot;status&quot;: &quot;AUTORIZADO&quot;,
+        &quot;metadata&quot;: {
+            &quot;taxpayer&quot;: {
+                &quot;id&quot;: 123,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU2&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;
+            },
+            &quot;team&quot;: {
+                &quot;id&quot;: 456,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU3&quot;,
+                &quot;name&quot;: &quot;Mi Empresa S.A.&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (200, Success - Withholding Retention):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Document status retrieved successfully&quot;,
+    &quot;data&quot;: {
+        &quot;document_id&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU1&quot;,
+        &quot;document_type&quot;: &quot;retention&quot;,
+        &quot;status&quot;: &quot;AUTORIZADO&quot;,
+        &quot;metadata&quot;: {
+            &quot;taxpayer&quot;: {
+                &quot;id&quot;: 123,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU2&quot;,
+                &quot;tax_number&quot;: &quot;1726051285001&quot;
+            },
+            &quot;team&quot;: {
+                &quot;id&quot;: 456,
+                &quot;ulid&quot;: &quot;01HQXZ8P9G2K4MNBVCXWERTYU3&quot;,
+                &quot;name&quot;: &quot;Mi Empresa S.A.&quot;
+            }
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (401, Unauthorized - Invalid API Key):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Invalid API key or organization ID&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Document Not Found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Document not found or does not belong to this taxpayer&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer Not Found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server Error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while retrieving document status&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status" data-method="GET"
+      data-path="api/v1/taxpayers/{taxNumber}/received/{documentUlid}/status"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-taxpayers--taxNumber--received--documentUlid--status', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+                    onclick="tryItOut('GETapi-v1-taxpayers--taxNumber--received--documentUlid--status');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+                    onclick="cancelTryOut('GETapi-v1-taxpayers--taxNumber--received--documentUlid--status');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/{documentUlid}/status</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>The taxpayer's RUC number (13 digits). Example: <code>1726051285001</code></p>
+            </div>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>documentUlid</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="documentUlid"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received--documentUlid--status"
+               value="01HQXZ8P9G2K4MNBVCXWERTYU1"
+               data-component="url">
+    <br>
+<p>The unique ULID identifier of the document. Can be from purchases, credit notes, or retentions. Example: <code>01HQXZ8P9G2K4MNBVCXWERTYU1</code></p>
+            </div>
+                    </form>
+
                     <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals">Get accumulated totals for a specific supplier (Provider)</h2>
 
 <p>
@@ -6646,7 +7623,6 @@ Do NOT send a request body.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
 
@@ -6658,7 +7634,6 @@ Do NOT send a request body.</p>
 
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
-    "Content-Type": "application/json",
     "Accept": "application/json",
     "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
@@ -6677,7 +7652,6 @@ $response = $client-&gt;get(
     [
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
-            'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
             'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
@@ -6694,7 +7668,6 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Content-Type': 'application/json',
   'Accept': 'application/json',
   'x-organization-id': '{YOUR_ORGANIZATION_ID}'
 }
@@ -6897,18 +7870,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>YOUR_API_KEY_HERE</code></p>
             </div>
                                 <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="Content-Type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--received-suppliers--contactTaxNumber--totals"
-               value="application/json"
-               data-component="header">
-    <br>
-<p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
 &nbsp;
  &nbsp;
@@ -7062,7 +8023,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <code>false</code>
         </label>
     <br>
-<p>Filter only uncategorized documents.</p>
+<p>Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.</p>
             </div>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>origin</code></b>&nbsp;&nbsp;

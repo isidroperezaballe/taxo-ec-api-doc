@@ -1,98 +1,128 @@
-# TaxoEC API Documentation
+# Taxo EC - Documentación de API
 
-![API Version](https://img.shields.io/badge/version-1.0.0-blue)
-![License](https://img.shields.io/badge/license-Private-red)
-![Status](https://img.shields.io/badge/status-production-success)
+Este repositorio contiene la documentación estática de la API de Taxo EC, generada con [Scribe](https://scribe.knuckles.wtf/).
 
-Documentación oficial de la API REST de TaxoEC para integración externa.
+## 🚀 Despliegue
 
-## 📖 Ver Documentación
+Esta documentación se despliega automáticamente en **Cloudflare Pages** desde la rama `main`.
 
-La documentación está disponible en:
+**URL de producción:** [Tu URL de Cloudflare]
 
-**🌐 https://docs.tudominio.com** _(una vez configurado Cloudflare Pages)_
+## 🔄 Workflow para Actualizar la Documentación
 
-## 📁 Contenido
-
-Este repositorio contiene documentación estática generada automáticamente por [Scribe](https://scribe.knuckles.wtf/) que incluye:
-
-- **📄 HTML Docs** - Documentación interactiva navegable
-- **📮 Postman Collection** - `collection.json` para importar en Postman
-- **📝 OpenAPI Spec** - `openapi.yaml` para Swagger/otras herramientas
-
-## 🔗 Formatos Disponibles
-
-### Documentación Web
-Abre `index.html` en tu navegador o visita la URL de Cloudflare Pages.
-
-### Postman
-1. Abre Postman
-2. File → Import
-3. Selecciona `collection.json`
-4. Configura las variables:
-   - `base_url`: URL de tu API
-   - `x-api-key`: Tu API key
-   - `x-organization-id`: Tu organization ID
-
-### OpenAPI/Swagger
-Importa `openapi.yaml` en:
-- [Swagger Editor](https://editor.swagger.io/)
-- [Stoplight Studio](https://stoplight.io/studio)
-- Otras herramientas compatibles con OpenAPI 3.0
-
-## 🚀 Endpoints Documentados
-
-### Taxpayers (Contribuyentes)
-- `GET /api/v1/taxpayers` - Listar contribuyentes
-- `POST /api/v1/taxpayers` - Crear nuevo contribuyente
-- `GET /api/v1/taxpayers/{taxNumber}` - Obtener contribuyente específico
-- `GET /api/v1/taxpayers/{taxNumber}/categories` - Obtener categorías del contribuyente
-
-## 🔐 Autenticación
-
-Todos los endpoints requieren los siguientes headers:
-
-```http
-x-api-key: YOUR_API_KEY_HERE
-x-organization-id: YOUR_ORGANIZATION_ID
-Content-Type: application/json
-Accept: application/json
-```
-
-## 📋 Ejemplo de Uso
+### 1️⃣ Generar Documentación (desde el repo principal)
 
 ```bash
-curl --request GET \
-  --url 'https://api.tudominio.com/api/v1/taxpayers?page=1&per_page=15' \
-  --header 'x-api-key: YOUR_API_KEY_HERE' \
-  --header 'x-organization-id: YOUR_ORGANIZATION_ID' \
-  --header 'Accept: application/json'
+# En /home/isidro/code/taxo-ec (repositorio principal)
+sail artisan scribe:generate
 ```
 
-## 🔄 Actualizaciones
+✅ En este punto, la documentación funciona correctamente en **local** en `http://localhost/docs`
 
-Esta documentación se actualiza automáticamente cuando se realizan cambios en la API.
+### 2️⃣ Preparar para Cloudflare
 
-**Última generación:** _(ver commits de Git)_
+```bash
+# Desde el repositorio principal
+cd /home/isidro/code/taxo-ec
+./fix-docs-paths.sh fix
+```
 
-## 📞 Soporte
+Este script:
+- ✅ Corrige las rutas de assets para Cloudflare (`../docs/css/` → `css/`)
+- ✅ Crea un backup automático (`index.html.backup`)
 
-Para obtener tu API key o reportar problemas:
-- **Email:** soporte@tudominio.com
-- **Repositorio principal:** (privado)
+### 3️⃣ Commitear y Desplegar
 
-## ⚙️ Información Técnica
+```bash
+# Entrar al submódulo
+cd public/docs
 
-- **Generador:** Scribe v5.x
-- **API Version:** v1
-- **Base URL:** `https://api.tudominio.com`
-- **Rate Limiting:** Configurado por organización
+# Verificar cambios
+git status
 
-## 📜 Licencia
+# Agregar cambios
+git add .
 
-Esta documentación es propiedad privada de TaxoEC. 
-No está permitida su redistribución sin autorización.
+# Commitear
+git commit -m "docs: Update API documentation with new endpoints"
 
----
+# Push a Cloudflare
+git push origin main
+```
 
-**Generado con ❤️ por [Scribe](https://scribe.knuckles.wtf/)**
+⏱️ **Cloudflare desplegará automáticamente** en 1-2 minutos.
+
+### 4️⃣ Actualizar Referencia en Repo Principal
+
+```bash
+# Volver al repo principal
+cd ../..
+
+# Agregar la nueva referencia del submódulo
+git add public/docs
+
+# Commit
+git commit -m "chore: Update docs submodule reference"
+
+# Push
+git push origin develop
+```
+
+### 5️⃣ (Opcional) Revertir para Ver Localmente
+
+Si necesitas ver la documentación localmente después de corregir las rutas:
+
+```bash
+# Desde el repositorio principal
+./fix-docs-paths.sh revert
+```
+
+Esto restaura las rutas para visualización local (`css/` → `../docs/css/`).
+
+## 🔧 Diferencias Local vs Cloudflare
+
+| Entorno | URL Base | Rutas de Assets | Funciona con |
+|---------|----------|-----------------|--------------|
+| **Local (Laravel)** | `/docs` | `../docs/css/...` | Scribe default |
+| **Cloudflare Pages** | `/` | `css/...` | Después del script |
+
+## 📝 Notas Importantes
+
+1. **NUNCA** corras `./fix-docs-paths.sh fix` si quieres ver la documentación en local
+2. El archivo `index.html.backup` está en `.gitignore` y no se commitea
+3. Scribe siempre genera con rutas para Laravel, por eso necesitamos el script
+4. El script puede revertir cambios si tienes el backup
+
+## 🆘 Solución de Problemas
+
+### La documentación no se ve en local
+
+```bash
+# Regenerar con Scribe
+sail artisan scribe:generate
+```
+
+### La documentación no tiene estilos en Cloudflare
+
+```bash
+# Corregir rutas y hacer push
+./fix-docs-paths.sh fix
+cd public/docs
+git add index.html
+git commit -m "fix: Correct asset paths for Cloudflare"
+git push origin main
+```
+
+### Perdí el backup
+
+No hay problema, simplemente regenera con Scribe:
+
+```bash
+sail artisan scribe:generate
+```
+
+## 📚 Recursos
+
+- [Scribe Documentation](https://scribe.knuckles.wtf/)
+- [Cloudflare Pages Docs](https://developers.cloudflare.com/pages/)
+- Repositorio principal: [Taxo-App/taxo-ec](https://github.com/Taxo-App/taxo-ec)
