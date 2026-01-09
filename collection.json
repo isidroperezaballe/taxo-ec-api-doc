@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "274dcdee-84bf-4ded-b2c8-7c54a7ec4348",
+        "_postman_id": "3bee3cdf-0fdb-43d6-981b-9fb699325b13",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -302,13 +302,13 @@
                                 },
                                 {
                                     "key": "filter.document_type",
-                                    "value": "sales",
+                                    "value": "purchases",
                                     "description": "",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "sales",
+                                    "value": "non_deductible_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=sales&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=non_deductible_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -1544,6 +1544,284 @@
                     ]
                 },
                 {
+                    "name": "Get accumulated totals for a specific supplier (Provider)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/suppliers\/:contactTaxNumber\/totals",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for filtering (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_id%5B%5D",
+                                    "value": "",
+                                    "description": "Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET \/api\/v1\/taxpayers\/{taxNumber}\/categories.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_type",
+                                    "value": "",
+                                    "description": "Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "deductible_type",
+                                    "value": "",
+                                    "description": "Filter by tax deductibility. Must be one of: deductible, non_deductible.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "",
+                                    "description": "Filter by document status. Must be one of: AUTORIZADO, ANULADO.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "",
+                                    "description": "Search in provider name, document number, access key, etc.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "uncategorized",
+                                    "value": "",
+                                    "description": "Filter only uncategorized documents. Accepts: true\/false, 1\/0, yes\/no, on\/off.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "origin",
+                                    "value": "",
+                                    "description": "Filter by document origin\/source system. Must be one of: tws, xml-import, physical-upload.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/suppliers\/:contactTaxNumber\/totals?start_date=&end_date=&category_id%5B%5D=&category_type=&deductible_type=&status=&search=&uncategorized=&origin=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "contactTaxNumber",
+                                    "key": "contactTaxNumber",
+                                    "value": "1790000000001",
+                                    "description": "The supplier's tax number (RUC\/CI)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).\nThis endpoint filters all documents by the supplier's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including supplier filter)\n\n**Use Cases:**\n\n- Analyze spending with a specific supplier\n- Supplier performance reports\n- Validate supplier invoices and totals\n- Tax deduction analysis per supplier\n- Supplier comparison reports\n\n**Example URLs:**\n\nGet totals for specific supplier (current month):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals\n```\n\nGet totals for specific supplier and date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet commercial expenses totals from specific supplier:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `\/received\/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in document details\n- `uncategorized`: Only uncategorized documents (true\/false)\n- `origin`: Document origin (electronic, physical)\n\n**Plus:** Automatically filters by `contact_tax_number` from URL parameter"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Supplier totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_vat_fifteen_sum\": 1250.50,\n      \"vat_fifteen_sum\": 187.58,\n      \"sub_total_sum\": 1250.50,\n      \"total_sum\": 1438.08,\n      \"subtotal_header\": 1250.50,\n      \"taxes_header\": 187.58,\n      \"total_header\": 1438.08,\n      \"document_count\": 12,\n      \"categorized_document_count\": 12,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      },\n      \"supplier\": {\n        \"contact_tax_number\": \"1790000000001\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Supplier totals"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Supplier totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_header\": 0.00,\n      \"taxes_header\": 0.00,\n      \"total_header\": 0.00,\n      \"document_count\": 0,\n      \"categorized_document_count\": 0,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      },\n      \"supplier\": {\n        \"contact_tax_number\": \"1790000000001\"\n      }\n    }\n  }\n}",
+                            "name": "Success - No documents from supplier"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Not Found - Taxpayer does not exist"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"category_type\": [\"Invalid category type.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving supplier totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Step 1: Start xls Export (Asynchronous)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/export\/excel",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/export\/excel",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "Tax identification number (RUC\/C\u00e9dula)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"document_type\":\"purchase\",\"start_date\":\"2025-01-01\",\"end_date\":\"2025-01-31\",\"origin\":\"tws\",\"supplier_tax_number\":\"1790000000001\",\"uncategorized\":false}"
+                        },
+                        "description": "**IMPORTANT: This is an asynchronous endpoint.** It starts a background export process and returns immediately.\nYou must use the returned `export_id` to poll the status endpoint until the file is ready.\n\n### Complete Workflow (3 Steps):\n\n**STEP 1: Start the export (this endpoint)**\n```bash\nPOST \/api\/v1\/taxpayers\/{taxNumber}\/received\/export\/excel\n```\nYou will receive a response like:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  \u2190 SAVE THIS ID!\n    \"status\": \"pending\",\n    \"polling_url\": \"\/api\/v1\/taxpayers\/1726051285001\/received\/export\/status\/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**STEP 2: Poll the status (repeatedly)**\nUse the `export_id` from Step 1 to check progress:\n```bash\nGET \/api\/v1\/taxpayers\/{taxNumber}\/received\/export\/status\/{export_id}\n```\nPoll every 10-30 seconds until `status` is `completed` or `failed`.\n\n**STEP 3: Download the file**\nWhen status is `completed`, the response will include a `download_url`:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"completed\",\n    \"progress\": 100,\n    \"download_url\": \"https:\/\/s3.amazonaws.com\/...\"  \u2190 USE THIS TO DOWNLOAD\n  }\n}\n```\nThe `download_url` is a temporary signed URL that expires in 1 hour.\n\n### Key Points:\n- \u2705 This endpoint returns immediately (HTTP 202) - the export runs in background\n- \u2705 Extract `data.export_id` from the response - you'll need it for polling\n- \u2705 Use the provided `polling_url` or construct it manually with the `export_id`\n- \u2705 Poll at any frequency (suggested: every 10 seconds for small exports, 30-60 seconds for large ones)\n- \u2705 The download URL requires no additional authentication (it's signed)\n- \u2705 If dates are not provided, defaults to current month"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 202,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Export started. Use the export_id to check progress.\",\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"pending\",\n    \"document_type\": \"purchase\",\n    \"estimated_records\": 1234,\n    \"batch_size\": 1000,\n    \"estimated_time_seconds\": 60,\n    \"polling_url\": \"\/api\/v1\/taxpayers\/1726051285001\/received\/export\/status\/exp_67abc123_1734567890\",\n    \"suggested_polling_interval_seconds\": 10\n  }\n}",
+                            "name": "Export started successfully - SAVE THE export_id!"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"El tipo de documento es requerido.\",\n  \"errors\": {\n    \"document_type\": [\"El tipo de documento es requerido.\"]\n  }\n}",
+                            "name": "Invalid data"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Taxpayer not found or does not belong to your team.\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Error al iniciar la exportaci\u00f3n de documentos recibidos.\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Step 2: Check xls Export Status (Polling)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/export\/status\/:exportId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/export\/status\/:exportId",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "Tax identification number (RUC\/C\u00e9dula)."
+                                },
+                                {
+                                    "id": "exportId",
+                                    "key": "exportId",
+                                    "value": "exp_67abc123_1734567890",
+                                    "description": "Export ID obtained from the start export endpoint (data.export_id)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "**Use this endpoint to check if your export is ready.** Poll this endpoint repeatedly\nusing the `export_id` you received from the start export endpoint until the status is `completed`.\n\n### How to Use This Endpoint:\n\n**1. Get the export_id**\nAfter calling `POST \/api\/v1\/taxpayers\/{taxNumber}\/received\/export\/excel`, you'll receive:\n```json\n{\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  \u2190 USE THIS ID HERE\n    \"polling_url\": \"\/api\/v1\/taxpayers\/1726051285001\/received\/export\/status\/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**2. Poll this endpoint**\n```bash\nGET \/api\/v1\/taxpayers\/{taxNumber}\/received\/export\/status\/exp_67abc123_1734567890\n                                                         \u2514\u2500 YOUR export_id goes here\n```\n\n**3. Check the status field**\n- `pending` \u2192 Keep polling (export is queued)\n- `processing` \u2192 Keep polling (export is being generated)\n- `completed` \u2192 **STOP POLLING** and extract `download_url` from response\n- `failed` \u2192 Stop polling (check `error_message`)\n\n**4. When completed, download the file**\n```json\n{\n  \"data\": {\n    \"status\": \"completed\",\n    \"download_url\": \"https:\/\/s3.amazonaws.com\/...\"  \u2190 DOWNLOAD FROM HERE\n  }\n}\n```\nSimply make a GET request to the `download_url` - no authentication needed (it's signed).\n\n### Polling Strategy:\n- **Small exports (< 1000 records)**: Poll every 10 seconds\n- **Medium exports (1000-10000 records)**: Poll every 20-30 seconds\n- **Large exports (> 10000 records)**: Poll every 30-60 seconds\n- You can poll at any frequency you want - the suggestion is just to avoid unnecessary requests\n- The export will be processed regardless of polling frequency\n\n### About the Download URL:\n- \u2705 It's a temporary AWS S3 signed URL\n- \u2705 Valid for 1 hour after export completion\n- \u2705 No additional authentication required (signature is in the URL)\n- \u2705 Direct download - just make a GET request to it\n- \u26a0\ufe0f Download the file within 1 hour or it will expire\n\n### Progress Tracking:\nWhile the export is `processing`, you'll receive:\n- `progress`: Percentage completed (0-100)\n- `processed_records` \/ `total_records`: Exact counts\n- `estimated_time_remaining_seconds`: Rough estimate"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"pending\",\n    \"progress\": 0,\n    \"total_records\": 1234,\n    \"processed_records\": 0,\n    \"file_name\": \"Compras - Periodo 2025-01-01_2025-01-31.xlsx\",\n    \"download_url\": null\n  }\n}",
+                            "name": "Status: pending (keep polling)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"processing\",\n    \"progress\": 45.5,\n    \"total_records\": 1234,\n    \"processed_records\": 562,\n    \"current_batch\": 3,\n    \"file_name\": \"Compras - Periodo 2025-01-01_2025-01-31.xlsx\",\n    \"estimated_time_remaining_seconds\": 30,\n    \"download_url\": null\n  }\n}",
+                            "name": "Status: processing (keep polling)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"completed\",\n    \"progress\": 100,\n    \"total_records\": 1234,\n    \"processed_records\": 1234,\n    \"file_name\": \"Compras - Periodo 2025-01-01_2025-01-31.xlsx\",\n    \"download_url\": \"https:\/\/s3.amazonaws.com\/taxo-exports\/exp_67abc123_1734567890.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...\",\n    \"download_expires_at\": \"2025-01-10T15:30:00Z\"\n  }\n}",
+                            "name": "Status: completed (STOP POLLING - Download file from download_url)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"failed\",\n    \"progress\": 0,\n    \"error_message\": \"No se pudieron procesar los documentos.\",\n    \"total_records\": 0,\n    \"processed_records\": 0,\n    \"download_url\": null\n  }\n}",
+                            "name": "Status: failed (stop polling)"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Export not found\"\n}",
+                            "name": "Export not found (wrong export_id or expired)"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Error al obtener el estado de la exportaci\u00f3n.\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
                     "name": "Get details of a specific received document",
                     "request": {
                         "url": {
@@ -1703,143 +1981,6 @@
                             "header": [],
                             "code": 500,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document status\"\n}",
-                            "name": "Server Error"
-                        }
-                    ]
-                },
-                {
-                    "name": "Get accumulated totals for a specific supplier (Provider)",
-                    "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/suppliers\/:contactTaxNumber\/totals",
-                            "query": [
-                                {
-                                    "key": "start_date",
-                                    "value": "",
-                                    "description": "Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "end_date",
-                                    "value": "",
-                                    "description": "End date for filtering (YYYY-MM-DD). Defaults to last day of current month.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "category_id%5B%5D",
-                                    "value": "",
-                                    "description": "Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET \/api\/v1\/taxpayers\/{taxNumber}\/categories.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "category_type",
-                                    "value": "",
-                                    "description": "Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "deductible_type",
-                                    "value": "",
-                                    "description": "Filter by tax deductibility. Must be one of: deductible, non_deductible.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "status",
-                                    "value": "",
-                                    "description": "Filter by document status. Must be one of: AUTORIZADO, ANULADO.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "search",
-                                    "value": "",
-                                    "description": "Search in provider name, document number, access key, etc.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "uncategorized",
-                                    "value": "",
-                                    "description": "Filter only uncategorized documents. Accepts: true\/false, 1\/0, yes\/no, on\/off.",
-                                    "disabled": true
-                                },
-                                {
-                                    "key": "origin",
-                                    "value": "",
-                                    "description": "Filter by document origin\/source system. Must be one of: tws, xml-import, physical-upload.",
-                                    "disabled": true
-                                }
-                            ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/suppliers\/:contactTaxNumber\/totals?start_date=&end_date=&category_id%5B%5D=&category_type=&deductible_type=&status=&search=&uncategorized=&origin=",
-                            "variable": [
-                                {
-                                    "id": "taxNumber",
-                                    "key": "taxNumber",
-                                    "value": "1726051285001",
-                                    "description": "The taxpayer's RUC number (13 digits)."
-                                },
-                                {
-                                    "id": "contactTaxNumber",
-                                    "key": "contactTaxNumber",
-                                    "value": "1790000000001",
-                                    "description": "The supplier's tax number (RUC\/CI)."
-                                }
-                            ]
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
-                            }
-                        ],
-                        "body": null,
-                        "description": "Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).\nThis endpoint filters all documents by the supplier's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including supplier filter)\n\n**Use Cases:**\n\n- Analyze spending with a specific supplier\n- Supplier performance reports\n- Validate supplier invoices and totals\n- Tax deduction analysis per supplier\n- Supplier comparison reports\n\n**Example URLs:**\n\nGet totals for specific supplier (current month):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals\n```\n\nGet totals for specific supplier and date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet commercial expenses totals from specific supplier:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/received\/suppliers\/1790000000001\/totals?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `\/received\/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in document details\n- `uncategorized`: Only uncategorized documents (true\/false)\n- `origin`: Document origin (electronic, physical)\n\n**Plus:** Automatically filters by `contact_tax_number` from URL parameter"
-                    },
-                    "response": [
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Supplier totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_vat_fifteen_sum\": 1250.50,\n      \"vat_fifteen_sum\": 187.58,\n      \"sub_total_sum\": 1250.50,\n      \"total_sum\": 1438.08,\n      \"subtotal_header\": 1250.50,\n      \"taxes_header\": 187.58,\n      \"total_header\": 1438.08,\n      \"document_count\": 12,\n      \"categorized_document_count\": 12,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      },\n      \"supplier\": {\n        \"contact_tax_number\": \"1790000000001\"\n      }\n    }\n  }\n}",
-                            "name": "Success - Supplier totals"
-                        },
-                        {
-                            "header": [],
-                            "code": 200,
-                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Supplier totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_header\": 0.00,\n      \"taxes_header\": 0.00,\n      \"total_header\": 0.00,\n      \"document_count\": 0,\n      \"categorized_document_count\": 0,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"date_range\": {\n        \"start_date\": \"2024-12-01\",\n        \"end_date\": \"2024-12-31\"\n      },\n      \"supplier\": {\n        \"contact_tax_number\": \"1790000000001\"\n      }\n    }\n  }\n}",
-                            "name": "Success - No documents from supplier"
-                        },
-                        {
-                            "header": [],
-                            "code": 401,
-                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
-                            "name": "Unauthorized - Invalid API Key"
-                        },
-                        {
-                            "header": [],
-                            "code": 403,
-                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
-                            "name": "Forbidden - Taxpayer not accessible"
-                        },
-                        {
-                            "header": [],
-                            "code": 404,
-                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
-                            "name": "Not Found - Taxpayer does not exist"
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"category_type\": [\"Invalid category type.\"]\n  }\n}",
-                            "name": "Validation Error"
-                        },
-                        {
-                            "header": [],
-                            "code": 500,
-                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving supplier totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
                             "name": "Server Error"
                         }
                     ]

@@ -968,12 +968,12 @@ paths:
           in: query
           name: filter.document_type
           description: ''
-          example: sales
+          example: purchases
           required: false
           schema:
             type: string
             description: ''
-            example: sales
+            example: purchases
             enum:
               - purchases
               - sales
@@ -982,12 +982,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: sales
+          example: non_deductible_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: sales
+            example: non_deductible_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -5265,6 +5265,863 @@ paths:
         required: true
         schema:
           type: string
+  '/api/v1/taxpayers/{taxNumber}/received/suppliers/{contactTaxNumber}/totals':
+    get:
+      summary: 'Get accumulated totals for a specific supplier (Provider)'
+      operationId: getAccumulatedTotalsForASpecificSupplierProvider
+      description: "Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).\nThis endpoint filters all documents by the supplier's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including supplier filter)\n\n**Use Cases:**\n\n- Analyze spending with a specific supplier\n- Supplier performance reports\n- Validate supplier invoices and totals\n- Tax deduction analysis per supplier\n- Supplier comparison reports\n\n**Example URLs:**\n\nGet totals for specific supplier (current month):\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals\n```\n\nGet totals for specific supplier and date range:\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet commercial expenses totals from specific supplier:\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `/received/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in document details\n- `uncategorized`: Only uncategorized documents (true/false)\n- `origin`: Document origin (electronic, physical)\n\n**Plus:** Automatically filters by `contact_tax_number` from URL parameter"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: query
+          name: 'category_id[]'
+          description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.'
+            example: null
+        -
+          in: query
+          name: category_type
+          description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
+            example: null
+        -
+          in: query
+          name: deductible_type
+          description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+            example: null
+        -
+          in: query
+          name: status
+          description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
+            example: null
+        -
+          in: query
+          name: search
+          description: 'Search in provider name, document number, access key, etc.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Search in provider name, document number, access key, etc.'
+            example: null
+        -
+          in: query
+          name: uncategorized
+          description: 'Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.'
+          example: null
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.'
+            example: null
+        -
+          in: query
+          name: origin
+          description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Supplier totals'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Supplier totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_vat_fifteen_sum: 1250.5
+                          vat_fifteen_sum: 187.58
+                          sub_total_sum: 1250.5
+                          total_sum: 1438.08
+                          subtotal_header: 1250.5
+                          taxes_header: 187.58
+                          total_header: 1438.08
+                          document_count: 12
+                          categorized_document_count: 12
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                      meta:
+                        filters_applied:
+                          date_range:
+                            start_date: '2024-12-01'
+                            end_date: '2024-12-31'
+                          supplier:
+                            contact_tax_number: '1790000000001'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Supplier totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_vat_fifteen_sum:
+                                type: number
+                                example: 1250.5
+                              vat_fifteen_sum:
+                                type: number
+                                example: 187.58
+                              sub_total_sum:
+                                type: number
+                                example: 1250.5
+                              total_sum:
+                                type: number
+                                example: 1438.08
+                              subtotal_header:
+                                type: number
+                                example: 1250.5
+                              taxes_header:
+                                type: number
+                                example: 187.58
+                              total_header:
+                                type: number
+                                example: 1438.08
+                              document_count:
+                                type: integer
+                                example: 12
+                              categorized_document_count:
+                                type: integer
+                                example: 12
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              date_range:
+                                type: object
+                                properties:
+                                  start_date:
+                                    type: string
+                                    example: '2024-12-01'
+                                  end_date:
+                                    type: string
+                                    example: '2024-12-31'
+                              supplier:
+                                type: object
+                                properties:
+                                  contact_tax_number:
+                                    type: string
+                                    example: '1790000000001'
+                  -
+                    description: 'Success - No documents from supplier'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Supplier totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_header: 0.0
+                          taxes_header: 0.0
+                          total_header: 0.0
+                          document_count: 0
+                          categorized_document_count: 0
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                      meta:
+                        filters_applied:
+                          date_range:
+                            start_date: '2024-12-01'
+                            end_date: '2024-12-31'
+                          supplier:
+                            contact_tax_number: '1790000000001'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Supplier totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_header:
+                                type: number
+                                example: 0.0
+                              taxes_header:
+                                type: number
+                                example: 0.0
+                              total_header:
+                                type: number
+                                example: 0.0
+                              document_count:
+                                type: integer
+                                example: 0
+                              categorized_document_count:
+                                type: integer
+                                example: 0
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              date_range:
+                                type: object
+                                properties:
+                                  start_date:
+                                    type: string
+                                    example: '2024-12-01'
+                                  end_date:
+                                    type: string
+                                    example: '2024-12-31'
+                              supplier:
+                                type: object
+                                properties:
+                                  contact_tax_number:
+                                    type: string
+                                    example: '1790000000001'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Not Found - Taxpayer does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                    category_type:
+                      - 'Invalid category type.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                        items:
+                          type: string
+                      category_type:
+                        type: array
+                        example:
+                          - 'Invalid category type.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving supplier totals'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving supplier totals'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Received Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: contactTaxNumber
+        description: "The supplier's tax number (RUC/CI)."
+        example: '1790000000001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received/export/excel':
+    post:
+      summary: 'Step 1: Start xls Export (Asynchronous)'
+      operationId: step1StartXlsExportAsynchronous
+      description: "**IMPORTANT: This is an asynchronous endpoint.** It starts a background export process and returns immediately.\nYou must use the returned `export_id` to poll the status endpoint until the file is ready.\n\n### Complete Workflow (3 Steps):\n\n**STEP 1: Start the export (this endpoint)**\n```bash\nPOST /api/v1/taxpayers/{taxNumber}/received/export/excel\n```\nYou will receive a response like:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  ← SAVE THIS ID!\n    \"status\": \"pending\",\n    \"polling_url\": \"/api/v1/taxpayers/1726051285001/received/export/status/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**STEP 2: Poll the status (repeatedly)**\nUse the `export_id` from Step 1 to check progress:\n```bash\nGET /api/v1/taxpayers/{taxNumber}/received/export/status/{export_id}\n```\nPoll every 10-30 seconds until `status` is `completed` or `failed`.\n\n**STEP 3: Download the file**\nWhen status is `completed`, the response will include a `download_url`:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"completed\",\n    \"progress\": 100,\n    \"download_url\": \"https://s3.amazonaws.com/...\"  ← USE THIS TO DOWNLOAD\n  }\n}\n```\nThe `download_url` is a temporary signed URL that expires in 1 hour.\n\n### Key Points:\n- ✅ This endpoint returns immediately (HTTP 202) - the export runs in background\n- ✅ Extract `data.export_id` from the response - you'll need it for polling\n- ✅ Use the provided `polling_url` or construct it manually with the `export_id`\n- ✅ Poll at any frequency (suggested: every 10 seconds for small exports, 30-60 seconds for large ones)\n- ✅ The download URL requires no additional authentication (it's signed)\n- ✅ If dates are not provided, defaults to current month"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: 'required API key for authentication. Example: prod_YOUR_API_KEY_HERE'
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        202:
+          description: 'Export started successfully - SAVE THE export_id!'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Export started. Use the export_id to check progress.'
+                  data:
+                    export_id: exp_67abc123_1734567890
+                    status: pending
+                    document_type: purchase
+                    estimated_records: 1234
+                    batch_size: 1000
+                    estimated_time_seconds: 60
+                    polling_url: /api/v1/taxpayers/1726051285001/received/export/status/exp_67abc123_1734567890
+                    suggested_polling_interval_seconds: 10
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Export started. Use the export_id to check progress.'
+                  data:
+                    type: object
+                    properties:
+                      export_id:
+                        type: string
+                        example: exp_67abc123_1734567890
+                      status:
+                        type: string
+                        example: pending
+                      document_type:
+                        type: string
+                        example: purchase
+                      estimated_records:
+                        type: integer
+                        example: 1234
+                      batch_size:
+                        type: integer
+                        example: 1000
+                      estimated_time_seconds:
+                        type: integer
+                        example: 60
+                      polling_url:
+                        type: string
+                        example: /api/v1/taxpayers/1726051285001/received/export/status/exp_67abc123_1734567890
+                      suggested_polling_interval_seconds:
+                        type: integer
+                        example: 10
+        400:
+          description: 'Invalid data'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'El tipo de documento es requerido.'
+                  errors:
+                    document_type:
+                      - 'El tipo de documento es requerido.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'El tipo de documento es requerido.'
+                  errors:
+                    type: object
+                    properties:
+                      document_type:
+                        type: array
+                        example:
+                          - 'El tipo de documento es requerido.'
+                        items:
+                          type: string
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Taxpayer not found or does not belong to your team.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Taxpayer not found or does not belong to your team.'
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Error al iniciar la exportación de documentos recibidos.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Error al iniciar la exportación de documentos recibidos.'
+      tags:
+        - 'Received Documents'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                document_type:
+                  type: string
+                  description: 'Document type to export. Values: `purchase`, `credit_note`, `retention`.'
+                  example: purchase
+                start_date:
+                  type: date
+                  description: 'optional Start date (YYYY-MM-DD). Defaults to first day of current month if not specified.'
+                  example: '2025-01-01'
+                end_date:
+                  type: date
+                  description: 'optional End date (YYYY-MM-DD). Defaults to last day of current month if not specified.'
+                  example: '2025-01-31'
+                origin:
+                  type: string
+                  description: 'optional Filter by document origin. Values: `tws`, `xml-import`, `physical-upload`.'
+                  example: tws
+                supplier_tax_number:
+                  type: string
+                  description: "optional Filter by supplier's tax ID (RUC)."
+                  example: '1790000000001'
+                uncategorized:
+                  type: boolean
+                  description: 'optional Filter only uncategorized documents.'
+                  example: false
+              required:
+                - document_type
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: 'Tax identification number (RUC/Cédula).'
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received/export/status/{exportId}':
+    get:
+      summary: 'Step 2: Check xls Export Status (Polling)'
+      operationId: step2CheckXlsExportStatusPolling
+      description: "**Use this endpoint to check if your export is ready.** Poll this endpoint repeatedly\nusing the `export_id` you received from the start export endpoint until the status is `completed`.\n\n### How to Use This Endpoint:\n\n**1. Get the export_id**\nAfter calling `POST /api/v1/taxpayers/{taxNumber}/received/export/excel`, you'll receive:\n```json\n{\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  ← USE THIS ID HERE\n    \"polling_url\": \"/api/v1/taxpayers/1726051285001/received/export/status/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**2. Poll this endpoint**\n```bash\nGET /api/v1/taxpayers/{taxNumber}/received/export/status/exp_67abc123_1734567890\n                                                         └─ YOUR export_id goes here\n```\n\n**3. Check the status field**\n- `pending` → Keep polling (export is queued)\n- `processing` → Keep polling (export is being generated)\n- `completed` → **STOP POLLING** and extract `download_url` from response\n- `failed` → Stop polling (check `error_message`)\n\n**4. When completed, download the file**\n```json\n{\n  \"data\": {\n    \"status\": \"completed\",\n    \"download_url\": \"https://s3.amazonaws.com/...\"  ← DOWNLOAD FROM HERE\n  }\n}\n```\nSimply make a GET request to the `download_url` - no authentication needed (it's signed).\n\n### Polling Strategy:\n- **Small exports (< 1000 records)**: Poll every 10 seconds\n- **Medium exports (1000-10000 records)**: Poll every 20-30 seconds\n- **Large exports (> 10000 records)**: Poll every 30-60 seconds\n- You can poll at any frequency you want - the suggestion is just to avoid unnecessary requests\n- The export will be processed regardless of polling frequency\n\n### About the Download URL:\n- ✅ It's a temporary AWS S3 signed URL\n- ✅ Valid for 1 hour after export completion\n- ✅ No additional authentication required (signature is in the URL)\n- ✅ Direct download - just make a GET request to it\n- ⚠️ Download the file within 1 hour or it will expire\n\n### Progress Tracking:\nWhile the export is `processing`, you'll receive:\n- `progress`: Percentage completed (0-100)\n- `processed_records` / `total_records`: Exact counts\n- `estimated_time_remaining_seconds`: Rough estimate"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: 'required API key for authentication. Example: prod_YOUR_API_KEY_HERE'
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Status: pending (keep polling)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: pending
+                        progress: 0
+                        total_records: 1234
+                        processed_records: 0
+                        file_name: 'Compras - Periodo 2025-01-01_2025-01-31.xlsx'
+                        download_url: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: pending
+                          progress:
+                            type: integer
+                            example: 0
+                          total_records:
+                            type: integer
+                            example: 1234
+                          processed_records:
+                            type: integer
+                            example: 0
+                          file_name:
+                            type: string
+                            example: 'Compras - Periodo 2025-01-01_2025-01-31.xlsx'
+                          download_url:
+                            type: string
+                            example: null
+                  -
+                    description: 'Status: processing (keep polling)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: processing
+                        progress: 45.5
+                        total_records: 1234
+                        processed_records: 562
+                        current_batch: 3
+                        file_name: 'Compras - Periodo 2025-01-01_2025-01-31.xlsx'
+                        estimated_time_remaining_seconds: 30
+                        download_url: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: processing
+                          progress:
+                            type: number
+                            example: 45.5
+                          total_records:
+                            type: integer
+                            example: 1234
+                          processed_records:
+                            type: integer
+                            example: 562
+                          current_batch:
+                            type: integer
+                            example: 3
+                          file_name:
+                            type: string
+                            example: 'Compras - Periodo 2025-01-01_2025-01-31.xlsx'
+                          estimated_time_remaining_seconds:
+                            type: integer
+                            example: 30
+                          download_url:
+                            type: string
+                            example: null
+                  -
+                    description: 'Status: completed (STOP POLLING - Download file from download_url)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: completed
+                        progress: 100
+                        total_records: 1234
+                        processed_records: 1234
+                        file_name: 'Compras - Periodo 2025-01-01_2025-01-31.xlsx'
+                        download_url: 'https://s3.amazonaws.com/taxo-exports/exp_67abc123_1734567890.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...'
+                        download_expires_at: '2025-01-10T15:30:00Z'
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: completed
+                          progress:
+                            type: integer
+                            example: 100
+                          total_records:
+                            type: integer
+                            example: 1234
+                          processed_records:
+                            type: integer
+                            example: 1234
+                          file_name:
+                            type: string
+                            example: 'Compras - Periodo 2025-01-01_2025-01-31.xlsx'
+                          download_url:
+                            type: string
+                            example: 'https://s3.amazonaws.com/taxo-exports/exp_67abc123_1734567890.xlsx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=...'
+                          download_expires_at:
+                            type: string
+                            example: '2025-01-10T15:30:00Z'
+                  -
+                    description: 'Status: failed (stop polling)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: failed
+                        progress: 0
+                        error_message: 'No se pudieron procesar los documentos.'
+                        total_records: 0
+                        processed_records: 0
+                        download_url: null
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: failed
+                          progress:
+                            type: integer
+                            example: 0
+                          error_message:
+                            type: string
+                            example: 'No se pudieron procesar los documentos.'
+                          total_records:
+                            type: integer
+                            example: 0
+                          processed_records:
+                            type: integer
+                            example: 0
+                          download_url:
+                            type: string
+                            example: null
+        404:
+          description: 'Export not found (wrong export_id or expired)'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Export not found'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Export not found'
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Error al obtener el estado de la exportación.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Error al obtener el estado de la exportación.'
+      tags:
+        - 'Received Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: 'Tax identification number (RUC/Cédula).'
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: exportId
+        description: 'Export ID obtained from the start export endpoint (data.export_id).'
+        example: exp_67abc123_1734567890
+        required: true
+        schema:
+          type: string
   '/api/v1/taxpayers/{taxNumber}/received/{documentUlid}/details':
     get:
       summary: 'Get details of a specific received document'
@@ -6360,432 +7217,6 @@ paths:
         name: documentUlid
         description: 'The unique ULID identifier of the document. Can be from purchases, credit notes, or retentions.'
         example: 01HQXZ8P9G2K4MNBVCXWERTYU1
-        required: true
-        schema:
-          type: string
-  '/api/v1/taxpayers/{taxNumber}/received/suppliers/{contactTaxNumber}/totals':
-    get:
-      summary: 'Get accumulated totals for a specific supplier (Provider)'
-      operationId: getAccumulatedTotalsForASpecificSupplierProvider
-      description: "Retrieves aggregated totals and statistics for received documents from a specific supplier (provider).\nThis endpoint filters all documents by the supplier's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate\n- **VAT amounts**: Total VAT collected at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including supplier filter)\n\n**Use Cases:**\n\n- Analyze spending with a specific supplier\n- Supplier performance reports\n- Validate supplier invoices and totals\n- Tax deduction analysis per supplier\n- Supplier comparison reports\n\n**Example URLs:**\n\nGet totals for specific supplier (current month):\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals\n```\n\nGet totals for specific supplier and date range:\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet commercial expenses totals from specific supplier:\n```\nGET /api/v1/taxpayers/1726051285001/received/suppliers/1790000000001/totals?category_type=commercial_expenses&deductible_type=deductible\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `/received/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `category_type`: Expense type (commercial_expenses, personal_expenses, non_deductible_expenses)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `status`: Document status (AUTORIZADO, ANULADO)\n- `search`: Search in document details\n- `uncategorized`: Only uncategorized documents (true/false)\n- `origin`: Document origin (electronic, physical)\n\n**Plus:** Automatically filters by `contact_tax_number` from URL parameter"
-      parameters:
-        -
-          in: query
-          name: start_date
-          description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
-            example: null
-        -
-          in: query
-          name: end_date
-          description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
-            example: null
-        -
-          in: query
-          name: 'category_id[]'
-          description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.'
-          example: null
-          required: false
-          schema:
-            type: integer
-            description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories.'
-            example: null
-        -
-          in: query
-          name: category_type
-          description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'Filter by expense type. Must be one of: commercial_expenses, personal_expenses, non_deductible_expenses.'
-            example: null
-        -
-          in: query
-          name: deductible_type
-          description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
-            example: null
-        -
-          in: query
-          name: status
-          description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'Filter by document status. Must be one of: AUTORIZADO, ANULADO.'
-            example: null
-        -
-          in: query
-          name: search
-          description: 'Search in provider name, document number, access key, etc.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'Search in provider name, document number, access key, etc.'
-            example: null
-        -
-          in: query
-          name: uncategorized
-          description: 'Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.'
-          example: null
-          required: false
-          schema:
-            type: boolean
-            description: 'Filter only uncategorized documents. Accepts: true/false, 1/0, yes/no, on/off.'
-            example: null
-        -
-          in: query
-          name: origin
-          description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
-          example: null
-          required: false
-          schema:
-            type: string
-            description: 'Filter by document origin/source system. Must be one of: tws, xml-import, physical-upload.'
-            example: null
-        -
-          in: header
-          name: x-api-key
-          description: ''
-          example: YOUR_API_KEY_HERE
-          schema:
-            type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
-          schema:
-            type: string
-      responses:
-        200:
-          description: ''
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  -
-                    description: 'Success - Supplier totals'
-                    type: object
-                    example:
-                      status: success
-                      message: 'Supplier totals retrieved successfully'
-                      data:
-                        totals:
-                          subtotal_vat_fifteen_sum: 1250.5
-                          vat_fifteen_sum: 187.58
-                          sub_total_sum: 1250.5
-                          total_sum: 1438.08
-                          subtotal_header: 1250.5
-                          taxes_header: 187.58
-                          total_header: 1438.08
-                          document_count: 12
-                          categorized_document_count: 12
-                          uncategorized_document_count: 0
-                          voided_document_count: 0
-                      meta:
-                        filters_applied:
-                          date_range:
-                            start_date: '2024-12-01'
-                            end_date: '2024-12-31'
-                          supplier:
-                            contact_tax_number: '1790000000001'
-                    properties:
-                      status:
-                        type: string
-                        example: success
-                      message:
-                        type: string
-                        example: 'Supplier totals retrieved successfully'
-                      data:
-                        type: object
-                        properties:
-                          totals:
-                            type: object
-                            properties:
-                              subtotal_vat_fifteen_sum:
-                                type: number
-                                example: 1250.5
-                              vat_fifteen_sum:
-                                type: number
-                                example: 187.58
-                              sub_total_sum:
-                                type: number
-                                example: 1250.5
-                              total_sum:
-                                type: number
-                                example: 1438.08
-                              subtotal_header:
-                                type: number
-                                example: 1250.5
-                              taxes_header:
-                                type: number
-                                example: 187.58
-                              total_header:
-                                type: number
-                                example: 1438.08
-                              document_count:
-                                type: integer
-                                example: 12
-                              categorized_document_count:
-                                type: integer
-                                example: 12
-                              uncategorized_document_count:
-                                type: integer
-                                example: 0
-                              voided_document_count:
-                                type: integer
-                                example: 0
-                      meta:
-                        type: object
-                        properties:
-                          filters_applied:
-                            type: object
-                            properties:
-                              date_range:
-                                type: object
-                                properties:
-                                  start_date:
-                                    type: string
-                                    example: '2024-12-01'
-                                  end_date:
-                                    type: string
-                                    example: '2024-12-31'
-                              supplier:
-                                type: object
-                                properties:
-                                  contact_tax_number:
-                                    type: string
-                                    example: '1790000000001'
-                  -
-                    description: 'Success - No documents from supplier'
-                    type: object
-                    example:
-                      status: success
-                      message: 'Supplier totals retrieved successfully'
-                      data:
-                        totals:
-                          subtotal_header: 0.0
-                          taxes_header: 0.0
-                          total_header: 0.0
-                          document_count: 0
-                          categorized_document_count: 0
-                          uncategorized_document_count: 0
-                          voided_document_count: 0
-                      meta:
-                        filters_applied:
-                          date_range:
-                            start_date: '2024-12-01'
-                            end_date: '2024-12-31'
-                          supplier:
-                            contact_tax_number: '1790000000001'
-                    properties:
-                      status:
-                        type: string
-                        example: success
-                      message:
-                        type: string
-                        example: 'Supplier totals retrieved successfully'
-                      data:
-                        type: object
-                        properties:
-                          totals:
-                            type: object
-                            properties:
-                              subtotal_header:
-                                type: number
-                                example: 0.0
-                              taxes_header:
-                                type: number
-                                example: 0.0
-                              total_header:
-                                type: number
-                                example: 0.0
-                              document_count:
-                                type: integer
-                                example: 0
-                              categorized_document_count:
-                                type: integer
-                                example: 0
-                              uncategorized_document_count:
-                                type: integer
-                                example: 0
-                              voided_document_count:
-                                type: integer
-                                example: 0
-                      meta:
-                        type: object
-                        properties:
-                          filters_applied:
-                            type: object
-                            properties:
-                              date_range:
-                                type: object
-                                properties:
-                                  start_date:
-                                    type: string
-                                    example: '2024-12-01'
-                                  end_date:
-                                    type: string
-                                    example: '2024-12-31'
-                              supplier:
-                                type: object
-                                properties:
-                                  contact_tax_number:
-                                    type: string
-                                    example: '1790000000001'
-        401:
-          description: 'Unauthorized - Invalid API Key'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: error
-                  message: 'Invalid API key'
-                  code: INVALID_API_KEY
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  message:
-                    type: string
-                    example: 'Invalid API key'
-                  code:
-                    type: string
-                    example: INVALID_API_KEY
-        403:
-          description: 'Forbidden - Taxpayer not accessible'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: error
-                  message: 'You do not have access to this taxpayer'
-                  code: TAXPAYER_ACCESS_DENIED
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  message:
-                    type: string
-                    example: 'You do not have access to this taxpayer'
-                  code:
-                    type: string
-                    example: TAXPAYER_ACCESS_DENIED
-        404:
-          description: 'Not Found - Taxpayer does not exist'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: error
-                  message: 'Taxpayer not found'
-                  code: TAXPAYER_NOT_FOUND
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  message:
-                    type: string
-                    example: 'Taxpayer not found'
-                  code:
-                    type: string
-                    example: TAXPAYER_NOT_FOUND
-        422:
-          description: 'Validation Error'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: error
-                  message: 'Validation failed'
-                  code: VALIDATION_ERROR
-                  errors:
-                    start_date:
-                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
-                    category_type:
-                      - 'Invalid category type.'
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  message:
-                    type: string
-                    example: 'Validation failed'
-                  code:
-                    type: string
-                    example: VALIDATION_ERROR
-                  errors:
-                    type: object
-                    properties:
-                      start_date:
-                        type: array
-                        example:
-                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
-                        items:
-                          type: string
-                      category_type:
-                        type: array
-                        example:
-                          - 'Invalid category type.'
-                        items:
-                          type: string
-        500:
-          description: 'Server Error'
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  status: error
-                  message: 'An error occurred while retrieving supplier totals'
-                  code: SERVER_ERROR
-                properties:
-                  status:
-                    type: string
-                    example: error
-                  message:
-                    type: string
-                    example: 'An error occurred while retrieving supplier totals'
-                  code:
-                    type: string
-                    example: SERVER_ERROR
-      tags:
-        - 'Received Documents'
-    parameters:
-      -
-        in: path
-        name: taxNumber
-        description: "The taxpayer's RUC number (13 digits)."
-        example: '1726051285001'
-        required: true
-        schema:
-          type: string
-      -
-        in: path
-        name: contactTaxNumber
-        description: "The supplier's tax number (RUC/CI)."
-        example: '1790000000001'
         required: true
         schema:
           type: string
