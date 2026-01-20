@@ -68,58 +68,78 @@ git commit -m "chore: Update docs submodule reference"
 git push origin develop
 ```
 
-### 5️⃣ (Opcional) Revertir para Ver Localmente
+### 5️⃣ ✅ Ver Documentación Localmente
 
-Si necesitas ver la documentación localmente después de corregir las rutas:
+**¡Ya no necesitas revertir!** La documentación funciona tanto en local como en Cloudflare con las mismas rutas.
 
 ```bash
-# Desde el repositorio principal
-./fix-docs-paths.sh revert
+# Simplemente visita
+http://localhost/docs
 ```
 
-Esto restaura las rutas para visualización local (`css/` → `../docs/css/`).
+Las rutas personalizadas en `routes/web.php` se encargan de servir los assets correctamente.
 
-## 🔧 Diferencias Local vs Cloudflare
+## 🔧 Configuración Unificada (Local y Cloudflare)
 
-| Entorno | URL Base | Rutas de Assets | Funciona con |
-|---------|----------|-----------------|--------------|
-| **Local (Laravel)** | `/docs` | `../docs/css/...` | Scribe default |
-| **Cloudflare Pages** | `/` | `css/...` | Después del script |
+✅ **Ahora local y Cloudflare usan las MISMAS rutas!**
+
+| Entorno | URL Base | Rutas de Assets | Requiere Script |
+|---------|----------|-----------------|-----------------|
+| **Local (Laravel)** | `/docs` | `css/...`, `js/...` | ✅ Sí (automático) |
+| **Cloudflare Pages** | `/` | `css/...`, `js/...` | ✅ Sí (automático) |
+
+**Cómo funciona:**
+- Laravel tiene rutas especiales en `routes/web.php` que sirven `/docs/css/*` y `/docs/js/*`
+- Estas rutas hacen que las rutas relativas (`css/...`) funcionen igual en local y producción
+- **Ya no necesitas revertir cambios** para ver la documentación localmente
 
 ## 📝 Notas Importantes
 
-1. **NUNCA** corras `./fix-docs-paths.sh fix` si quieres ver la documentación en local
+1. ✅ **Ahora SÍ puedes** correr `./fix-docs-paths.sh fix` y ver la documentación en local
 2. El archivo `index.html.backup` está en `.gitignore` y no se commitea
-3. Scribe siempre genera con rutas para Laravel, por eso necesitamos el script
-4. El script puede revertir cambios si tienes el backup
+3. Scribe siempre genera con rutas `../docs/`, el script las corrige a rutas relativas `css/`, `js/`
+4. Laravel tiene rutas especiales (`/docs/css/*`, `/docs/js/*`) que sirven los assets correctamente
+5. **Las mismas rutas funcionan en local y en Cloudflare** 🎉
 
 ## 🆘 Solución de Problemas
 
 ### La documentación no se ve en local
 
 ```bash
-# Regenerar con Scribe
+# Regenerar con Scribe y corregir rutas
 sail artisan scribe:generate
+./fix-docs-paths.sh fix
 ```
 
-### La documentación no tiene estilos en Cloudflare
+Luego visita: http://localhost/docs
+
+### La documentación no tiene estilos en local o Cloudflare
+
+**Causa común:** Las rutas no se corrigieron después de regenerar.
 
 ```bash
-# Corregir rutas y hacer push
+# Corregir rutas
 ./fix-docs-paths.sh fix
+
+# Para Cloudflare, además hacer push
 cd public/docs
 git add index.html
-git commit -m "fix: Correct asset paths for Cloudflare"
+git commit -m "fix: Correct asset paths"
 git push origin main
 ```
 
-### Perdí el backup
+### Las rutas de Laravel no funcionan
 
-No hay problema, simplemente regenera con Scribe:
+Verifica que las rutas `/docs/css/*` y `/docs/js/*` estén registradas:
 
 ```bash
-sail artisan scribe:generate
+sail artisan route:list | grep docs
 ```
+
+Deberías ver:
+- `GET|HEAD  docs/css/{file}`
+- `GET|HEAD  docs/js/{file}`
+- `GET|HEAD  docs/{any?}`
 
 ## 📚 Recursos
 

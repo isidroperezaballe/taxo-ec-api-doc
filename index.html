@@ -43,7 +43,7 @@
 <a href="#" id="nav-button">
     <span>
         MENU
-        <img src="../docs/images/navbar.png" alt="navbar-image"/>
+        <img src="images/navbar.png" alt="navbar-image"/>
     </span>
 </a>
 <div class="tocify-wrapper">
@@ -176,8 +176,8 @@
             </div>
 
     <ul class="toc-footer" id="toc-footer">
-                    <li style="padding-bottom: 5px;"><a href="../docs/collection.json">View Postman collection</a></li>
-                            <li style="padding-bottom: 5px;"><a href="../docs/openapi.yaml">View OpenAPI spec</a></li>
+                    <li style="padding-bottom: 5px;"><a href="collection.json">View Postman collection</a></li>
+                            <li style="padding-bottom: 5px;"><a href="openapi.yaml">View OpenAPI spec</a></li>
                 <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
     </ul>
 
@@ -1137,7 +1137,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=commercial_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=commercial_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
@@ -1156,7 +1156,7 @@ const params = {
     "enabled": "1",
     "editable": "1",
     "search": "Alimentación",
-    "filter[document_type]": "purchases",
+    "filter[document_type]": "sales",
     "filter[category_type]": "commercial_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
@@ -1194,7 +1194,7 @@ $response = $client-&gt;get(
             'enabled' =&gt; '1',
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
-            'filter[document_type]' =&gt; 'purchases',
+            'filter[document_type]' =&gt; 'sales',
             'filter[category_type]' =&gt; 'commercial_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
@@ -1217,7 +1217,7 @@ params = {
   'enabled': '1',
   'editable': '1',
   'search': 'Alimentación',
-  'filter[document_type]': 'purchases',
+  'filter[document_type]': 'sales',
   'filter[category_type]': 'commercial_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
@@ -1514,10 +1514,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="purchases"
+               value="sales"
                data-component="query">
     <br>
-<p>Example: <code>purchases</code></p>
+<p>Example: <code>sales</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
             </div>

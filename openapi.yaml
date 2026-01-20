@@ -971,12 +971,12 @@ paths:
           in: query
           name: filter.document_type
           description: ''
-          example: purchases
+          example: sales
           required: false
           schema:
             type: string
             description: ''
-            example: purchases
+            example: sales
             enum:
               - purchases
               - sales
