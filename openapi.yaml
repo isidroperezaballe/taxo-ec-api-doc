@@ -985,12 +985,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: commercial_expenses
+          example: non_deductible_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: commercial_expenses
+            example: non_deductible_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -2504,6 +2504,1173 @@ paths:
         name: taxNumber
         description: "The taxpayer's RUC number (13 digits)."
         example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/count':
+    get:
+      summary: 'Get count of all emitted documents types'
+      operationId: getCountOfAllEmittedDocumentsTypes
+      description: "Retrieves document counts across all emitted document types (sales invoices, credit notes, withholdings, settlements)\nfor a specific taxpayer and time period.\n\nThis endpoint aggregates data from four tables:\n- **invoices**: Sales invoices (Facturas de Venta)\n- **sale_credit_notes**: Credit notes applied to sales (Notas de Crédito de Venta)\n- **sale_withholdings**: Withholdings issued to sellers (Retenciones Emitidas)\n- **sale_settlements**: Purchase settlements (Liquidaciones de Compra)\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Default Behavior:**\n- If no date range is specified, returns counts for the current month\n- Only counts documents that belong to the authenticated taxpayer and team (organization)\n- Excludes deleted documents (soft deletes)\n\n**Use Cases:**\n- Dashboard statistics showing total documents emitted\n- Monthly/period document volume analysis\n- Document type distribution reports\n- Compliance verification (ensuring all document types are being processed)\n- Sales performance tracking\n- Invoice generation monitoring\n\n**Example URLs:**\n\nGet counts for current month:\n```\nGET /api/v1/taxpayers/1726051285001/emitted/count\n```\n\nGet counts for specific period:\n```\nGET /api/v1/taxpayers/1726051285001/emitted/count?start_date=2024-01-01&end_date=2024-01-31\n```\n\nGet counts for entire year:\n```\nGET /api/v1/taxpayers/1726051285001/emitted/count?start_date=2024-01-01&end_date=2024-12-31\n```"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for counting (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for counting (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for counting (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for counting (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Current month'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Emitted documents count retrieved successfully'
+                      data:
+                        counts:
+                          invoices: 120
+                          credit_notes: 5
+                          withholdings: 18
+                          settlements: 2
+                          total: 145
+                        period:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Emitted documents count retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          counts:
+                            type: object
+                            properties:
+                              invoices:
+                                type: integer
+                                example: 120
+                              credit_notes:
+                                type: integer
+                                example: 5
+                              withholdings:
+                                type: integer
+                                example: 18
+                              settlements:
+                                type: integer
+                                example: 2
+                              total:
+                                type: integer
+                                example: 145
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+                  -
+                    description: 'Success - Custom period'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Emitted documents count retrieved successfully'
+                      data:
+                        counts:
+                          invoices: 450
+                          credit_notes: 15
+                          withholdings: 65
+                          settlements: 8
+                          total: 538
+                        period:
+                          start_date: '2024-01-01'
+                          end_date: '2024-03-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Emitted documents count retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          counts:
+                            type: object
+                            properties:
+                              invoices:
+                                type: integer
+                                example: 450
+                              credit_notes:
+                                type: integer
+                                example: 15
+                              withholdings:
+                                type: integer
+                                example: 65
+                              settlements:
+                                type: integer
+                                example: 8
+                              total:
+                                type: integer
+                                example: 538
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-01-01'
+                              end_date:
+                                type: string
+                                example: '2024-03-31'
+                  -
+                    description: 'Success - No documents'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Emitted documents count retrieved successfully'
+                      data:
+                        counts:
+                          invoices: 0
+                          credit_notes: 0
+                          withholdings: 0
+                          settlements: 0
+                          total: 0
+                        period:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Emitted documents count retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          counts:
+                            type: object
+                            properties:
+                              invoices:
+                                type: integer
+                                example: 0
+                              credit_notes:
+                                type: integer
+                                example: 0
+                              withholdings:
+                                type: integer
+                                example: 0
+                              settlements:
+                                type: integer
+                                example: 0
+                              total:
+                                type: integer
+                                example: 0
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Not Found - Taxpayer does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                    end_date:
+                      - 'The end date must be equal to or after the start date.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                        items:
+                          type: string
+                      end_date:
+                        type: array
+                        example:
+                          - 'The end date must be equal to or after the start date.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving document counts'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving document counts'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Emitted Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/clients/{contactTaxNumber}/totals':
+    get:
+      summary: 'Get accumulated totals for a specific client (Customer)'
+      operationId: getAccumulatedTotalsForASpecificClientCustomer
+      description: "Retrieves aggregated totals and statistics for emitted documents to a specific client (customer).\nThis endpoint filters all invoices by the client's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate (15%, 14%, 13%, 12%, 5%, 0%, exempt, not subject)\n- **VAT amounts**: Total VAT charged at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including client filter)\n\n**⚠️ Understanding `total_sum` vs `total_header`:**\n\nThe response includes TWO total values that may differ slightly:\n\n- **`total_sum`**: Direct sum of the `total` field from each document (SRI-authorized values). **Use for official reports.**\n- **`total_header`**: Calculated from subtotals + recalculated VAT. May differ by a few cents due to rounding.\n\nSee the `/emitted/accumulated` endpoint documentation for detailed explanation of this difference.\n\n**Use Cases:**\n\n- Analyze sales to a specific client\n- Client performance and revenue reports\n- Validate client invoices and totals\n- Calculate client-specific discounts and benefits\n- Client comparison and ranking reports\n- Credit analysis and payment behavior\n\n**Example URLs:**\n\nGet totals for specific client (current month):\n```\nGET /api/v1/taxpayers/1726051285001/emitted/clients/0998765432001/totals\n```\n\nGet totals for specific client and date range:\n```\nGET /api/v1/taxpayers/1726051285001/emitted/clients/0998765432001/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet general regime sales totals to specific client:\n```\nGET /api/v1/taxpayers/1726051285001/emitted/clients/0998765432001/totals?regime=general\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `/emitted/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `regime`: Tax regime (general, rimpe_entrepreneur, rimpe_popular_business)\n- `origin`: Document origin (datil, physical-upload, tws, xml-import)\n\n**Note:** Status filter is not available for this endpoint. All calculations are performed on AUTHORIZED documents only.\n\n**Plus:** Automatically filters by `contact_tax_number` (client's RUC/CI) from URL parameter"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for filtering (YYYY-MM-DD). Defaults to last day of current month.'
+            example: null
+        -
+          in: query
+          name: 'category_id[]'
+          description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories?type=sales.'
+          example: null
+          required: false
+          schema:
+            type: integer
+            description: 'Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET /api/v1/taxpayers/{taxNumber}/categories?type=sales.'
+            example: null
+        -
+          in: query
+          name: deductible_type
+          description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax deductibility. Must be one of: deductible, non_deductible.'
+            example: null
+        -
+          in: query
+          name: regime
+          description: 'Filter by tax regime. Must be one of: general, rimpe_entrepreneur, rimpe_popular_business.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by tax regime. Must be one of: general, rimpe_entrepreneur, rimpe_popular_business.'
+            example: null
+        -
+          in: query
+          name: origin
+          description: 'Filter by document origin/source system. Must be one of: datil, physical-upload, tws, xml-import.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Filter by document origin/source system. Must be one of: datil, physical-upload, tws, xml-import.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Client totals'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Client totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_vat_fifteen_sum: 5420.8
+                          vat_fifteen_sum: 813.12
+                          subtotal_vat_twelve_sum: 1200.0
+                          vat_twelve_sum: 144.0
+                          subtotal_vat_zero_sum: 500.0
+                          sub_total_sum: 7120.8
+                          total_sum: 8077.92
+                          subtotal_header: 7120.8
+                          taxes_header: 957.12
+                          total_header: 8077.92
+                          document_count: 25
+                          categorized_document_count: 25
+                          uncategorized_document_count: 0
+                          voided_document_count: 1
+                        totals_explanation:
+                          total_sum: "Direct sum of 'total' field from documents (SRI-authorized values). Use for official reports."
+                          total_header: 'Calculated from subtotals + recalculated VAT. May differ slightly from total_sum due to rounding.'
+                      meta:
+                        filters_applied:
+                          start_date: '2024-01-01'
+                          end_date: '2024-12-31'
+                          client:
+                            contact_tax_number: '0998765432001'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Client totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_vat_fifteen_sum:
+                                type: number
+                                example: 5420.8
+                              vat_fifteen_sum:
+                                type: number
+                                example: 813.12
+                              subtotal_vat_twelve_sum:
+                                type: number
+                                example: 1200.0
+                              vat_twelve_sum:
+                                type: number
+                                example: 144.0
+                              subtotal_vat_zero_sum:
+                                type: number
+                                example: 500.0
+                              sub_total_sum:
+                                type: number
+                                example: 7120.8
+                              total_sum:
+                                type: number
+                                example: 8077.92
+                              subtotal_header:
+                                type: number
+                                example: 7120.8
+                              taxes_header:
+                                type: number
+                                example: 957.12
+                              total_header:
+                                type: number
+                                example: 8077.92
+                              document_count:
+                                type: integer
+                                example: 25
+                              categorized_document_count:
+                                type: integer
+                                example: 25
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 1
+                          totals_explanation:
+                            type: object
+                            properties:
+                              total_sum:
+                                type: string
+                                example: "Direct sum of 'total' field from documents (SRI-authorized values). Use for official reports."
+                              total_header:
+                                type: string
+                                example: 'Calculated from subtotals + recalculated VAT. May differ slightly from total_sum due to rounding.'
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-01-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+                              client:
+                                type: object
+                                properties:
+                                  contact_tax_number:
+                                    type: string
+                                    example: '0998765432001'
+                  -
+                    description: 'Success - No documents for client'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Client totals retrieved successfully'
+                      data:
+                        totals:
+                          subtotal_header: 0.0
+                          taxes_header: 0.0
+                          total_header: 0.0
+                          total_sum: 0.0
+                          document_count: 0
+                          categorized_document_count: 0
+                          uncategorized_document_count: 0
+                          voided_document_count: 0
+                        totals_explanation:
+                          total_sum: "Direct sum of 'total' field from documents (SRI-authorized values). Use for official reports."
+                          total_header: 'Calculated from subtotals + recalculated VAT. May differ slightly from total_sum due to rounding.'
+                      meta:
+                        filters_applied:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                          client:
+                            contact_tax_number: '0998765432001'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Client totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              subtotal_header:
+                                type: number
+                                example: 0.0
+                              taxes_header:
+                                type: number
+                                example: 0.0
+                              total_header:
+                                type: number
+                                example: 0.0
+                              total_sum:
+                                type: number
+                                example: 0.0
+                              document_count:
+                                type: integer
+                                example: 0
+                              categorized_document_count:
+                                type: integer
+                                example: 0
+                              uncategorized_document_count:
+                                type: integer
+                                example: 0
+                              voided_document_count:
+                                type: integer
+                                example: 0
+                          totals_explanation:
+                            type: object
+                            properties:
+                              total_sum:
+                                type: string
+                                example: "Direct sum of 'total' field from documents (SRI-authorized values). Use for official reports."
+                              total_header:
+                                type: string
+                                example: 'Calculated from subtotals + recalculated VAT. May differ slightly from total_sum due to rounding.'
+                      meta:
+                        type: object
+                        properties:
+                          filters_applied:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+                              client:
+                                type: object
+                                properties:
+                                  contact_tax_number:
+                                    type: string
+                                    example: '0998765432001'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Not Found - Taxpayer does not exist'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                    regime:
+                      - 'Invalid regime. Must be one of: general, rimpe_entrepreneur, rimpe_popular_business.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start date field must be a valid date in YYYY-MM-DD format.'
+                        items:
+                          type: string
+                      regime:
+                        type: array
+                        example:
+                          - 'Invalid regime. Must be one of: general, rimpe_entrepreneur, rimpe_popular_business.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving client totals'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving client totals'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Emitted Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: contactTaxNumber
+        description: "The client's tax number (RUC/CI)."
+        example: '0998765432001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/{documentUlid}/status':
+    get:
+      summary: 'Get status of a specific emitted document'
+      operationId: getStatusOfASpecificEmittedDocument
+      description: "Retrieves the current status of a specific emitted document (invoice, credit note, withholding, or settlement)\nby its unique ULID identifier. The system will automatically search across all emitted document types\nand return the status along with the document type.\n\n**Performance:** The search uses database indexes and stops as soon as the document is found,\nensuring optimal query performance even with large datasets.\n\n**How to obtain the document ULID:**\n\nYou can get the document ULID from these endpoints:\n- `GET /api/v1/taxpayers/{taxNumber}/emitted` - Returns sales invoices with their ULIDs\n- Any other endpoint that lists emitted documents\n\nThe ULID field is typically returned as `ulid` in the document listing responses.\n\n**Document Types:**\n- `invoice` - Sales invoice (from invoices table)\n- `credit_note` - Sales credit note (from sale_credit_notes table)\n- `withholding` - Withholding issued (from sale_withholdings table)\n- `settlement` - Purchase settlement (from sale_settlements table / liquidación de compra)\n\n**Status Values:**\n\nFor invoices, credit notes, withholdings and settlements:\n- `AUTORIZADO` - Authorized document\n- `NO AUTORIZADO` - Not authorized document\n- `ANULADO` - Voided/Cancelled document\n- Other status values depending on the electronic document system"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Invoice'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document status retrieved successfully'
+                      data:
+                        document_id: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                        document_type: invoice
+                        status: AUTORIZADO
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document status retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_id:
+                            type: string
+                            example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                          document_type:
+                            type: string
+                            example: invoice
+                          status:
+                            type: string
+                            example: AUTORIZADO
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+                  -
+                    description: 'Success - Credit Note'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document status retrieved successfully'
+                      data:
+                        document_id: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                        document_type: credit_note
+                        status: AUTORIZADO
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document status retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_id:
+                            type: string
+                            example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                          document_type:
+                            type: string
+                            example: credit_note
+                          status:
+                            type: string
+                            example: AUTORIZADO
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+                  -
+                    description: 'Success - Withholding'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document status retrieved successfully'
+                      data:
+                        document_id: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                        document_type: withholding
+                        status: AUTORIZADO
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document status retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_id:
+                            type: string
+                            example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                          document_type:
+                            type: string
+                            example: withholding
+                          status:
+                            type: string
+                            example: AUTORIZADO
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+                  -
+                    description: 'Success - Settlement'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document status retrieved successfully'
+                      data:
+                        document_id: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                        document_type: settlement
+                        status: AUTORIZADO
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document status retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_id:
+                            type: string
+                            example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                          document_type:
+                            type: string
+                            example: settlement
+                          status:
+                            type: string
+                            example: AUTORIZADO
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Document Not Found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Document not found or does not belong to this taxpayer'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Document not found or does not belong to this taxpayer'
+                  -
+                    description: 'Taxpayer Not Found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found'
+                      code: TAXPAYER_NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found'
+                      code:
+                        type: string
+                        example: TAXPAYER_NOT_FOUND
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving document status'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving document status'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Emitted Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: documentUlid
+        description: 'The unique ULID identifier of the document. Can be from invoices, credit notes, withholdings, or settlements.'
+        example: 01HQXZ8P9G2K4MNBVCXWERTYU1
         required: true
         schema:
           type: string

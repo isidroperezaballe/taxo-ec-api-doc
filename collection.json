@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "f4bf2ad0-40c0-4a11-a88f-4017798fab87",
+        "_postman_id": "e1c9278b-8cb8-4bda-bdc1-f364d74196df",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -308,7 +308,7 @@
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "commercial_expenses",
+                                    "value": "non_deductible_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=commercial_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=non_deductible_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -622,6 +622,314 @@
                             "header": [],
                             "code": 500,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving accumulated totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get count of all emitted documents types",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/count",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for counting (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for counting (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/count?start_date=&end_date=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves document counts across all emitted document types (sales invoices, credit notes, withholdings, settlements)\nfor a specific taxpayer and time period.\n\nThis endpoint aggregates data from four tables:\n- **invoices**: Sales invoices (Facturas de Venta)\n- **sale_credit_notes**: Credit notes applied to sales (Notas de Cr\u00e9dito de Venta)\n- **sale_withholdings**: Withholdings issued to sellers (Retenciones Emitidas)\n- **sale_settlements**: Purchase settlements (Liquidaciones de Compra)\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**Default Behavior:**\n- If no date range is specified, returns counts for the current month\n- Only counts documents that belong to the authenticated taxpayer and team (organization)\n- Excludes deleted documents (soft deletes)\n\n**Use Cases:**\n- Dashboard statistics showing total documents emitted\n- Monthly\/period document volume analysis\n- Document type distribution reports\n- Compliance verification (ensuring all document types are being processed)\n- Sales performance tracking\n- Invoice generation monitoring\n\n**Example URLs:**\n\nGet counts for current month:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/emitted\/count\n```\n\nGet counts for specific period:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/emitted\/count?start_date=2024-01-01&end_date=2024-01-31\n```\n\nGet counts for entire year:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/emitted\/count?start_date=2024-01-01&end_date=2024-12-31\n```"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Emitted documents count retrieved successfully\",\n  \"data\": {\n    \"counts\": {\n      \"invoices\": 120,\n      \"credit_notes\": 5,\n      \"withholdings\": 18,\n      \"settlements\": 2,\n      \"total\": 145\n    },\n    \"period\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\"\n    }\n  }\n}",
+                            "name": "Success - Current month"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Emitted documents count retrieved successfully\",\n  \"data\": {\n    \"counts\": {\n      \"invoices\": 450,\n      \"credit_notes\": 15,\n      \"withholdings\": 65,\n      \"settlements\": 8,\n      \"total\": 538\n    },\n    \"period\": {\n      \"start_date\": \"2024-01-01\",\n      \"end_date\": \"2024-03-31\"\n    }\n  }\n}",
+                            "name": "Success - Custom period"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Emitted documents count retrieved successfully\",\n  \"data\": {\n    \"counts\": {\n      \"invoices\": 0,\n      \"credit_notes\": 0,\n      \"withholdings\": 0,\n      \"settlements\": 0,\n      \"total\": 0\n    },\n    \"period\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\"\n    }\n  }\n}",
+                            "name": "Success - No documents"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Not Found - Taxpayer does not exist"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"end_date\": [\"The end date must be equal to or after the start date.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document counts\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get accumulated totals for a specific client (Customer)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/clients\/:contactTaxNumber\/totals",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for filtering (YYYY-MM-DD). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for filtering (YYYY-MM-DD). Defaults to last day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "category_id%5B%5D",
+                                    "value": "",
+                                    "description": "Filter by category ID(s). Can pass multiple values. To obtain available category IDs, use GET \/api\/v1\/taxpayers\/{taxNumber}\/categories?type=sales.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "deductible_type",
+                                    "value": "",
+                                    "description": "Filter by tax deductibility. Must be one of: deductible, non_deductible.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "regime",
+                                    "value": "",
+                                    "description": "Filter by tax regime. Must be one of: general, rimpe_entrepreneur, rimpe_popular_business.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "origin",
+                                    "value": "",
+                                    "description": "Filter by document origin\/source system. Must be one of: datil, physical-upload, tws, xml-import.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/clients\/:contactTaxNumber\/totals?start_date=&end_date=&category_id%5B%5D=&deductible_type=&regime=&origin=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "contactTaxNumber",
+                                    "key": "contactTaxNumber",
+                                    "value": "0998765432001",
+                                    "description": "The client's tax number (RUC\/CI)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves aggregated totals and statistics for emitted documents to a specific client (customer).\nThis endpoint filters all invoices by the client's tax number and applies additional filters.\n\n**IMPORTANT:** This is a GET request. All parameters must be sent as query string parameters in the URL.\nDo NOT send a request body.\n\n**What This Endpoint Returns:**\n\n- **Subtotals by VAT rate**: Detailed breakdown of subtotals for each VAT rate (15%, 14%, 13%, 12%, 5%, 0%, exempt, not subject)\n- **VAT amounts**: Total VAT charged at each rate\n- **Discounts**: Discounts applied at each VAT rate\n- **Header totals**: Simplified totals (subtotal, taxes, total)\n- **Document counts**: Total documents, categorized, uncategorized, voided\n- **Applied filters**: Summary of which filters were used (including client filter)\n\n**\u26a0\ufe0f Understanding `total_sum` vs `total_header`:**\n\nThe response includes TWO total values that may differ slightly:\n\n- **`total_sum`**: Direct sum of the `total` field from each document (SRI-authorized values). **Use for official reports.**\n- **`total_header`**: Calculated from subtotals + recalculated VAT. May differ by a few cents due to rounding.\n\nSee the `\/emitted\/accumulated` endpoint documentation for detailed explanation of this difference.\n\n**Use Cases:**\n\n- Analyze sales to a specific client\n- Client performance and revenue reports\n- Validate client invoices and totals\n- Calculate client-specific discounts and benefits\n- Client comparison and ranking reports\n- Credit analysis and payment behavior\n\n**Example URLs:**\n\nGet totals for specific client (current month):\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/emitted\/clients\/0998765432001\/totals\n```\n\nGet totals for specific client and date range:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/emitted\/clients\/0998765432001\/totals?start_date=2024-01-01&end_date=2024-12-31\n```\n\nGet general regime sales totals to specific client:\n```\nGET \/api\/v1\/taxpayers\/1726051285001\/emitted\/clients\/0998765432001\/totals?regime=general\n```\n\n**Filters:**\n\nThis endpoint accepts the **same filters** as `\/emitted\/accumulated`:\n- `start_date`, `end_date`: Date range (defaults to current month)\n- `category_id[]`: Specific category IDs (array)\n- `deductible_type`: Tax deductibility (deductible, non_deductible)\n- `regime`: Tax regime (general, rimpe_entrepreneur, rimpe_popular_business)\n- `origin`: Document origin (datil, physical-upload, tws, xml-import)\n\n**Note:** Status filter is not available for this endpoint. All calculations are performed on AUTHORIZED documents only.\n\n**Plus:** Automatically filters by `contact_tax_number` (client's RUC\/CI) from URL parameter"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Client totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_vat_fifteen_sum\": 5420.80,\n      \"vat_fifteen_sum\": 813.12,\n      \"subtotal_vat_twelve_sum\": 1200.00,\n      \"vat_twelve_sum\": 144.00,\n      \"subtotal_vat_zero_sum\": 500.00,\n      \"sub_total_sum\": 7120.80,\n      \"total_sum\": 8077.92,\n      \"subtotal_header\": 7120.80,\n      \"taxes_header\": 957.12,\n      \"total_header\": 8077.92,\n      \"document_count\": 25,\n      \"categorized_document_count\": 25,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 1\n    },\n    \"totals_explanation\": {\n      \"total_sum\": \"Direct sum of 'total' field from documents (SRI-authorized values). Use for official reports.\",\n      \"total_header\": \"Calculated from subtotals + recalculated VAT. May differ slightly from total_sum due to rounding.\"\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"start_date\": \"2024-01-01\",\n      \"end_date\": \"2024-12-31\",\n      \"client\": {\n        \"contact_tax_number\": \"0998765432001\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Client totals"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Client totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"subtotal_header\": 0.00,\n      \"taxes_header\": 0.00,\n      \"total_header\": 0.00,\n      \"total_sum\": 0.00,\n      \"document_count\": 0,\n      \"categorized_document_count\": 0,\n      \"uncategorized_document_count\": 0,\n      \"voided_document_count\": 0\n    },\n    \"totals_explanation\": {\n      \"total_sum\": \"Direct sum of 'total' field from documents (SRI-authorized values). Use for official reports.\",\n      \"total_header\": \"Calculated from subtotals + recalculated VAT. May differ slightly from total_sum due to rounding.\"\n    }\n  },\n  \"meta\": {\n    \"filters_applied\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\",\n      \"client\": {\n        \"contact_tax_number\": \"0998765432001\"\n      }\n    }\n  }\n}",
+                            "name": "Success - No documents for client"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Not Found - Taxpayer does not exist"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start date field must be a valid date in YYYY-MM-DD format.\"],\n    \"regime\": [\"Invalid regime. Must be one of: general, rimpe_entrepreneur, rimpe_popular_business.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving client totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get status of a specific emitted document",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/:documentUlid\/status",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/:documentUlid\/status",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "documentUlid",
+                                    "key": "documentUlid",
+                                    "value": "01HQXZ8P9G2K4MNBVCXWERTYU1",
+                                    "description": "The unique ULID identifier of the document. Can be from invoices, credit notes, withholdings, or settlements."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves the current status of a specific emitted document (invoice, credit note, withholding, or settlement)\nby its unique ULID identifier. The system will automatically search across all emitted document types\nand return the status along with the document type.\n\n**Performance:** The search uses database indexes and stops as soon as the document is found,\nensuring optimal query performance even with large datasets.\n\n**How to obtain the document ULID:**\n\nYou can get the document ULID from these endpoints:\n- `GET \/api\/v1\/taxpayers\/{taxNumber}\/emitted` - Returns sales invoices with their ULIDs\n- Any other endpoint that lists emitted documents\n\nThe ULID field is typically returned as `ulid` in the document listing responses.\n\n**Document Types:**\n- `invoice` - Sales invoice (from invoices table)\n- `credit_note` - Sales credit note (from sale_credit_notes table)\n- `withholding` - Withholding issued (from sale_withholdings table)\n- `settlement` - Purchase settlement (from sale_settlements table \/ liquidaci\u00f3n de compra)\n\n**Status Values:**\n\nFor invoices, credit notes, withholdings and settlements:\n- `AUTORIZADO` - Authorized document\n- `NO AUTORIZADO` - Not authorized document\n- `ANULADO` - Voided\/Cancelled document\n- Other status values depending on the electronic document system"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"invoice\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Invoice"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"credit_note\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Credit Note"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"withholding\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Withholding"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Document status retrieved successfully\",\n  \"data\": {\n    \"document_id\": \"01HQXZ8P9G2K4MNBVCXWERTYU1\",\n    \"document_type\": \"settlement\",\n    \"status\": \"AUTORIZADO\",\n    \"metadata\": {\n      \"taxpayer\": {\n        \"id\": 123,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU2\",\n        \"tax_number\": \"1726051285001\"\n      },\n      \"team\": {\n        \"id\": 456,\n        \"ulid\": \"01HQXZ8P9G2K4MNBVCXWERTYU3\",\n        \"name\": \"Mi Empresa S.A.\"\n      }\n    }\n  }\n}",
+                            "name": "Success - Settlement"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Document not found or does not belong to this taxpayer\"\n}",
+                            "name": "Document Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Taxpayer Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document status\",\n  \"code\": \"SERVER_ERROR\"\n}",
                             "name": "Server Error"
                         }
                     ]
