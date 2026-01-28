@@ -971,12 +971,12 @@ paths:
           in: query
           name: filter.document_type
           description: ''
-          example: sales
+          example: purchases
           required: false
           schema:
             type: string
             description: ''
-            example: sales
+            example: purchases
             enum:
               - purchases
               - sales
@@ -985,12 +985,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: non_deductible_expenses
+          example: commercial_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: non_deductible_expenses
+            example: commercial_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -2507,6 +2507,439 @@ paths:
         required: true
         schema:
           type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/retentions/accumulated':
+    get:
+      summary: 'Get accumulated emitted retention totals'
+      operationId: getAccumulatedEmittedRetentionTotals
+      description: "Retrieves aggregated totals of emitted withholding retentions for a specific taxpayer and team\nwithin a date range. Returns amounts withheld for VAT, Income Tax (Rent), and Special Taxes (IGT/ISD),\nalong with their tax bases and document counts.\n\n**What are emitted retentions?**\nEmitted retentions are withholding documents issued by the taxpayer to their suppliers/sellers.\nWhen a taxpayer makes a purchase, they may be required to withhold a portion of taxes\nand issue a retention document to the supplier.\n\n**Use Cases:**\n- Display retention statistics on dashboards\n- Generate monthly retention reports for compliance\n- Monitor total amounts withheld by tax type\n- Track active vs voided retentions\n- Calculate tax obligations and credits\n\n**Performance:**\nThis endpoint uses direct database aggregation for efficient calculation of totals\neven with large datasets containing thousands of retention documents.\n\n**Default Period:** If no dates are specified, the current month is used.\n\n**Important Notes:**\n- Only active (non-voided) retentions are included in the monetary totals\n- Voided retentions are counted separately but not included in amounts\n- All amounts are in USD\n- Tax bases represent the amounts on which withholdings were calculated"
+      parameters:
+        -
+          in: query
+          name: start_date
+          description: 'Start date for filtering retentions (YYYY-MM-DD format). Defaults to first day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'Start date for filtering retentions (YYYY-MM-DD format). Defaults to first day of current month.'
+            example: null
+        -
+          in: query
+          name: end_date
+          description: 'End date for filtering retentions (YYYY-MM-DD format). Defaults to last day of current month.'
+          example: null
+          required: false
+          schema:
+            type: string
+            description: 'End date for filtering retentions (YYYY-MM-DD format). Defaults to last day of current month.'
+            example: null
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Current Month'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Emitted retention totals retrieved successfully'
+                      data:
+                        totals:
+                          vat_withheld: 450.75
+                          rent_withheld: 1250.0
+                          igt_withheld: 0.0
+                          total_withheld: 1700.75
+                          tax_bases:
+                            vat: 15025.0
+                            rent: 12500.0
+                            igt: 0.0
+                            total: 27525.0
+                        counts:
+                          total_retentions: 45
+                          active_retentions: 43
+                          voided_retentions: 2
+                        period:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Emitted retention totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              vat_withheld:
+                                type: number
+                                example: 450.75
+                              rent_withheld:
+                                type: number
+                                example: 1250.0
+                              igt_withheld:
+                                type: number
+                                example: 0.0
+                              total_withheld:
+                                type: number
+                                example: 1700.75
+                              tax_bases:
+                                type: object
+                                properties:
+                                  vat:
+                                    type: number
+                                    example: 15025.0
+                                  rent:
+                                    type: number
+                                    example: 12500.0
+                                  igt:
+                                    type: number
+                                    example: 0.0
+                                  total:
+                                    type: number
+                                    example: 27525.0
+                          counts:
+                            type: object
+                            properties:
+                              total_retentions:
+                                type: integer
+                                example: 45
+                              active_retentions:
+                                type: integer
+                                example: 43
+                              voided_retentions:
+                                type: integer
+                                example: 2
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+                  -
+                    description: 'Success - Custom Period'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Emitted retention totals retrieved successfully'
+                      data:
+                        totals:
+                          vat_withheld: 2350.5
+                          rent_withheld: 4200.0
+                          igt_withheld: 125.0
+                          total_withheld: 6675.5
+                          tax_bases:
+                            vat: 78350.0
+                            rent: 42000.0
+                            igt: 1250.0
+                            total: 121600.0
+                        counts:
+                          total_retentions: 156
+                          active_retentions: 150
+                          voided_retentions: 6
+                        period:
+                          start_date: '2024-01-01'
+                          end_date: '2024-03-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Emitted retention totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              vat_withheld:
+                                type: number
+                                example: 2350.5
+                              rent_withheld:
+                                type: number
+                                example: 4200.0
+                              igt_withheld:
+                                type: number
+                                example: 125.0
+                              total_withheld:
+                                type: number
+                                example: 6675.5
+                              tax_bases:
+                                type: object
+                                properties:
+                                  vat:
+                                    type: number
+                                    example: 78350.0
+                                  rent:
+                                    type: number
+                                    example: 42000.0
+                                  igt:
+                                    type: number
+                                    example: 1250.0
+                                  total:
+                                    type: number
+                                    example: 121600.0
+                          counts:
+                            type: object
+                            properties:
+                              total_retentions:
+                                type: integer
+                                example: 156
+                              active_retentions:
+                                type: integer
+                                example: 150
+                              voided_retentions:
+                                type: integer
+                                example: 6
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-01-01'
+                              end_date:
+                                type: string
+                                example: '2024-03-31'
+                  -
+                    description: 'Success - No Retentions'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Emitted retention totals retrieved successfully'
+                      data:
+                        totals:
+                          vat_withheld: 0.0
+                          rent_withheld: 0.0
+                          igt_withheld: 0.0
+                          total_withheld: 0.0
+                          tax_bases:
+                            vat: 0.0
+                            rent: 0.0
+                            igt: 0.0
+                            total: 0.0
+                        counts:
+                          total_retentions: 0
+                          active_retentions: 0
+                          voided_retentions: 0
+                        period:
+                          start_date: '2024-12-01'
+                          end_date: '2024-12-31'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Emitted retention totals retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          totals:
+                            type: object
+                            properties:
+                              vat_withheld:
+                                type: number
+                                example: 0.0
+                              rent_withheld:
+                                type: number
+                                example: 0.0
+                              igt_withheld:
+                                type: number
+                                example: 0.0
+                              total_withheld:
+                                type: number
+                                example: 0.0
+                              tax_bases:
+                                type: object
+                                properties:
+                                  vat:
+                                    type: number
+                                    example: 0.0
+                                  rent:
+                                    type: number
+                                    example: 0.0
+                                  igt:
+                                    type: number
+                                    example: 0.0
+                                  total:
+                                    type: number
+                                    example: 0.0
+                          counts:
+                            type: object
+                            properties:
+                              total_retentions:
+                                type: integer
+                                example: 0
+                              active_retentions:
+                                type: integer
+                                example: 0
+                              voided_retentions:
+                                type: integer
+                                example: 0
+                          period:
+                            type: object
+                            properties:
+                              start_date:
+                                type: string
+                                example: '2024-12-01'
+                              end_date:
+                                type: string
+                                example: '2024-12-31'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: 'Taxpayer Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found'
+                  code: TAXPAYER_NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found'
+                  code:
+                    type: string
+                    example: TAXPAYER_NOT_FOUND
+        422:
+          description: 'Validation Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    start_date:
+                      - 'The start_date must be in the format YYYY-MM-DD.'
+                    end_date:
+                      - 'The end_date must be equal to or after start_date.'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      start_date:
+                        type: array
+                        example:
+                          - 'The start_date must be in the format YYYY-MM-DD.'
+                        items:
+                          type: string
+                      end_date:
+                        type: array
+                        example:
+                          - 'The end_date must be equal to or after start_date.'
+                        items:
+                          type: string
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving emitted retention totals'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving emitted retention totals'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Emitted Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
   '/api/v1/taxpayers/{taxNumber}/emitted/count':
     get:
       summary: 'Get count of all emitted documents types'
@@ -3269,6 +3702,1570 @@ paths:
         name: contactTaxNumber
         description: "The client's tax number (RUC/CI)."
         example: '0998765432001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/export/excel':
+    post:
+      summary: 'Step 1: Start Excel Export (Asynchronous)'
+      operationId: step1StartExcelExportAsynchronous
+      description: "**IMPORTANT: This is an asynchronous endpoint.** It starts a background export process and returns immediately.\nYou must use the returned `export_id` to poll the status endpoint until the file is ready.\n\n### Complete Workflow (3 Steps):\n\n**STEP 1: Start the export (this endpoint)**\n```bash\nPOST /api/v1/taxpayers/{taxNumber}/emitted/export/excel\n```\nYou will receive a response like:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  ← SAVE THIS ID!\n    \"status\": \"pending\",\n    \"polling_url\": \"/api/v1/taxpayers/1726051285001/emitted/export/status/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**STEP 2: Poll the status (repeatedly)**\nUse the `export_id` from Step 1 to check progress:\n```bash\nGET /api/v1/taxpayers/{taxNumber}/emitted/export/status/{export_id}\n```\nPoll every 10-30 seconds until `status` is `completed` or `failed`.\n\n**STEP 3: Download the file**\nWhen status is `completed`, the response will include a `download_url`:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"completed\",\n    \"progress\": 100,\n    \"download_url\": \"https://s3.amazonaws.com/...\"  ← USE THIS TO DOWNLOAD\n  }\n}\n```\nThe `download_url` is a temporary signed URL that expires in 1 hour.\n\n### Key Points:\n- ✅ This endpoint returns immediately (HTTP 202) - the export runs in background\n- ✅ Extract `data.export_id` from the response - you'll need it for polling\n- ✅ Use the provided `polling_url` or construct it manually with the `export_id`\n- ✅ Poll at any frequency (suggested: every 10 seconds for small exports, 30-60 seconds for large ones)\n- ✅ The download URL requires no additional authentication (it's signed)\n- ✅ If dates are not provided, defaults to current month\n\n### Export Types:\n- **invoice**: Export sales invoices (facturas de venta)\n- **credit_note**: Export sales credit notes (notas de crédito de venta)\n- **retention**: Export emitted withholdings (retenciones emitidas)\n- **settlement**: Export purchase settlements (liquidaciones de compra)"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: 'required API key for authentication. Example: prod_YOUR_API_KEY_HERE'
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        202:
+          description: 'Export started successfully - SAVE THE export_id!'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Export started. Use the export_id to check progress.'
+                  data:
+                    export_id: exp_67abc123_1734567890
+                    status: pending
+                    document_type: invoice
+                    estimated_records: 1234
+                    batch_size: 1000
+                    estimated_time_seconds: 60
+                    polling_url: /api/v1/taxpayers/1726051285001/emitted/export/status/exp_67abc123_1734567890
+                    suggested_polling_interval_seconds: 10
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Export started. Use the export_id to check progress.'
+                  data:
+                    type: object
+                    properties:
+                      export_id:
+                        type: string
+                        example: exp_67abc123_1734567890
+                      status:
+                        type: string
+                        example: pending
+                      document_type:
+                        type: string
+                        example: invoice
+                      estimated_records:
+                        type: integer
+                        example: 1234
+                      batch_size:
+                        type: integer
+                        example: 1000
+                      estimated_time_seconds:
+                        type: integer
+                        example: 60
+                      polling_url:
+                        type: string
+                        example: /api/v1/taxpayers/1726051285001/emitted/export/status/exp_67abc123_1734567890
+                      suggested_polling_interval_seconds:
+                        type: integer
+                        example: 10
+        400:
+          description: 'Invalid data'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'El tipo de documento es requerido.'
+                  errors:
+                    document_type:
+                      - 'El tipo de documento es requerido.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'El tipo de documento es requerido.'
+                  errors:
+                    type: object
+                    properties:
+                      document_type:
+                        type: array
+                        example:
+                          - 'El tipo de documento es requerido.'
+                        items:
+                          type: string
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Taxpayer not found or does not belong to your team.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Taxpayer not found or does not belong to your team.'
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Error al iniciar la exportación de documentos emitidos.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Error al iniciar la exportación de documentos emitidos.'
+      tags:
+        - 'Emitted Documents'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                document_type:
+                  type: string
+                  description: 'Document type to export. Values: `invoice`, `credit_note`, `retention`, `settlement`.'
+                  example: invoice
+                start_date:
+                  type: date
+                  description: 'optional Start date (YYYY-MM-DD). Defaults to first day of current month if not specified.'
+                  example: '2025-01-01'
+                end_date:
+                  type: date
+                  description: 'optional End date (YYYY-MM-DD). Defaults to last day of current month if not specified.'
+                  example: '2025-01-31'
+                origin:
+                  type: string
+                  description: 'optional Filter by document origin. Values: `tws`, `xml-import`, `physical-upload`, `datil`.'
+                  example: tws
+                contact_tax_number:
+                  type: string
+                  description: "optional Filter by customer's tax ID (RUC/CI)."
+                  example: '1790000000001'
+              required:
+                - document_type
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: 'Tax identification number (RUC/Cédula).'
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/export/status/{exportId}':
+    get:
+      summary: 'Step 2: Check Excel Export Status (Polling)'
+      operationId: step2CheckExcelExportStatusPolling
+      description: "**Use this endpoint to check if your emitted documents export is ready.** Poll this endpoint repeatedly\nusing the `export_id` you received from the start export endpoint until the status is `completed`.\n\n### How to Use This Endpoint:\n\n**1. Get the export_id**\nAfter calling `POST /api/v1/taxpayers/{taxNumber}/emitted/export/excel`, you'll receive:\n```json\n{\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  ← USE THIS ID HERE\n    \"polling_url\": \"/api/v1/taxpayers/1726051285001/emitted/export/status/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**2. Poll this endpoint**\n```bash\nGET /api/v1/taxpayers/{taxNumber}/emitted/export/status/exp_67abc123_1734567890\n                                                         └─ YOUR export_id goes here\n```\n\n**3. Check the status field**\n- `pending` → Keep polling (export is queued)\n- `processing` → Keep polling (export is being generated)\n- `completed` → **STOP POLLING** and extract `download_url` from response\n- `failed` → Stop polling (check `error_message`)\n\n**4. When completed, download the file**\n```json\n{\n  \"data\": {\n    \"status\": \"completed\",\n    \"download_url\": \"https://s3.amazonaws.com/...\"  ← DOWNLOAD FROM HERE\n  }\n}\n```\nSimply make a GET request to the `download_url` - no authentication needed (it's signed).\n\n### Polling Strategy:\n- **Small exports (< 1000 records)**: Poll every 10 seconds\n- **Medium exports (1000-10000 records)**: Poll every 20-30 seconds\n- **Large exports (> 10000 records)**: Poll every 30-60 seconds\n- You can poll at any frequency you want - the suggestion is just to avoid unnecessary requests\n- The export will be processed regardless of polling frequency\n\n### About the Download URL:\n- ✅ It's a temporary AWS S3 signed URL\n- ✅ Valid for 1 hour after export completion\n- ✅ No additional authentication required (signature is in the URL)\n- ✅ Direct download - just make a GET request to it\n- ⚠️ Download the file within 1 hour or it will expire\n\n### Progress Tracking:\nWhile the export is `processing`, you'll receive:\n- `progress`: Percentage completed (0-100)\n- `processed_records` / `total_records`: Exact counts\n- `estimated_time_remaining_seconds`: Rough estimate"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: 'required API key for authentication. Example: prod_YOUR_API_KEY_HERE'
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Status: pending (keep polling)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: pending
+                        progress: 0
+                        message: 'Export is queued and waiting to be processed.'
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: pending
+                          progress:
+                            type: integer
+                            example: 0
+                          message:
+                            type: string
+                            example: 'Export is queued and waiting to be processed.'
+                  -
+                    description: 'Status: processing (keep polling)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: processing
+                        progress: 45
+                        processed_records: 450
+                        total_records: 1000
+                        estimated_time_remaining_seconds: 30
+                        message: 'Export is being generated. Please wait...'
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: processing
+                          progress:
+                            type: integer
+                            example: 45
+                          processed_records:
+                            type: integer
+                            example: 450
+                          total_records:
+                            type: integer
+                            example: 1000
+                          estimated_time_remaining_seconds:
+                            type: integer
+                            example: 30
+                          message:
+                            type: string
+                            example: 'Export is being generated. Please wait...'
+                  -
+                    description: 'Status: completed (download now!)'
+                    type: object
+                    example:
+                      success: true
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: completed
+                        progress: 100
+                        processed_records: 1000
+                        total_records: 1000
+                        download_url: 'https://s3.amazonaws.com/taxo-exports/exports/exp_67abc123_1734567890.xlsx?signature=...'
+                        expires_at: '2025-01-23T15:30:00Z'
+                        file_size_bytes: 245678
+                        message: 'Export completed successfully. Download the file using the provided URL.'
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: completed
+                          progress:
+                            type: integer
+                            example: 100
+                          processed_records:
+                            type: integer
+                            example: 1000
+                          total_records:
+                            type: integer
+                            example: 1000
+                          download_url:
+                            type: string
+                            example: 'https://s3.amazonaws.com/taxo-exports/exports/exp_67abc123_1734567890.xlsx?signature=...'
+                          expires_at:
+                            type: string
+                            example: '2025-01-23T15:30:00Z'
+                          file_size_bytes:
+                            type: integer
+                            example: 245678
+                          message:
+                            type: string
+                            example: 'Export completed successfully. Download the file using the provided URL.'
+                  -
+                    description: 'Status: failed'
+                    type: object
+                    example:
+                      success: false
+                      data:
+                        export_id: exp_67abc123_1734567890
+                        status: failed
+                        progress: 0
+                        error_message: 'No records found matching the specified criteria.'
+                        failed_at: '2025-01-22T14:30:00Z'
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      data:
+                        type: object
+                        properties:
+                          export_id:
+                            type: string
+                            example: exp_67abc123_1734567890
+                          status:
+                            type: string
+                            example: failed
+                          progress:
+                            type: integer
+                            example: 0
+                          error_message:
+                            type: string
+                            example: 'No records found matching the specified criteria.'
+                          failed_at:
+                            type: string
+                            example: '2025-01-22T14:30:00Z'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        404:
+          description: 'Export not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Exportación no encontrada o no pertenece a tu organización.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Exportación no encontrada o no pertenece a tu organización.'
+      tags:
+        - 'Emitted Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: 'Tax identification number (RUC/Cédula).'
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: exportId
+        description: 'Export ID obtained from the start export endpoint (data.export_id).'
+        example: exp_67abc123_1734567890
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/physical-documents':
+    post:
+      summary: 'Import Physical Sales Document'
+      operationId: importPhysicalSalesDocument
+      description: "Upload one or more files (images or PDFs) representing a physical sales document.\nThis is useful when you have scanned receipts, manual invoices, or other sales documents\nthat need to be stored in the system for later review by an accountant.\n\n### Use Case:\nThis endpoint allows you to quickly upload physical document files without manually\nentering all the details. An accountant can later review the uploaded images through\nthe web interface and complete the information (update totals, VAT type, category, etc.).\n\n### File Requirements:\n- **Types allowed**: PDF, JPG, JPEG, PNG\n- **Max size per file**: 10 MB\n- **Min files**: 1\n- **Max files**: 5\n\n### VAT Types (vat_type):\n- `\"0\"` - VAT 0% (default if not specified)\n- `\"5\"` - VAT 5%\n- `\"12\"` - VAT 12% (historical)\n- `\"13\"` - VAT 13% (historical)\n- `\"14\"` - VAT 14% (historical)\n- `\"15\"` - VAT 15%\n- `\"exempt\"` - Exempt from VAT\n- `\"not_subject\"` - Not subject to VAT\n- `\"special\"` - Special regime\n\n### Important Notes:\n- All fields except `files[]` are optional\n- `total_value` can be `0` - useful when you want to upload images first and let accountant fill amounts later\n- `category_id` can be omitted - accountant can categorize later via web interface\n- `document_date` defaults to today if not provided\n- The returned `ulid` can be used with detail endpoints like `GET /api/v1/taxpayers/{taxNumber}/emitted/{documentUlid}/details`"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Physical document created successfully with 2 file(s) attached.'
+                  data:
+                    ulid: 01HN9K8Z6Q2YWXJ3E5M4VFGTH7
+                    document_type: emitted
+                    total_value: 250.0
+                    vat_type: '15'
+                    document_date: '2026-01-22'
+                    files_count: 2
+                    created_at: '2026-01-22T10:30:00Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Physical document created successfully with 2 file(s) attached.'
+                  data:
+                    type: object
+                    properties:
+                      ulid:
+                        type: string
+                        example: 01HN9K8Z6Q2YWXJ3E5M4VFGTH7
+                      document_type:
+                        type: string
+                        example: emitted
+                      total_value:
+                        type: number
+                        example: 250.0
+                      vat_type:
+                        type: string
+                        example: '15'
+                      document_date:
+                        type: string
+                        example: '2026-01-22'
+                      files_count:
+                        type: integer
+                        example: 2
+                      created_at:
+                        type: string
+                        example: '2026-01-22T10:30:00Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Taxpayer not found.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Taxpayer not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation failed.'
+                  errors:
+                    files.0:
+                      - 'The file must not be greater than 10240 kilobytes.'
+                    files:
+                      - 'You may not upload more than 5 files.'
+                    vat_type:
+                      - 'Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation failed.'
+                  errors:
+                    type: object
+                    properties:
+                      files.0:
+                        type: array
+                        example:
+                          - 'The file must not be greater than 10240 kilobytes.'
+                        items:
+                          type: string
+                      files:
+                        type: array
+                        example:
+                          - 'You may not upload more than 5 files.'
+                        items:
+                          type: string
+                      vat_type:
+                        type: array
+                        example:
+                          - 'Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.'
+                        items:
+                          type: string
+      tags:
+        - 'Emitted Documents'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  description: 'At least 1 file, maximum 5 files. Each file must be PDF, JPG, JPEG, or PNG and not exceed 10MB.'
+                  items:
+                    type: string
+                    format: binary
+                category_id:
+                  type: integer
+                  description: 'optional Category ID for this document. You can get available categories from other endpoints.'
+                  example: 123
+                total_value:
+                  type: numeric
+                  description: 'optional Total value of the document. Can be 0 if you want accountant to fill it later. Default: 0.'
+                  example: '150.50'
+                vat_type:
+                  type: string
+                  description: 'optional Type of VAT applied. Default: "0".'
+                  example: '12'
+                document_date:
+                  type: date
+                  description: 'optional Date of the document in YYYY-MM-DD format. Cannot be in the future. Default: today.'
+                  example: '2026-01-22'
+                notes:
+                  type: string
+                  description: 'optional Additional notes about the document (max 1000 characters).'
+                  example: 'Venta al contado'
+                contact_tax_number:
+                  type: string
+                  description: 'optional Tax number (RUC/CI) of the client (max 20 characters).'
+                  example: '1234567890001'
+              required:
+                - files
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: 'Tax identification number (RUC/Cédula).'
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/emitted/{documentUlid}/details':
+    get:
+      summary: 'Get details of a specific emitted document'
+      operationId: getDetailsOfASpecificEmittedDocument
+      description: "Retrieves full details of a specific emitted document (sales invoice, credit note, withholding, or settlement)\nby its unique ULID identifier. This endpoint returns comprehensive data including all related information\nsuch as items, customer data, payment information, taxes, totals, and associated files.\n\n**This endpoint provides:**\n- Complete document header information (number, dates, status, access key)\n- All document line items with detailed categorization and tax information\n- Complete customer/buyer data (name, tax number, email, phone, address)\n- Payment information (methods, amounts, terms)\n- Detailed tax breakdowns by type (IVA 0%, 12%, 15%, etc.)\n- Document totals and calculations\n- Associated files (PDF, XML) with signed URLs\n- For invoices: related credit notes\n- Document status and locking information\n- Categorization data, deductibility types, and regime\n- Metadata with taxpayer and team context\n\n**How to obtain the document ULID:**\n\nThe ULID can be obtained from:\n- `GET /api/v1/taxpayers/{taxNumber}/emitted` - Field `id` or `ulid` in each document\n- `GET /api/v1/taxpayers/{taxNumber}/emitted/{documentUlid}/status` - Returns ULID and type\n- Any other endpoint that lists emitted documents\n\n**Document Types:**\n- `invoice` - Sales invoice (includes items, payments, taxes, totals, credit notes)\n- `credit_note` - Credit note for sales (includes items, linked to supporting invoice)\n- `withholding` - Withholding issued to seller (includes withholding items and tax calculations)\n- `settlement` - Purchase settlement / Liquidación de compra (includes items and payments)\n\n**Performance:**\n- Uses early exit strategy: stops searching as soon as document is found\n- Leverages database indexes (ulid, tax_payer_id, team_id) for optimal performance\n- Lazy loads relationships only when document is found\n\n**Note:** This endpoint uses optimized API Resources that return only essential data,\nunlike UI endpoints which include full taxpayer and team objects."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Success - Sales Invoice'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document details retrieved successfully'
+                      data:
+                        document_type: invoice
+                        document:
+                          id: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                          type: invoice
+                          document_number: 001-001-000000123
+                          status: AUTORIZADO
+                          access_key: '1234567890123456789012345678901234567890123456789'
+                          issue_date: '2024-01-15'
+                          authorization_date: '2024-01-15 14:30:00'
+                          categories:
+                            - 'Ingresos Operacionales'
+                          category_types:
+                            - income
+                          deductible_types:
+                            - deductible
+                          customer:
+                            name: 'CLIENTE DEMO S.A.'
+                            email: cliente@example.com
+                            tax_number: '1790000000001'
+                            phone: '0999999999'
+                            address: 'Av. Principal 123'
+                          issuer:
+                            id: '1726051285001'
+                            id_type: ruc
+                          payments:
+                            -
+                              method: '01'
+                              amount: 112.0
+                              term: '0'
+                          items:
+                            -
+                              id: 1
+                              description: 'Producto vendido'
+                              sku: PROD001
+                              quantity: 1
+                              price: 100.0
+                              discount: 0
+                              sub_total: 100.0
+                              tax: 12.0
+                              tax_type: 'IVA 12%'
+                              total: 112.0
+                              category:
+                                id: 5
+                                name: Ventas
+                              deductible_type: deductible
+                              regime: general
+                              category_message: null
+                              categorized_by: user
+                          taxes:
+                            subtotal_vat_twelve: 100.0
+                            vat_twelve: 12.0
+                          totals:
+                            subtotal: 100.0
+                            total: 112.0
+                          files:
+                            pdf: 'https://s3.amazonaws.com/.../document.pdf'
+                            xml: 'https://s3.amazonaws.com/.../document.xml'
+                          credit_notes: []
+                          notes: Observaciones
+                          origin: tws
+                          is_physical: false
+                          is_sale_note: false
+                          is_checked: true
+                          regime: general
+                          deductible_type: deductible
+                          is_locked: false
+                          created_at: '2024-01-15T14:30:00+00:00'
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document details retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_type:
+                            type: string
+                            example: invoice
+                          document:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                              type:
+                                type: string
+                                example: invoice
+                              document_number:
+                                type: string
+                                example: 001-001-000000123
+                              status:
+                                type: string
+                                example: AUTORIZADO
+                              access_key:
+                                type: string
+                                example: '1234567890123456789012345678901234567890123456789'
+                              issue_date:
+                                type: string
+                                example: '2024-01-15'
+                              authorization_date:
+                                type: string
+                                example: '2024-01-15 14:30:00'
+                              categories:
+                                type: array
+                                example:
+                                  - 'Ingresos Operacionales'
+                                items:
+                                  type: string
+                              category_types:
+                                type: array
+                                example:
+                                  - income
+                                items:
+                                  type: string
+                              deductible_types:
+                                type: array
+                                example:
+                                  - deductible
+                                items:
+                                  type: string
+                              customer:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    example: 'CLIENTE DEMO S.A.'
+                                  email:
+                                    type: string
+                                    example: cliente@example.com
+                                  tax_number:
+                                    type: string
+                                    example: '1790000000001'
+                                  phone:
+                                    type: string
+                                    example: '0999999999'
+                                  address:
+                                    type: string
+                                    example: 'Av. Principal 123'
+                              issuer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: string
+                                    example: '1726051285001'
+                                  id_type:
+                                    type: string
+                                    example: ruc
+                              payments:
+                                type: array
+                                example:
+                                  -
+                                    method: '01'
+                                    amount: 112
+                                    term: '0'
+                                items:
+                                  type: object
+                                  properties:
+                                    method:
+                                      type: string
+                                      example: '01'
+                                    amount:
+                                      type: number
+                                      example: 112.0
+                                    term:
+                                      type: string
+                                      example: '0'
+                              items:
+                                type: array
+                                example:
+                                  -
+                                    id: 1
+                                    description: 'Producto vendido'
+                                    sku: PROD001
+                                    quantity: 1
+                                    price: 100
+                                    discount: 0
+                                    sub_total: 100
+                                    tax: 12
+                                    tax_type: 'IVA 12%'
+                                    total: 112
+                                    category:
+                                      id: 5
+                                      name: Ventas
+                                    deductible_type: deductible
+                                    regime: general
+                                    category_message: null
+                                    categorized_by: user
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    description:
+                                      type: string
+                                      example: 'Producto vendido'
+                                    sku:
+                                      type: string
+                                      example: PROD001
+                                    quantity:
+                                      type: integer
+                                      example: 1
+                                    price:
+                                      type: number
+                                      example: 100.0
+                                    discount:
+                                      type: integer
+                                      example: 0
+                                    sub_total:
+                                      type: number
+                                      example: 100.0
+                                    tax:
+                                      type: number
+                                      example: 12.0
+                                    tax_type:
+                                      type: string
+                                      example: 'IVA 12%'
+                                    total:
+                                      type: number
+                                      example: 112.0
+                                    category:
+                                      type: object
+                                      properties: { id: { type: integer, example: 5 }, name: { type: string, example: Ventas } }
+                                    deductible_type:
+                                      type: string
+                                      example: deductible
+                                    regime:
+                                      type: string
+                                      example: general
+                                    category_message:
+                                      type: string
+                                      example: null
+                                    categorized_by:
+                                      type: string
+                                      example: user
+                              taxes:
+                                type: object
+                                properties:
+                                  subtotal_vat_twelve:
+                                    type: number
+                                    example: 100.0
+                                  vat_twelve:
+                                    type: number
+                                    example: 12.0
+                              totals:
+                                type: object
+                                properties:
+                                  subtotal:
+                                    type: number
+                                    example: 100.0
+                                  total:
+                                    type: number
+                                    example: 112.0
+                              files:
+                                type: object
+                                properties:
+                                  pdf:
+                                    type: string
+                                    example: 'https://s3.amazonaws.com/.../document.pdf'
+                                  xml:
+                                    type: string
+                                    example: 'https://s3.amazonaws.com/.../document.xml'
+                              credit_notes:
+                                type: array
+                                example: []
+                              notes:
+                                type: string
+                                example: Observaciones
+                              origin:
+                                type: string
+                                example: tws
+                              is_physical:
+                                type: boolean
+                                example: false
+                              is_sale_note:
+                                type: boolean
+                                example: false
+                              is_checked:
+                                type: boolean
+                                example: true
+                              regime:
+                                type: string
+                                example: general
+                              deductible_type:
+                                type: string
+                                example: deductible
+                              is_locked:
+                                type: boolean
+                                example: false
+                              created_at:
+                                type: string
+                                example: '2024-01-15T14:30:00+00:00'
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+                  -
+                    description: 'Success - Credit Note'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document details retrieved successfully'
+                      data:
+                        document_type: credit_note
+                        document:
+                          id: 01HQXZ8P9G2K4MNBVCXWERTYU5
+                          type: credit_note
+                          document_number: 001-001-000000124
+                          status: AUTORIZADO
+                          issue_date: '2024-01-15'
+                          supporting_document:
+                            invoice_id: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                            invoice_number: 001-001-000000123
+                            emission_date: '2024-01-15'
+                          cause: 'Devolución de mercadería'
+                          customer:
+                            name: 'CLIENTE DEMO S.A.'
+                            tax_number: '1790000000001'
+                          items:
+                            -
+                              id: 1
+                              description: 'Producto devuelto'
+                              quantity: 1
+                              price: 50.0
+                              tax: 6.0
+                              total: 56.0
+                              category:
+                                id: 5
+                                name: Devoluciones
+                          totals:
+                            subtotal: 50.0
+                            total: 56.0
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document details retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_type:
+                            type: string
+                            example: credit_note
+                          document:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: 01HQXZ8P9G2K4MNBVCXWERTYU5
+                              type:
+                                type: string
+                                example: credit_note
+                              document_number:
+                                type: string
+                                example: 001-001-000000124
+                              status:
+                                type: string
+                                example: AUTORIZADO
+                              issue_date:
+                                type: string
+                                example: '2024-01-15'
+                              supporting_document:
+                                type: object
+                                properties:
+                                  invoice_id:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+                                  invoice_number:
+                                    type: string
+                                    example: 001-001-000000123
+                                  emission_date:
+                                    type: string
+                                    example: '2024-01-15'
+                              cause:
+                                type: string
+                                example: 'Devolución de mercadería'
+                              customer:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    example: 'CLIENTE DEMO S.A.'
+                                  tax_number:
+                                    type: string
+                                    example: '1790000000001'
+                              items:
+                                type: array
+                                example:
+                                  -
+                                    id: 1
+                                    description: 'Producto devuelto'
+                                    quantity: 1
+                                    price: 50
+                                    tax: 6
+                                    total: 56
+                                    category:
+                                      id: 5
+                                      name: Devoluciones
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    description:
+                                      type: string
+                                      example: 'Producto devuelto'
+                                    quantity:
+                                      type: integer
+                                      example: 1
+                                    price:
+                                      type: number
+                                      example: 50.0
+                                    tax:
+                                      type: number
+                                      example: 6.0
+                                    total:
+                                      type: number
+                                      example: 56.0
+                                    category:
+                                      type: object
+                                      properties: { id: { type: integer, example: 5 }, name: { type: string, example: Devoluciones } }
+                              totals:
+                                type: object
+                                properties:
+                                  subtotal:
+                                    type: number
+                                    example: 50.0
+                                  total:
+                                    type: number
+                                    example: 56.0
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+                  -
+                    description: 'Success - Withholding'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document details retrieved successfully'
+                      data:
+                        document_type: withholding
+                        document:
+                          id: 01HQXZ8P9G2K4MNBVCXWERTYU6
+                          type: withholding
+                          document_number: 001-001-000000125
+                          status: AUTORIZADO
+                          fiscal_period: 01/2024
+                          supporting_documents:
+                            numbers: 001-001-000000123
+                            dates: 15/01/2024
+                          subject:
+                            name: 'PROVEEDOR DEMO S.A.'
+                            tax_number: '1790000000001'
+                          items:
+                            -
+                              id: 1
+                              invoice_number: 001-001-000000123
+                              tax_type: IVA
+                              tax_base: 100.0
+                              percentage: 30
+                              amount: 30.0
+                          taxes:
+                            vat:
+                              tax_base: 100.0
+                              amount: 30.0
+                              percentage: 30
+                            rent:
+                              tax_base: 0
+                              amount: 0
+                              percentage: 0
+                            igt:
+                              tax_base: 0
+                              amount: 0
+                              percentage: 0
+                          files:
+                            pdf: 'https://s3.amazonaws.com/.../retention.pdf'
+                            xml: 'https://s3.amazonaws.com/.../retention.xml'
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document details retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_type:
+                            type: string
+                            example: withholding
+                          document:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: 01HQXZ8P9G2K4MNBVCXWERTYU6
+                              type:
+                                type: string
+                                example: withholding
+                              document_number:
+                                type: string
+                                example: 001-001-000000125
+                              status:
+                                type: string
+                                example: AUTORIZADO
+                              fiscal_period:
+                                type: string
+                                example: 01/2024
+                              supporting_documents:
+                                type: object
+                                properties:
+                                  numbers:
+                                    type: string
+                                    example: 001-001-000000123
+                                  dates:
+                                    type: string
+                                    example: 15/01/2024
+                              subject:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    example: 'PROVEEDOR DEMO S.A.'
+                                  tax_number:
+                                    type: string
+                                    example: '1790000000001'
+                              items:
+                                type: array
+                                example:
+                                  -
+                                    id: 1
+                                    invoice_number: 001-001-000000123
+                                    tax_type: IVA
+                                    tax_base: 100
+                                    percentage: 30
+                                    amount: 30
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    invoice_number:
+                                      type: string
+                                      example: 001-001-000000123
+                                    tax_type:
+                                      type: string
+                                      example: IVA
+                                    tax_base:
+                                      type: number
+                                      example: 100.0
+                                    percentage:
+                                      type: integer
+                                      example: 30
+                                    amount:
+                                      type: number
+                                      example: 30.0
+                              taxes:
+                                type: object
+                                properties:
+                                  vat:
+                                    type: object
+                                    properties:
+                                      tax_base: { type: number, example: 100.0 }
+                                      amount: { type: number, example: 30.0 }
+                                      percentage: { type: integer, example: 30 }
+                                  rent:
+                                    type: object
+                                    properties:
+                                      tax_base: { type: integer, example: 0 }
+                                      amount: { type: integer, example: 0 }
+                                      percentage: { type: integer, example: 0 }
+                                  igt:
+                                    type: object
+                                    properties:
+                                      tax_base: { type: integer, example: 0 }
+                                      amount: { type: integer, example: 0 }
+                                      percentage: { type: integer, example: 0 }
+                              files:
+                                type: object
+                                properties:
+                                  pdf:
+                                    type: string
+                                    example: 'https://s3.amazonaws.com/.../retention.pdf'
+                                  xml:
+                                    type: string
+                                    example: 'https://s3.amazonaws.com/.../retention.xml'
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+                  -
+                    description: 'Success - Settlement'
+                    type: object
+                    example:
+                      status: success
+                      message: 'Document details retrieved successfully'
+                      data:
+                        document_type: settlement
+                        document:
+                          id: 01HQXZ8P9G2K4MNBVCXWERTYU7
+                          type: settlement
+                          document_number: 001-001-000000126
+                          status: AUTORIZADO
+                          issue_date: '2024-01-15'
+                          provider:
+                            name: 'PROVEEDOR DEMO S.A.'
+                            tax_number: '1790000000001'
+                          items:
+                            -
+                              id: 1
+                              description: Servicio
+                              quantity: 1
+                              price: 100.0
+                              tax: 12.0
+                              total: 112.0
+                          totals:
+                            subtotal: 100.0
+                            total: 112.0
+                        metadata:
+                          taxpayer:
+                            id: 123
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                            tax_number: '1726051285001'
+                          team:
+                            id: 456
+                            ulid: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                            name: 'Mi Empresa S.A.'
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      message:
+                        type: string
+                        example: 'Document details retrieved successfully'
+                      data:
+                        type: object
+                        properties:
+                          document_type:
+                            type: string
+                            example: settlement
+                          document:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                example: 01HQXZ8P9G2K4MNBVCXWERTYU7
+                              type:
+                                type: string
+                                example: settlement
+                              document_number:
+                                type: string
+                                example: 001-001-000000126
+                              status:
+                                type: string
+                                example: AUTORIZADO
+                              issue_date:
+                                type: string
+                                example: '2024-01-15'
+                              provider:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                    example: 'PROVEEDOR DEMO S.A.'
+                                  tax_number:
+                                    type: string
+                                    example: '1790000000001'
+                              items:
+                                type: array
+                                example:
+                                  -
+                                    id: 1
+                                    description: Servicio
+                                    quantity: 1
+                                    price: 100
+                                    tax: 12
+                                    total: 112
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      example: 1
+                                    description:
+                                      type: string
+                                      example: Servicio
+                                    quantity:
+                                      type: integer
+                                      example: 1
+                                    price:
+                                      type: number
+                                      example: 100.0
+                                    tax:
+                                      type: number
+                                      example: 12.0
+                                    total:
+                                      type: number
+                                      example: 112.0
+                              totals:
+                                type: object
+                                properties:
+                                  subtotal:
+                                    type: number
+                                    example: 100.0
+                                  total:
+                                    type: number
+                                    example: 112.0
+                          metadata:
+                            type: object
+                            properties:
+                              taxpayer:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 123
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU2
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                              team:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    example: 456
+                                  ulid:
+                                    type: string
+                                    example: 01HQXZ8P9G2K4MNBVCXWERTYU3
+                                  name:
+                                    type: string
+                                    example: 'Mi Empresa S.A.'
+        401:
+          description: 'Unauthorized - Invalid API Key'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: INVALID_API_KEY
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: INVALID_API_KEY
+        403:
+          description: 'Forbidden - Taxpayer not accessible'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'You do not have access to this taxpayer'
+                  code: TAXPAYER_ACCESS_DENIED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'You do not have access to this taxpayer'
+                  code:
+                    type: string
+                    example: TAXPAYER_ACCESS_DENIED
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Document Not Found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Document not found or does not belong to this taxpayer'
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Document not found or does not belong to this taxpayer'
+                  -
+                    description: 'Taxpayer Not Found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found'
+                      code: TAXPAYER_NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found'
+                      code:
+                        type: string
+                        example: TAXPAYER_NOT_FOUND
+        500:
+          description: 'Server Error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving document details'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving document details'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - 'Emitted Documents'
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: "The taxpayer's RUC number (13 digits)."
+        example: '1726051285001'
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: documentUlid
+        description: 'The unique ULID identifier of the document.'
+        example: 01HQXZ8P9G2K4MNBVCXWERTYU1
         required: true
         schema:
           type: string
@@ -8541,6 +10538,185 @@ paths:
         name: exportId
         description: 'Export ID obtained from the start export endpoint (data.export_id).'
         example: exp_67abc123_1734567890
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/received/physical-documents':
+    post:
+      summary: 'Import Physical Purchase Document'
+      operationId: importPhysicalPurchaseDocument
+      description: "Upload one or more files (images or PDFs) representing a physical purchase document.\nThis is useful when you have scanned receipts, invoices, or other purchase documents\nthat need to be stored in the system for later review by an accountant.\n\n### Use Case:\nThis endpoint allows you to quickly upload physical document files without manually\nentering all the details. An accountant can later review the uploaded images through\nthe web interface and complete the information (update totals, VAT type, category, etc.).\n\n\n### File Requirements:\n- **Types allowed**: PDF, JPG, JPEG, PNG\n- **Max size per file**: 10 MB\n- **Min files**: 1\n- **Max files**: 5\n\n### VAT Types (vat_type):\n- `\"0\"` - VAT 0% (default if not specified)\n- `\"5\"` - VAT 5%\n- `\"12\"` - VAT 12% (historical)\n- `\"13\"` - VAT 13% (historical)\n- `\"14\"` - VAT 14% (historical)\n- `\"15\"` - VAT 15%\n- `\"exempt\"` - Exempt from VAT\n- `\"not_subject\"` - Not subject to VAT\n- `\"special\"` - Special regime\n\n### Important Notes:\n- All fields except `files[]` are optional\n- `total_value` can be `0` - useful when you want to upload images first and let accountant fill amounts later\n- `category_id` can be omitted - accountant can categorize later via web interface\n- `document_date` defaults to today if not provided\n- The returned `ulid` can be used with detail endpoints like `GET /api/v1/taxpayers/{taxNumber}/received/{documentUlid}/details`"
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Physical document created successfully with 3 file(s) attached.'
+                  data:
+                    ulid: 01HN9K8Z6Q2YWXJ3E5M4VFGTH7
+                    document_type: received
+                    total_value: 150.5
+                    vat_type: '12'
+                    document_date: '2026-01-22'
+                    files_count: 3
+                    created_at: '2026-01-22T10:30:00Z'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Physical document created successfully with 3 file(s) attached.'
+                  data:
+                    type: object
+                    properties:
+                      ulid:
+                        type: string
+                        example: 01HN9K8Z6Q2YWXJ3E5M4VFGTH7
+                      document_type:
+                        type: string
+                        example: received
+                      total_value:
+                        type: number
+                        example: 150.5
+                      vat_type:
+                        type: string
+                        example: '12'
+                      document_date:
+                        type: string
+                        example: '2026-01-22'
+                      files_count:
+                        type: integer
+                        example: 3
+                      created_at:
+                        type: string
+                        example: '2026-01-22T10:30:00Z'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Taxpayer not found.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Taxpayer not found.'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: false
+                  message: 'Validation failed.'
+                  errors:
+                    files.0:
+                      - 'The file must not be greater than 10240 kilobytes.'
+                    files:
+                      - 'You may not upload more than 5 files.'
+                    vat_type:
+                      - 'Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.'
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: 'Validation failed.'
+                  errors:
+                    type: object
+                    properties:
+                      files.0:
+                        type: array
+                        example:
+                          - 'The file must not be greater than 10240 kilobytes.'
+                        items:
+                          type: string
+                      files:
+                        type: array
+                        example:
+                          - 'You may not upload more than 5 files.'
+                        items:
+                          type: string
+                      vat_type:
+                        type: array
+                        example:
+                          - 'Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.'
+                        items:
+                          type: string
+      tags:
+        - 'Received Documents'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  description: 'At least 1 file, maximum 5 files. Each file must be PDF, JPG, JPEG, or PNG and not exceed 10MB.'
+                  items:
+                    type: string
+                    format: binary
+                category_id:
+                  type: integer
+                  description: 'optional Category ID for this document. You can get available categories from other endpoints.'
+                  example: 123
+                total_value:
+                  type: numeric
+                  description: 'optional Total value of the document. Can be 0 if you want accountant to fill it later. Default: 0.'
+                  example: '150.50'
+                vat_type:
+                  type: string
+                  description: 'optional Type of VAT applied. Default: "0".'
+                  example: '12'
+                document_date:
+                  type: date
+                  description: 'optional Date of the document in YYYY-MM-DD format. Cannot be in the future. Default: today.'
+                  example: '2026-01-22'
+                notes:
+                  type: string
+                  description: 'optional Additional notes about the document (max 1000 characters).'
+                  example: 'Compra de suministros de oficina'
+                contact_tax_number:
+                  type: string
+                  description: 'optional Tax number (RUC/CI) of the supplier (max 20 characters).'
+                  example: '1234567890001'
+              required:
+                - files
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: 'Tax identification number (RUC/Cédula).'
+        example: '1726051285001'
         required: true
         schema:
           type: string

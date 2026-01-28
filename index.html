@@ -115,6 +115,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="emitted-documents-GETapi-v1-taxpayers--taxNumber--emitted-export-status--exportId-">
                                 <a href="#emitted-documents-GETapi-v1-taxpayers--taxNumber--emitted-export-status--exportId-">Step 2: Check Excel Export Status (Polling)</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="emitted-documents-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents">
+                                <a href="#emitted-documents-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents">Import Physical Sales Document</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="emitted-documents-GETapi-v1-taxpayers--taxNumber--emitted--documentUlid--details">
                                 <a href="#emitted-documents-GETapi-v1-taxpayers--taxNumber--emitted--documentUlid--details">Get details of a specific emitted document</a>
                             </li>
@@ -186,6 +189,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received-export-status--exportId-">
                                 <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received-export-status--exportId-">Step 2: Check xls Export Status (Polling)</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="received-documents-POSTapi-v1-taxpayers--taxNumber--received-physical-documents">
+                                <a href="#received-documents-POSTapi-v1-taxpayers--taxNumber--received-physical-documents">Import Physical Purchase Document</a>
+                            </li>
                                                                                 <li class="tocify-item level-2" data-unique="received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">
                                 <a href="#received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">Get details of a specific received document</a>
                             </li>
@@ -203,7 +209,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: January 23, 2026</li>
+        <li>Last updated: January 26, 2026</li>
     </ul>
 </div>
 
@@ -1158,7 +1164,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=sales&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=commercial_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
@@ -1178,7 +1184,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "purchases",
-    "filter[category_type]": "sales",
+    "filter[category_type]": "commercial_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1216,7 +1222,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'purchases',
-            'filter[category_type]' =&gt; 'sales',
+            'filter[category_type]' =&gt; 'commercial_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1239,7 +1245,7 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'purchases',
-  'filter[category_type]': 'sales',
+  'filter[category_type]': 'commercial_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1549,10 +1555,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="sales"
+               value="commercial_expenses"
                data-component="query">
     <br>
-<p>Example: <code>sales</code></p>
+<p>Example: <code>commercial_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -4517,6 +4523,425 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Export ID obtained from the start export endpoint (data.export_id). Example: <code>exp_67abc123_1734567890</code></p>
             </div>
                     </form>
+
+                    <h2 id="emitted-documents-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents">Import Physical Sales Document</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Upload one or more files (images or PDFs) representing a physical sales document.
+This is useful when you have scanned receipts, manual invoices, or other sales documents
+that need to be stored in the system for later review by an accountant.</p>
+<h3>Use Case:</h3>
+<p>This endpoint allows you to quickly upload physical document files without manually
+entering all the details. An accountant can later review the uploaded images through
+the web interface and complete the information (update totals, VAT type, category, etc.).</p>
+<h3>File Requirements:</h3>
+<ul>
+<li><strong>Types allowed</strong>: PDF, JPG, JPEG, PNG</li>
+<li><strong>Max size per file</strong>: 10 MB</li>
+<li><strong>Min files</strong>: 1</li>
+<li><strong>Max files</strong>: 5</li>
+</ul>
+<h3>VAT Types (vat_type):</h3>
+<ul>
+<li><code>"0"</code> - VAT 0% (default if not specified)</li>
+<li><code>"5"</code> - VAT 5%</li>
+<li><code>"12"</code> - VAT 12% (historical)</li>
+<li><code>"13"</code> - VAT 13% (historical)</li>
+<li><code>"14"</code> - VAT 14% (historical)</li>
+<li><code>"15"</code> - VAT 15%</li>
+<li><code>"exempt"</code> - Exempt from VAT</li>
+<li><code>"not_subject"</code> - Not subject to VAT</li>
+<li><code>"special"</code> - Special regime</li>
+</ul>
+<h3>Important Notes:</h3>
+<ul>
+<li>All fields except <code>files[]</code> are optional</li>
+<li><code>total_value</code> can be <code>0</code> - useful when you want to upload images first and let accountant fill amounts later</li>
+<li><code>category_id</code> can be omitted - accountant can categorize later via web interface</li>
+<li><code>document_date</code> defaults to today if not provided</li>
+<li>The returned <code>ulid</code> can be used with detail endpoints like <code>GET /api/v1/taxpayers/{taxNumber}/emitted/{documentUlid}/details</code></li>
+</ul>
+
+<span id="example-requests-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/emitted/physical-documents" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: multipart/form-data" \
+    --form "category_id=123"\
+    --form "total_value=150.50"\
+    --form "vat_type=12"\
+    --form "document_date=2026-01-22"\
+    --form "notes=Venta al contado"\
+    --form "contact_tax_number=1234567890001"\
+    --form "files[]=@/tmp/phpcgqCj2" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/emitted/physical-documents"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "multipart/form-data",
+};
+
+const body = new FormData();
+body.append('category_id', '123');
+body.append('total_value', '150.50');
+body.append('vat_type', '12');
+body.append('document_date', '2026-01-22');
+body.append('notes', 'Venta al contado');
+body.append('contact_tax_number', '1234567890001');
+body.append('files[]', document.querySelector('input[name="files[]"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/emitted/physical-documents';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'multipart/form-data',
+        ],
+        'multipart' =&gt; [
+            [
+                'name' =&gt; 'category_id',
+                'contents' =&gt; '123'
+            ],
+            [
+                'name' =&gt; 'total_value',
+                'contents' =&gt; '150.50'
+            ],
+            [
+                'name' =&gt; 'vat_type',
+                'contents' =&gt; '12'
+            ],
+            [
+                'name' =&gt; 'document_date',
+                'contents' =&gt; '2026-01-22'
+            ],
+            [
+                'name' =&gt; 'notes',
+                'contents' =&gt; 'Venta al contado'
+            ],
+            [
+                'name' =&gt; 'contact_tax_number',
+                'contents' =&gt; '1234567890001'
+            ],
+            [
+                'name' =&gt; 'files[]',
+                'contents' =&gt; fopen('/tmp/phpcgqCj2', 'r')
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/emitted/physical-documents'
+files = {
+  'category_id': (None, '123'),
+  'total_value': (None, '150.50'),
+  'vat_type': (None, '12'),
+  'document_date': (None, '2026-01-22'),
+  'notes': (None, 'Venta al contado'),
+  'contact_tax_number': (None, '1234567890001'),
+  'files[]': open('/tmp/phpcgqCj2', 'rb')}
+payload = {
+    "category_id": 123,
+    "total_value": "150.50",
+    "vat_type": "12",
+    "document_date": "2026-01-22",
+    "notes": "Venta al contado",
+    "contact_tax_number": "1234567890001"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'multipart/form-data'
+}
+
+response = requests.request('POST', url, headers=headers, files=files)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;success&quot;: true,
+    &quot;message&quot;: &quot;Physical document created successfully with 2 file(s) attached.&quot;,
+    &quot;data&quot;: {
+        &quot;ulid&quot;: &quot;01HN9K8Z6Q2YWXJ3E5M4VFGTH7&quot;,
+        &quot;document_type&quot;: &quot;emitted&quot;,
+        &quot;total_value&quot;: 250,
+        &quot;vat_type&quot;: &quot;15&quot;,
+        &quot;document_date&quot;: &quot;2026-01-22&quot;,
+        &quot;files_count&quot;: 2,
+        &quot;created_at&quot;: &quot;2026-01-22T10:30:00Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;success&quot;: false,
+    &quot;message&quot;: &quot;Taxpayer not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;success&quot;: false,
+    &quot;message&quot;: &quot;Validation failed.&quot;,
+    &quot;errors&quot;: {
+        &quot;files.0&quot;: [
+            &quot;The file must not be greater than 10240 kilobytes.&quot;
+        ],
+        &quot;files&quot;: [
+            &quot;You may not upload more than 5 files.&quot;
+        ],
+        &quot;vat_type&quot;: [
+            &quot;Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents" data-method="POST"
+      data-path="api/v1/taxpayers/{taxNumber}/emitted/physical-documents"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+                    onclick="tryItOut('POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/emitted/physical-documents</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>Tax identification number (RUC/Cédula). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>files</code></b>&nbsp;&nbsp;
+<small>file[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="files[0]"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               data-component="body">
+        <input type="file" style="display: none"
+               name="files[1]"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               data-component="body">
+    <br>
+<p>At least 1 file, maximum 5 files. Each file must be PDF, JPG, JPEG, or PNG and not exceed 10MB.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>category_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="category_id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="123"
+               data-component="body">
+    <br>
+<p>optional Category ID for this document. You can get available categories from other endpoints. Example: <code>123</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>total_value</code></b>&nbsp;&nbsp;
+<small>numeric</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="total_value"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="150.50"
+               data-component="body">
+    <br>
+<p>optional Total value of the document. Can be 0 if you want accountant to fill it later. Default: 0. Example: <code>150.50</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>vat_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="vat_type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="12"
+               data-component="body">
+    <br>
+<p>optional Type of VAT applied. Default: &quot;0&quot;. Example: <code>12</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>document_date</code></b>&nbsp;&nbsp;
+<small>date</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="document_date"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="2026-01-22"
+               data-component="body">
+    <br>
+<p>optional Date of the document in YYYY-MM-DD format. Cannot be in the future. Default: today. Example: <code>2026-01-22</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>notes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="notes"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="Venta al contado"
+               data-component="body">
+    <br>
+<p>optional Additional notes about the document (max 1000 characters). Example: <code>Venta al contado</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>contact_tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="contact_tax_number"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--emitted-physical-documents"
+               value="1234567890001"
+               data-component="body">
+    <br>
+<p>optional Tax number (RUC/CI) of the client (max 20 characters). Example: <code>1234567890001</code></p>
+        </div>
+        </form>
 
                     <h2 id="emitted-documents-GETapi-v1-taxpayers--taxNumber--emitted--documentUlid--details">Get details of a specific emitted document</h2>
 
@@ -11873,6 +12298,425 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Export ID obtained from the start export endpoint (data.export_id). Example: <code>exp_67abc123_1734567890</code></p>
             </div>
                     </form>
+
+                    <h2 id="received-documents-POSTapi-v1-taxpayers--taxNumber--received-physical-documents">Import Physical Purchase Document</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Upload one or more files (images or PDFs) representing a physical purchase document.
+This is useful when you have scanned receipts, invoices, or other purchase documents
+that need to be stored in the system for later review by an accountant.</p>
+<h3>Use Case:</h3>
+<p>This endpoint allows you to quickly upload physical document files without manually
+entering all the details. An accountant can later review the uploaded images through
+the web interface and complete the information (update totals, VAT type, category, etc.).</p>
+<h3>File Requirements:</h3>
+<ul>
+<li><strong>Types allowed</strong>: PDF, JPG, JPEG, PNG</li>
+<li><strong>Max size per file</strong>: 10 MB</li>
+<li><strong>Min files</strong>: 1</li>
+<li><strong>Max files</strong>: 5</li>
+</ul>
+<h3>VAT Types (vat_type):</h3>
+<ul>
+<li><code>"0"</code> - VAT 0% (default if not specified)</li>
+<li><code>"5"</code> - VAT 5%</li>
+<li><code>"12"</code> - VAT 12% (historical)</li>
+<li><code>"13"</code> - VAT 13% (historical)</li>
+<li><code>"14"</code> - VAT 14% (historical)</li>
+<li><code>"15"</code> - VAT 15%</li>
+<li><code>"exempt"</code> - Exempt from VAT</li>
+<li><code>"not_subject"</code> - Not subject to VAT</li>
+<li><code>"special"</code> - Special regime</li>
+</ul>
+<h3>Important Notes:</h3>
+<ul>
+<li>All fields except <code>files[]</code> are optional</li>
+<li><code>total_value</code> can be <code>0</code> - useful when you want to upload images first and let accountant fill amounts later</li>
+<li><code>category_id</code> can be omitted - accountant can categorize later via web interface</li>
+<li><code>document_date</code> defaults to today if not provided</li>
+<li>The returned <code>ulid</code> can be used with detail endpoints like <code>GET /api/v1/taxpayers/{taxNumber}/received/{documentUlid}/details</code></li>
+</ul>
+
+<span id="example-requests-POSTapi-v1-taxpayers--taxNumber--received-physical-documents">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/physical-documents" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}" \
+    --header "Content-Type: multipart/form-data" \
+    --form "category_id=123"\
+    --form "total_value=150.50"\
+    --form "vat_type=12"\
+    --form "document_date=2026-01-22"\
+    --form "notes=Compra de suministros de oficina"\
+    --form "contact_tax_number=1234567890001"\
+    --form "files[]=@/tmp/phpUZdbGe" </code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/physical-documents"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+    "Content-Type": "multipart/form-data",
+};
+
+const body = new FormData();
+body.append('category_id', '123');
+body.append('total_value', '150.50');
+body.append('vat_type', '12');
+body.append('document_date', '2026-01-22');
+body.append('notes', 'Compra de suministros de oficina');
+body.append('contact_tax_number', '1234567890001');
+body.append('files[]', document.querySelector('input[name="files[]"]').files[0]);
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/physical-documents';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+            'Content-Type' =&gt; 'multipart/form-data',
+        ],
+        'multipart' =&gt; [
+            [
+                'name' =&gt; 'category_id',
+                'contents' =&gt; '123'
+            ],
+            [
+                'name' =&gt; 'total_value',
+                'contents' =&gt; '150.50'
+            ],
+            [
+                'name' =&gt; 'vat_type',
+                'contents' =&gt; '12'
+            ],
+            [
+                'name' =&gt; 'document_date',
+                'contents' =&gt; '2026-01-22'
+            ],
+            [
+                'name' =&gt; 'notes',
+                'contents' =&gt; 'Compra de suministros de oficina'
+            ],
+            [
+                'name' =&gt; 'contact_tax_number',
+                'contents' =&gt; '1234567890001'
+            ],
+            [
+                'name' =&gt; 'files[]',
+                'contents' =&gt; fopen('/tmp/phpUZdbGe', 'r')
+            ],
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/received/physical-documents'
+files = {
+  'category_id': (None, '123'),
+  'total_value': (None, '150.50'),
+  'vat_type': (None, '12'),
+  'document_date': (None, '2026-01-22'),
+  'notes': (None, 'Compra de suministros de oficina'),
+  'contact_tax_number': (None, '1234567890001'),
+  'files[]': open('/tmp/phpUZdbGe', 'rb')}
+payload = {
+    "category_id": 123,
+    "total_value": "150.50",
+    "vat_type": "12",
+    "document_date": "2026-01-22",
+    "notes": "Compra de suministros de oficina",
+    "contact_tax_number": "1234567890001"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}',
+  'Content-Type': 'multipart/form-data'
+}
+
+response = requests.request('POST', url, headers=headers, files=files)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-taxpayers--taxNumber--received-physical-documents">
+            <blockquote>
+            <p>Example response (201):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;success&quot;: true,
+    &quot;message&quot;: &quot;Physical document created successfully with 3 file(s) attached.&quot;,
+    &quot;data&quot;: {
+        &quot;ulid&quot;: &quot;01HN9K8Z6Q2YWXJ3E5M4VFGTH7&quot;,
+        &quot;document_type&quot;: &quot;received&quot;,
+        &quot;total_value&quot;: 150.5,
+        &quot;vat_type&quot;: &quot;12&quot;,
+        &quot;document_date&quot;: &quot;2026-01-22&quot;,
+        &quot;files_count&quot;: 3,
+        &quot;created_at&quot;: &quot;2026-01-22T10:30:00Z&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;success&quot;: false,
+    &quot;message&quot;: &quot;Taxpayer not found.&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;success&quot;: false,
+    &quot;message&quot;: &quot;Validation failed.&quot;,
+    &quot;errors&quot;: {
+        &quot;files.0&quot;: [
+            &quot;The file must not be greater than 10240 kilobytes.&quot;
+        ],
+        &quot;files&quot;: [
+            &quot;You may not upload more than 5 files.&quot;
+        ],
+        &quot;vat_type&quot;: [
+            &quot;Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.&quot;
+        ]
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-taxpayers--taxNumber--received-physical-documents" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-taxpayers--taxNumber--received-physical-documents"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-taxpayers--taxNumber--received-physical-documents" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-taxpayers--taxNumber--received-physical-documents">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-taxpayers--taxNumber--received-physical-documents" data-method="POST"
+      data-path="api/v1/taxpayers/{taxNumber}/received/physical-documents"
+      data-authed="1"
+      data-hasfiles="1"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-taxpayers--taxNumber--received-physical-documents', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+                    onclick="tryItOut('POSTapi-v1-taxpayers--taxNumber--received-physical-documents');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+                    onclick="cancelTryOut('POSTapi-v1-taxpayers--taxNumber--received-physical-documents');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/taxpayers/{taxNumber}/received/physical-documents</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="multipart/form-data"
+               data-component="header">
+    <br>
+<p>Example: <code>multipart/form-data</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>taxNumber</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="taxNumber"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="1726051285001"
+               data-component="url">
+    <br>
+<p>Tax identification number (RUC/Cédula). Example: <code>1726051285001</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>files</code></b>&nbsp;&nbsp;
+<small>file[]</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="file" style="display: none"
+                              name="files[0]"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               data-component="body">
+        <input type="file" style="display: none"
+               name="files[1]"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               data-component="body">
+    <br>
+<p>At least 1 file, maximum 5 files. Each file must be PDF, JPG, JPEG, or PNG and not exceed 10MB.</p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>category_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="category_id"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="123"
+               data-component="body">
+    <br>
+<p>optional Category ID for this document. You can get available categories from other endpoints. Example: <code>123</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>total_value</code></b>&nbsp;&nbsp;
+<small>numeric</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="total_value"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="150.50"
+               data-component="body">
+    <br>
+<p>optional Total value of the document. Can be 0 if you want accountant to fill it later. Default: 0. Example: <code>150.50</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>vat_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="vat_type"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="12"
+               data-component="body">
+    <br>
+<p>optional Type of VAT applied. Default: &quot;0&quot;. Example: <code>12</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>document_date</code></b>&nbsp;&nbsp;
+<small>date</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="document_date"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="2026-01-22"
+               data-component="body">
+    <br>
+<p>optional Date of the document in YYYY-MM-DD format. Cannot be in the future. Default: today. Example: <code>2026-01-22</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>notes</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="notes"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="Compra de suministros de oficina"
+               data-component="body">
+    <br>
+<p>optional Additional notes about the document (max 1000 characters). Example: <code>Compra de suministros de oficina</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>contact_tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="contact_tax_number"                data-endpoint="POSTapi-v1-taxpayers--taxNumber--received-physical-documents"
+               value="1234567890001"
+               data-component="body">
+    <br>
+<p>optional Tax number (RUC/CI) of the supplier (max 20 characters). Example: <code>1234567890001</code></p>
+        </div>
+        </form>
 
                     <h2 id="received-documents-GETapi-v1-taxpayers--taxNumber--received--documentUlid--details">Get details of a specific received document</h2>
 

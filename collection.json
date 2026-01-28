@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "e1c9278b-8cb8-4bda-bdc1-f364d74196df",
+        "_postman_id": "63d99128-337f-4013-9bb6-b93c58aae307",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -302,13 +302,13 @@
                                 },
                                 {
                                     "key": "filter.document_type",
-                                    "value": "sales",
+                                    "value": "purchases",
                                     "description": "",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "non_deductible_expenses",
+                                    "value": "commercial_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=non_deductible_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=commercial_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -627,6 +627,101 @@
                     ]
                 },
                 {
+                    "name": "Get accumulated emitted retention totals",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/retentions\/accumulated",
+                            "query": [
+                                {
+                                    "key": "start_date",
+                                    "value": "",
+                                    "description": "Start date for filtering retentions (YYYY-MM-DD format). Defaults to first day of current month.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "end_date",
+                                    "value": "",
+                                    "description": "End date for filtering retentions (YYYY-MM-DD format). Defaults to last day of current month.",
+                                    "disabled": true
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/retentions\/accumulated?start_date=&end_date=",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves aggregated totals of emitted withholding retentions for a specific taxpayer and team\nwithin a date range. Returns amounts withheld for VAT, Income Tax (Rent), and Special Taxes (IGT\/ISD),\nalong with their tax bases and document counts.\n\n**What are emitted retentions?**\nEmitted retentions are withholding documents issued by the taxpayer to their suppliers\/sellers.\nWhen a taxpayer makes a purchase, they may be required to withhold a portion of taxes\nand issue a retention document to the supplier.\n\n**Use Cases:**\n- Display retention statistics on dashboards\n- Generate monthly retention reports for compliance\n- Monitor total amounts withheld by tax type\n- Track active vs voided retentions\n- Calculate tax obligations and credits\n\n**Performance:**\nThis endpoint uses direct database aggregation for efficient calculation of totals\neven with large datasets containing thousands of retention documents.\n\n**Default Period:** If no dates are specified, the current month is used.\n\n**Important Notes:**\n- Only active (non-voided) retentions are included in the monetary totals\n- Voided retentions are counted separately but not included in amounts\n- All amounts are in USD\n- Tax bases represent the amounts on which withholdings were calculated"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Emitted retention totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"vat_withheld\": 450.75,\n      \"rent_withheld\": 1250.00,\n      \"igt_withheld\": 0.00,\n      \"total_withheld\": 1700.75,\n      \"tax_bases\": {\n        \"vat\": 15025.00,\n        \"rent\": 12500.00,\n        \"igt\": 0.00,\n        \"total\": 27525.00\n      }\n    },\n    \"counts\": {\n      \"total_retentions\": 45,\n      \"active_retentions\": 43,\n      \"voided_retentions\": 2\n    },\n    \"period\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\"\n    }\n  }\n}",
+                            "name": "Success - Current Month"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Emitted retention totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"vat_withheld\": 2350.50,\n      \"rent_withheld\": 4200.00,\n      \"igt_withheld\": 125.00,\n      \"total_withheld\": 6675.50,\n      \"tax_bases\": {\n        \"vat\": 78350.00,\n        \"rent\": 42000.00,\n        \"igt\": 1250.00,\n        \"total\": 121600.00\n      }\n    },\n    \"counts\": {\n      \"total_retentions\": 156,\n      \"active_retentions\": 150,\n      \"voided_retentions\": 6\n    },\n    \"period\": {\n      \"start_date\": \"2024-01-01\",\n      \"end_date\": \"2024-03-31\"\n    }\n  }\n}",
+                            "name": "Success - Custom Period"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Emitted retention totals retrieved successfully\",\n  \"data\": {\n    \"totals\": {\n      \"vat_withheld\": 0.00,\n      \"rent_withheld\": 0.00,\n      \"igt_withheld\": 0.00,\n      \"total_withheld\": 0.00,\n      \"tax_bases\": {\n        \"vat\": 0.00,\n        \"rent\": 0.00,\n        \"igt\": 0.00,\n        \"total\": 0.00\n      }\n    },\n    \"counts\": {\n      \"total_retentions\": 0,\n      \"active_retentions\": 0,\n      \"voided_retentions\": 0\n    },\n    \"period\": {\n      \"start_date\": \"2024-12-01\",\n      \"end_date\": \"2024-12-31\"\n    }\n  }\n}",
+                            "name": "Success - No Retentions"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Taxpayer Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": {\n    \"start_date\": [\"The start_date must be in the format YYYY-MM-DD.\"],\n    \"end_date\": [\"The end_date must be equal to or after start_date.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving emitted retention totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
                     "name": "Get count of all emitted documents types",
                     "request": {
                         "url": {
@@ -836,6 +931,342 @@
                             "header": [],
                             "code": 500,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving client totals\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Step 1: Start Excel Export (Asynchronous)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/export\/excel",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/export\/excel",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "Tax identification number (RUC\/C\u00e9dula)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"document_type\":\"invoice\",\"start_date\":\"2025-01-01\",\"end_date\":\"2025-01-31\",\"origin\":\"tws\",\"contact_tax_number\":\"1790000000001\"}"
+                        },
+                        "description": "**IMPORTANT: This is an asynchronous endpoint.** It starts a background export process and returns immediately.\nYou must use the returned `export_id` to poll the status endpoint until the file is ready.\n\n### Complete Workflow (3 Steps):\n\n**STEP 1: Start the export (this endpoint)**\n```bash\nPOST \/api\/v1\/taxpayers\/{taxNumber}\/emitted\/export\/excel\n```\nYou will receive a response like:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  \u2190 SAVE THIS ID!\n    \"status\": \"pending\",\n    \"polling_url\": \"\/api\/v1\/taxpayers\/1726051285001\/emitted\/export\/status\/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**STEP 2: Poll the status (repeatedly)**\nUse the `export_id` from Step 1 to check progress:\n```bash\nGET \/api\/v1\/taxpayers\/{taxNumber}\/emitted\/export\/status\/{export_id}\n```\nPoll every 10-30 seconds until `status` is `completed` or `failed`.\n\n**STEP 3: Download the file**\nWhen status is `completed`, the response will include a `download_url`:\n```json\n{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"completed\",\n    \"progress\": 100,\n    \"download_url\": \"https:\/\/s3.amazonaws.com\/...\"  \u2190 USE THIS TO DOWNLOAD\n  }\n}\n```\nThe `download_url` is a temporary signed URL that expires in 1 hour.\n\n### Key Points:\n- \u2705 This endpoint returns immediately (HTTP 202) - the export runs in background\n- \u2705 Extract `data.export_id` from the response - you'll need it for polling\n- \u2705 Use the provided `polling_url` or construct it manually with the `export_id`\n- \u2705 Poll at any frequency (suggested: every 10 seconds for small exports, 30-60 seconds for large ones)\n- \u2705 The download URL requires no additional authentication (it's signed)\n- \u2705 If dates are not provided, defaults to current month\n\n### Export Types:\n- **invoice**: Export sales invoices (facturas de venta)\n- **credit_note**: Export sales credit notes (notas de cr\u00e9dito de venta)\n- **retention**: Export emitted withholdings (retenciones emitidas)\n- **settlement**: Export purchase settlements (liquidaciones de compra)"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 202,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Export started. Use the export_id to check progress.\",\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"pending\",\n    \"document_type\": \"invoice\",\n    \"estimated_records\": 1234,\n    \"batch_size\": 1000,\n    \"estimated_time_seconds\": 60,\n    \"polling_url\": \"\/api\/v1\/taxpayers\/1726051285001\/emitted\/export\/status\/exp_67abc123_1734567890\",\n    \"suggested_polling_interval_seconds\": 10\n  }\n}",
+                            "name": "Export started successfully - SAVE THE export_id!"
+                        },
+                        {
+                            "header": [],
+                            "code": 400,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"El tipo de documento es requerido.\",\n  \"errors\": {\n    \"document_type\": [\"El tipo de documento es requerido.\"]\n  }\n}",
+                            "name": "Invalid data"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Taxpayer not found or does not belong to your team.\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Error al iniciar la exportaci\u00f3n de documentos emitidos.\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Step 2: Check Excel Export Status (Polling)",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/export\/status\/:exportId",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/export\/status\/:exportId",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "Tax identification number (RUC\/C\u00e9dula)."
+                                },
+                                {
+                                    "id": "exportId",
+                                    "key": "exportId",
+                                    "value": "exp_67abc123_1734567890",
+                                    "description": "Export ID obtained from the start export endpoint (data.export_id)."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "**Use this endpoint to check if your emitted documents export is ready.** Poll this endpoint repeatedly\nusing the `export_id` you received from the start export endpoint until the status is `completed`.\n\n### How to Use This Endpoint:\n\n**1. Get the export_id**\nAfter calling `POST \/api\/v1\/taxpayers\/{taxNumber}\/emitted\/export\/excel`, you'll receive:\n```json\n{\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",  \u2190 USE THIS ID HERE\n    \"polling_url\": \"\/api\/v1\/taxpayers\/1726051285001\/emitted\/export\/status\/exp_67abc123_1734567890\"\n  }\n}\n```\n\n**2. Poll this endpoint**\n```bash\nGET \/api\/v1\/taxpayers\/{taxNumber}\/emitted\/export\/status\/exp_67abc123_1734567890\n                                                         \u2514\u2500 YOUR export_id goes here\n```\n\n**3. Check the status field**\n- `pending` \u2192 Keep polling (export is queued)\n- `processing` \u2192 Keep polling (export is being generated)\n- `completed` \u2192 **STOP POLLING** and extract `download_url` from response\n- `failed` \u2192 Stop polling (check `error_message`)\n\n**4. When completed, download the file**\n```json\n{\n  \"data\": {\n    \"status\": \"completed\",\n    \"download_url\": \"https:\/\/s3.amazonaws.com\/...\"  \u2190 DOWNLOAD FROM HERE\n  }\n}\n```\nSimply make a GET request to the `download_url` - no authentication needed (it's signed).\n\n### Polling Strategy:\n- **Small exports (< 1000 records)**: Poll every 10 seconds\n- **Medium exports (1000-10000 records)**: Poll every 20-30 seconds\n- **Large exports (> 10000 records)**: Poll every 30-60 seconds\n- You can poll at any frequency you want - the suggestion is just to avoid unnecessary requests\n- The export will be processed regardless of polling frequency\n\n### About the Download URL:\n- \u2705 It's a temporary AWS S3 signed URL\n- \u2705 Valid for 1 hour after export completion\n- \u2705 No additional authentication required (signature is in the URL)\n- \u2705 Direct download - just make a GET request to it\n- \u26a0\ufe0f Download the file within 1 hour or it will expire\n\n### Progress Tracking:\nWhile the export is `processing`, you'll receive:\n- `progress`: Percentage completed (0-100)\n- `processed_records` \/ `total_records`: Exact counts\n- `estimated_time_remaining_seconds`: Rough estimate"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"pending\",\n    \"progress\": 0,\n    \"message\": \"Export is queued and waiting to be processed.\"\n  }\n}",
+                            "name": "Status: pending (keep polling)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"processing\",\n    \"progress\": 45,\n    \"processed_records\": 450,\n    \"total_records\": 1000,\n    \"estimated_time_remaining_seconds\": 30,\n    \"message\": \"Export is being generated. Please wait...\"\n  }\n}",
+                            "name": "Status: processing (keep polling)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"completed\",\n    \"progress\": 100,\n    \"processed_records\": 1000,\n    \"total_records\": 1000,\n    \"download_url\": \"https:\/\/s3.amazonaws.com\/taxo-exports\/exports\/exp_67abc123_1734567890.xlsx?signature=...\",\n    \"expires_at\": \"2025-01-23T15:30:00Z\",\n    \"file_size_bytes\": 245678,\n    \"message\": \"Export completed successfully. Download the file using the provided URL.\"\n  }\n}",
+                            "name": "Status: completed (download now!)"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"success\": false,\n  \"data\": {\n    \"export_id\": \"exp_67abc123_1734567890\",\n    \"status\": \"failed\",\n    \"progress\": 0,\n    \"error_message\": \"No records found matching the specified criteria.\",\n    \"failed_at\": \"2025-01-22T14:30:00Z\"\n  }\n}",
+                            "name": "Status: failed"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Exportaci\u00f3n no encontrada o no pertenece a tu organizaci\u00f3n.\"\n}",
+                            "name": "Export not found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Import Physical Sales Document",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/physical-documents",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/physical-documents",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "Tax identification number (RUC\/C\u00e9dula)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "category_id",
+                                    "value": "123",
+                                    "type": "text",
+                                    "description": "optional Category ID for this document. You can get available categories from other endpoints."
+                                },
+                                {
+                                    "key": "total_value",
+                                    "value": "150.50",
+                                    "type": "text",
+                                    "description": "optional Total value of the document. Can be 0 if you want accountant to fill it later. Default: 0."
+                                },
+                                {
+                                    "key": "vat_type",
+                                    "value": "12",
+                                    "type": "text",
+                                    "description": "optional Type of VAT applied. Default: \"0\"."
+                                },
+                                {
+                                    "key": "document_date",
+                                    "value": "2026-01-22",
+                                    "type": "text",
+                                    "description": "optional Date of the document in YYYY-MM-DD format. Cannot be in the future. Default: today."
+                                },
+                                {
+                                    "key": "notes",
+                                    "value": "Venta al contado",
+                                    "type": "text",
+                                    "description": "optional Additional notes about the document (max 1000 characters)."
+                                },
+                                {
+                                    "key": "contact_tax_number",
+                                    "value": "1234567890001",
+                                    "type": "text",
+                                    "description": "optional Tax number (RUC\/CI) of the client (max 20 characters)."
+                                },
+                                {
+                                    "key": "files[]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Upload one or more files (images or PDFs) representing a physical sales document.\nThis is useful when you have scanned receipts, manual invoices, or other sales documents\nthat need to be stored in the system for later review by an accountant.\n\n### Use Case:\nThis endpoint allows you to quickly upload physical document files without manually\nentering all the details. An accountant can later review the uploaded images through\nthe web interface and complete the information (update totals, VAT type, category, etc.).\n\n### File Requirements:\n- **Types allowed**: PDF, JPG, JPEG, PNG\n- **Max size per file**: 10 MB\n- **Min files**: 1\n- **Max files**: 5\n\n### VAT Types (vat_type):\n- `\"0\"` - VAT 0% (default if not specified)\n- `\"5\"` - VAT 5%\n- `\"12\"` - VAT 12% (historical)\n- `\"13\"` - VAT 13% (historical)\n- `\"14\"` - VAT 14% (historical)\n- `\"15\"` - VAT 15%\n- `\"exempt\"` - Exempt from VAT\n- `\"not_subject\"` - Not subject to VAT\n- `\"special\"` - Special regime\n\n### Important Notes:\n- All fields except `files[]` are optional\n- `total_value` can be `0` - useful when you want to upload images first and let accountant fill amounts later\n- `category_id` can be omitted - accountant can categorize later via web interface\n- `document_date` defaults to today if not provided\n- The returned `ulid` can be used with detail endpoints like `GET \/api\/v1\/taxpayers\/{taxNumber}\/emitted\/{documentUlid}\/details`"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Physical document created successfully with 2 file(s) attached.\",\n  \"data\": {\n    \"ulid\": \"01HN9K8Z6Q2YWXJ3E5M4VFGTH7\",\n    \"document_type\": \"emitted\",\n    \"total_value\": 250.00,\n    \"vat_type\": \"15\",\n    \"document_date\": \"2026-01-22\",\n    \"files_count\": 2,\n    \"created_at\": \"2026-01-22T10:30:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Taxpayer not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed.\",\n  \"errors\": {\n    \"files.0\": [\"The file must not be greater than 10240 kilobytes.\"],\n    \"files\": [\"You may not upload more than 5 files.\"],\n    \"vat_type\": [\"Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get details of a specific emitted document",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/emitted\/:documentUlid\/details",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/emitted\/:documentUlid\/details",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "The taxpayer's RUC number (13 digits)."
+                                },
+                                {
+                                    "id": "documentUlid",
+                                    "key": "documentUlid",
+                                    "value": "01HQXZ8P9G2K4MNBVCXWERTYU1",
+                                    "description": "The unique ULID identifier of the document."
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves full details of a specific emitted document (sales invoice, credit note, withholding, or settlement)\nby its unique ULID identifier. This endpoint returns comprehensive data including all related information\nsuch as items, customer data, payment information, taxes, totals, and associated files.\n\n**This endpoint provides:**\n- Complete document header information (number, dates, status, access key)\n- All document line items with detailed categorization and tax information\n- Complete customer\/buyer data (name, tax number, email, phone, address)\n- Payment information (methods, amounts, terms)\n- Detailed tax breakdowns by type (IVA 0%, 12%, 15%, etc.)\n- Document totals and calculations\n- Associated files (PDF, XML) with signed URLs\n- For invoices: related credit notes\n- Document status and locking information\n- Categorization data, deductibility types, and regime\n- Metadata with taxpayer and team context\n\n**How to obtain the document ULID:**\n\nThe ULID can be obtained from:\n- `GET \/api\/v1\/taxpayers\/{taxNumber}\/emitted` - Field `id` or `ulid` in each document\n- `GET \/api\/v1\/taxpayers\/{taxNumber}\/emitted\/{documentUlid}\/status` - Returns ULID and type\n- Any other endpoint that lists emitted documents\n\n**Document Types:**\n- `invoice` - Sales invoice (includes items, payments, taxes, totals, credit notes)\n- `credit_note` - Credit note for sales (includes items, linked to supporting invoice)\n- `withholding` - Withholding issued to seller (includes withholding items and tax calculations)\n- `settlement` - Purchase settlement \/ Liquidaci\u00f3n de compra (includes items and payments)\n\n**Performance:**\n- Uses early exit strategy: stops searching as soon as document is found\n- Leverages database indexes (ulid, tax_payer_id, team_id) for optimal performance\n- Lazy loads relationships only when document is found\n\n**Note:** This endpoint uses optimized API Resources that return only essential data,\nunlike UI endpoints which include full taxpayer and team objects."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"invoice\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU1\",\"type\":\"invoice\",\"document_number\":\"001-001-000000123\",\"status\":\"AUTORIZADO\",\"access_key\":\"1234567890123456789012345678901234567890123456789\",\"issue_date\":\"2024-01-15\",\"authorization_date\":\"2024-01-15 14:30:00\",\"categories\":[\"Ingresos Operacionales\"],\"category_types\":[\"income\"],\"deductible_types\":[\"deductible\"],\"customer\":{\"name\":\"CLIENTE DEMO S.A.\",\"email\":\"cliente@example.com\",\"tax_number\":\"1790000000001\",\"phone\":\"0999999999\",\"address\":\"Av. Principal 123\"},\"issuer\":{\"id\":\"1726051285001\",\"id_type\":\"ruc\"},\"payments\":[{\"method\":\"01\",\"amount\":112.00,\"term\":\"0\"}],\"items\":[{\"id\":1,\"description\":\"Producto vendido\",\"sku\":\"PROD001\",\"quantity\":1,\"price\":100.00,\"discount\":0,\"sub_total\":100.00,\"tax\":12.00,\"tax_type\":\"IVA 12%\",\"total\":112.00,\"category\":{\"id\":5,\"name\":\"Ventas\"},\"deductible_type\":\"deductible\",\"regime\":\"general\",\"category_message\":null,\"categorized_by\":\"user\"}],\"taxes\":{\"subtotal_vat_twelve\":100.00,\"vat_twelve\":12.00},\"totals\":{\"subtotal\":100.00,\"total\":112.00},\"files\":{\"pdf\":\"https:\/\/s3.amazonaws.com\/...\/document.pdf\",\"xml\":\"https:\/\/s3.amazonaws.com\/...\/document.xml\"},\"credit_notes\":[],\"notes\":\"Observaciones\",\"origin\":\"tws\",\"is_physical\":false,\"is_sale_note\":false,\"is_checked\":true,\"regime\":\"general\",\"deductible_type\":\"deductible\",\"is_locked\":false,\"created_at\":\"2024-01-15T14:30:00+00:00\"},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Sales Invoice"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"credit_note\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU5\",\"type\":\"credit_note\",\"document_number\":\"001-001-000000124\",\"status\":\"AUTORIZADO\",\"issue_date\":\"2024-01-15\",\"supporting_document\":{\"invoice_id\":\"01HQXZ8P9G2K4MNBVCXWERTYU1\",\"invoice_number\":\"001-001-000000123\",\"emission_date\":\"2024-01-15\"},\"cause\":\"Devoluci\u00f3n de mercader\u00eda\",\"customer\":{\"name\":\"CLIENTE DEMO S.A.\",\"tax_number\":\"1790000000001\"},\"items\":[{\"id\":1,\"description\":\"Producto devuelto\",\"quantity\":1,\"price\":50.00,\"tax\":6.00,\"total\":56.00,\"category\":{\"id\":5,\"name\":\"Devoluciones\"}}],\"totals\":{\"subtotal\":50.00,\"total\":56.00}},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Credit Note"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"withholding\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU6\",\"type\":\"withholding\",\"document_number\":\"001-001-000000125\",\"status\":\"AUTORIZADO\",\"fiscal_period\":\"01\/2024\",\"supporting_documents\":{\"numbers\":\"001-001-000000123\",\"dates\":\"15\/01\/2024\"},\"subject\":{\"name\":\"PROVEEDOR DEMO S.A.\",\"tax_number\":\"1790000000001\"},\"items\":[{\"id\":1,\"invoice_number\":\"001-001-000000123\",\"tax_type\":\"IVA\",\"tax_base\":100.00,\"percentage\":30,\"amount\":30.00}],\"taxes\":{\"vat\":{\"tax_base\":100.00,\"amount\":30.00,\"percentage\":30},\"rent\":{\"tax_base\":0,\"amount\":0,\"percentage\":0},\"igt\":{\"tax_base\":0,\"amount\":0,\"percentage\":0}},\"files\":{\"pdf\":\"https:\/\/s3.amazonaws.com\/...\/retention.pdf\",\"xml\":\"https:\/\/s3.amazonaws.com\/...\/retention.xml\"}},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Withholding"
+                        },
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\"status\":\"success\",\"message\":\"Document details retrieved successfully\",\"data\":{\"document_type\":\"settlement\",\"document\":{\"id\":\"01HQXZ8P9G2K4MNBVCXWERTYU7\",\"type\":\"settlement\",\"document_number\":\"001-001-000000126\",\"status\":\"AUTORIZADO\",\"issue_date\":\"2024-01-15\",\"provider\":{\"name\":\"PROVEEDOR DEMO S.A.\",\"tax_number\":\"1790000000001\"},\"items\":[{\"id\":1,\"description\":\"Servicio\",\"quantity\":1,\"price\":100.00,\"tax\":12.00,\"total\":112.00}],\"totals\":{\"subtotal\":100.00,\"total\":112.00}},\"metadata\":{\"taxpayer\":{\"id\":123,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU2\",\"tax_number\":\"1726051285001\"},\"team\":{\"id\":456,\"ulid\":\"01HQXZ8P9G2K4MNBVCXWERTYU3\",\"name\":\"Mi Empresa S.A.\"}}}}",
+                            "name": "Success - Settlement"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"INVALID_API_KEY\"\n}",
+                            "name": "Unauthorized - Invalid API Key"
+                        },
+                        {
+                            "header": [],
+                            "code": 403,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"You do not have access to this taxpayer\",\n  \"code\": \"TAXPAYER_ACCESS_DENIED\"\n}",
+                            "name": "Forbidden - Taxpayer not accessible"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Document not found or does not belong to this taxpayer\"\n}",
+                            "name": "Document Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found\",\n  \"code\": \"TAXPAYER_NOT_FOUND\"\n}",
+                            "name": "Taxpayer Not Found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document details\",\n  \"code\": \"SERVER_ERROR\"\n}",
                             "name": "Server Error"
                         }
                     ]
@@ -2370,6 +2801,107 @@
                             "code": 500,
                             "body": "{\n  \"success\": false,\n  \"message\": \"Error al obtener el estado de la exportaci\u00f3n.\"\n}",
                             "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Import Physical Purchase Document",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/received\/physical-documents",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/received\/physical-documents",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "1726051285001",
+                                    "description": "Tax identification number (RUC\/C\u00e9dula)."
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart\/form-data"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "category_id",
+                                    "value": "123",
+                                    "type": "text",
+                                    "description": "optional Category ID for this document. You can get available categories from other endpoints."
+                                },
+                                {
+                                    "key": "total_value",
+                                    "value": "150.50",
+                                    "type": "text",
+                                    "description": "optional Total value of the document. Can be 0 if you want accountant to fill it later. Default: 0."
+                                },
+                                {
+                                    "key": "vat_type",
+                                    "value": "12",
+                                    "type": "text",
+                                    "description": "optional Type of VAT applied. Default: \"0\"."
+                                },
+                                {
+                                    "key": "document_date",
+                                    "value": "2026-01-22",
+                                    "type": "text",
+                                    "description": "optional Date of the document in YYYY-MM-DD format. Cannot be in the future. Default: today."
+                                },
+                                {
+                                    "key": "notes",
+                                    "value": "Compra de suministros de oficina",
+                                    "type": "text",
+                                    "description": "optional Additional notes about the document (max 1000 characters)."
+                                },
+                                {
+                                    "key": "contact_tax_number",
+                                    "value": "1234567890001",
+                                    "type": "text",
+                                    "description": "optional Tax number (RUC\/CI) of the supplier (max 20 characters)."
+                                },
+                                {
+                                    "key": "files[]",
+                                    "src": [],
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Upload one or more files (images or PDFs) representing a physical purchase document.\nThis is useful when you have scanned receipts, invoices, or other purchase documents\nthat need to be stored in the system for later review by an accountant.\n\n### Use Case:\nThis endpoint allows you to quickly upload physical document files without manually\nentering all the details. An accountant can later review the uploaded images through\nthe web interface and complete the information (update totals, VAT type, category, etc.).\n\n\n### File Requirements:\n- **Types allowed**: PDF, JPG, JPEG, PNG\n- **Max size per file**: 10 MB\n- **Min files**: 1\n- **Max files**: 5\n\n### VAT Types (vat_type):\n- `\"0\"` - VAT 0% (default if not specified)\n- `\"5\"` - VAT 5%\n- `\"12\"` - VAT 12% (historical)\n- `\"13\"` - VAT 13% (historical)\n- `\"14\"` - VAT 14% (historical)\n- `\"15\"` - VAT 15%\n- `\"exempt\"` - Exempt from VAT\n- `\"not_subject\"` - Not subject to VAT\n- `\"special\"` - Special regime\n\n### Important Notes:\n- All fields except `files[]` are optional\n- `total_value` can be `0` - useful when you want to upload images first and let accountant fill amounts later\n- `category_id` can be omitted - accountant can categorize later via web interface\n- `document_date` defaults to today if not provided\n- The returned `ulid` can be used with detail endpoints like `GET \/api\/v1\/taxpayers\/{taxNumber}\/received\/{documentUlid}\/details`"
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Physical document created successfully with 3 file(s) attached.\",\n  \"data\": {\n    \"ulid\": \"01HN9K8Z6Q2YWXJ3E5M4VFGTH7\",\n    \"document_type\": \"received\",\n    \"total_value\": 150.50,\n    \"vat_type\": \"12\",\n    \"document_date\": \"2026-01-22\",\n    \"files_count\": 3,\n    \"created_at\": \"2026-01-22T10:30:00Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Taxpayer not found.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"Validation failed.\",\n  \"errors\": {\n    \"files.0\": [\"The file must not be greater than 10240 kilobytes.\"],\n    \"files\": [\"You may not upload more than 5 files.\"],\n    \"vat_type\": [\"Invalid VAT type. Allowed: 0, 5, 12, 13, 14, 15, exempt, not_subject, special.\"]\n  }\n}",
+                            "name": ""
                         }
                     ]
                 },
