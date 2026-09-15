@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "feed20ad-5e17-4820-af9c-397a1a39a387",
+        "_postman_id": "bbf7272a-b417-4fa8-80b5-033e49fc2e6d",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -3289,9 +3289,16 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"password\":\"S3curePassw0rd\",\"role\":\"manager\",\"tax_number\":\"1726051285001\",\"tws_tax_payer_id\":\"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\",\"notify_created_users\":false}"
+                        },
                         "description": "Creates a new user account (and its Clerk account) with the given role, or, if the\nemail already belongs to an existing user, associates that existing user with the\ntaxpayer instead (its role is left untouched, matching the \"Manejo de usuarios\"\nweb behavior). Exactly one of `tax_number` or `tws_tax_payer_id` must identify the\ntarget taxpayer, which must belong to the authenticated organization."
                     },
                     "response": [
@@ -3361,9 +3368,16 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"role\":\"accountant\",\"tax_number\":\"1726051285001\",\"tws_tax_payer_id\":\"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"}"
+                        },
                         "description": "Updates the application role (manager, billing, or accountant) of a user for a\ngiven taxpayer. Exactly one of `tax_number` or `tws_tax_payer_id` must identify\nthe taxpayer, which must belong to the authenticated organization."
                     },
                     "response": [
@@ -3421,9 +3435,16 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tax_number\":\"1726051285001\",\"tws_tax_payer_id\":\"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"}"
+                        },
                         "description": "Marks a user as active for the given taxpayer. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization."
                     },
                     "response": [
@@ -3475,9 +3496,16 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tax_number\":\"1726051285001\",\"tws_tax_payer_id\":\"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"}"
+                        },
                         "description": "Marks a user as inactive for the given taxpayer. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization."
                     },
                     "response": [
@@ -3529,9 +3557,16 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
                             }
                         ],
-                        "body": null,
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"tax_number\":\"1726051285001\",\"tws_tax_payer_id\":\"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"}"
+                        },
                         "description": "Removes a user's access to a taxpayer entirely. As a safety check, this only\nsucceeds if the user is currently deactivated for that taxpayer - deactivate\nthe user first via PATCH \/users\/{id}\/deactivate. Exactly one of `tax_number`\nor `tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization. This does not delete the user's account globally\n- only its association with this specific taxpayer (a user may still be\nassociated with other taxpayers)."
                     },
                     "response": [

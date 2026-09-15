@@ -4793,7 +4793,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Venta al contado"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpn9Ukjn" </code></pre></div>
+    --form "files[]=@/tmp/phpbwJMQm" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4863,7 +4863,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpn9Ukjn', 'r')
+                'contents' =&gt; fopen('/tmp/phpbwJMQm', 'r')
             ],
         ],
     ]
@@ -4884,7 +4884,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Venta al contado'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpn9Ukjn', 'rb')}
+  'files[]': open('/tmp/phpbwJMQm', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -12936,7 +12936,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Compra de suministros de oficina"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpXCYzkp" </code></pre></div>
+    --form "files[]=@/tmp/phpHnrAIp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -13006,7 +13006,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpXCYzkp', 'r')
+                'contents' =&gt; fopen('/tmp/phpHnrAIp', 'r')
             ],
         ],
     ]
@@ -13027,7 +13027,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Compra de suministros de oficina'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpXCYzkp', 'rb')}
+  'files[]': open('/tmp/phpHnrAIp', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -14471,7 +14471,18 @@ target taxpayer, which must belong to the authenticated organization.</p>
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/users" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --data "{
+    \"email\": \"jane@example.com\",
+    \"name\": \"Jane Doe\",
+    \"password\": \"S3curePassw0rd\",
+    \"role\": \"manager\",
+    \"tax_number\": \"1726051285001\",
+    \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\",
+    \"notify_created_users\": false
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -14482,11 +14493,23 @@ target taxpayer, which must belong to the authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+let body = {
+    "email": "jane@example.com",
+    "name": "Jane Doe",
+    "password": "S3curePassw0rd",
+    "role": "manager",
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab",
+    "notify_created_users": false
 };
 
 fetch(url, {
     method: "POST",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -14499,6 +14522,16 @@ $response = $client-&gt;post(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
+            'Content-Type' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'email' =&gt; 'jane@example.com',
+            'name' =&gt; 'Jane Doe',
+            'password' =&gt; 'S3curePassw0rd',
+            'role' =&gt; 'manager',
+            'tax_number' =&gt; '1726051285001',
+            'tws_tax_payer_id' =&gt; '0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab',
+            'notify_created_users' =&gt; false,
         ],
     ]
 );
@@ -14511,12 +14544,22 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/users'
+payload = {
+    "email": "jane@example.com",
+    "name": "Jane Doe",
+    "password": "S3curePassw0rd",
+    "role": "manager",
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab",
+    "notify_created_users": false
+}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json'
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
 }
 
-response = requests.request('POST', url, headers=headers)
+response = requests.request('POST', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
@@ -14700,7 +14743,116 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-users"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>email</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="email"                data-endpoint="POSTapi-v1-users"
+               value="jane@example.com"
+               data-component="body">
+    <br>
+<p>Email of the user to create or associate. El campo value debe ser una dirección de correo electrónico válida. El campo value no debe ser mayor que 255 caracteres. Example: <code>jane@example.com</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>name</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="name"                data-endpoint="POSTapi-v1-users"
+               value="Jane Doe"
+               data-component="body">
+    <br>
+<p>Full name of the user. El campo value no debe ser mayor que 255 caracteres. Example: <code>Jane Doe</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>password</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="password"                data-endpoint="POSTapi-v1-users"
+               value="S3curePassw0rd"
+               data-component="body">
+    <br>
+<p>Password for the new user account. Required, but ignored when the email already belongs to an existing user (the existing account keeps its own password). Example: <code>S3curePassw0rd</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="role"                data-endpoint="POSTapi-v1-users"
+               value="manager"
+               data-component="body">
+    <br>
+<p>Application role to assign: manager, billing, or accountant. Example: <code>manager</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>manager</code></li> <li><code>billing</code></li> <li><code>accountant</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_number"                data-endpoint="POSTapi-v1-users"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Tax number (RUC/cédula) of the taxpayer to associate the user with. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tws_tax_payer_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tws_tax_payer_id"                data-endpoint="POSTapi-v1-users"
+               value="0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+               data-component="body">
+    <br>
+<p>TWS taxpayer id to associate the user with. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres. Example: <code>0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>notify_created_users</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="POSTapi-v1-users" style="display: none">
+            <input type="radio" name="notify_created_users"
+                   value="true"
+                   data-endpoint="POSTapi-v1-users"
+                   data-component="body"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="POSTapi-v1-users" style="display: none">
+            <input type="radio" name="notify_created_users"
+                   value="false"
+                   data-endpoint="POSTapi-v1-users"
+                   data-component="body"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>Whether to email the user notifying them about the new access. Defaults to true. Example: <code>false</code></p>
+        </div>
+        </form>
 
                     <h2 id="users-PATCHapi-v1-users--id--role">Update a user&#039;s role</h2>
 
@@ -14720,7 +14872,14 @@ the taxpayer, which must belong to the authenticated organization.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/users/42/role" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --data "{
+    \"role\": \"accountant\",
+    \"tax_number\": \"1726051285001\",
+    \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -14731,11 +14890,19 @@ the taxpayer, which must belong to the authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+let body = {
+    "role": "accountant",
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
 };
 
 fetch(url, {
     method: "PATCH",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -14748,6 +14915,12 @@ $response = $client-&gt;patch(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
+            'Content-Type' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'role' =&gt; 'accountant',
+            'tax_number' =&gt; '1726051285001',
+            'tws_tax_payer_id' =&gt; '0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab',
         ],
     ]
 );
@@ -14760,12 +14933,18 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/users/42/role'
+payload = {
+    "role": "accountant",
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json'
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
 }
 
-response = requests.request('PATCH', url, headers=headers)
+response = requests.request('PATCH', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
@@ -14910,6 +15089,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-users--id--role"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -14923,7 +15114,46 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>The user's id. Example: <code>42</code></p>
             </div>
-                    </form>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>role</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="role"                data-endpoint="PATCHapi-v1-users--id--role"
+               value="accountant"
+               data-component="body">
+    <br>
+<p>New application role to assign: manager, billing, or accountant. Example: <code>accountant</code></p>
+Must be one of:
+<ul style="list-style-type: square;"><li><code>manager</code></li> <li><code>billing</code></li> <li><code>accountant</code></li></ul>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_number"                data-endpoint="PATCHapi-v1-users--id--role"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Tax number (RUC/cédula) of the taxpayer this role change applies to. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tws_tax_payer_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tws_tax_payer_id"                data-endpoint="PATCHapi-v1-users--id--role"
+               value="0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+               data-component="body">
+    <br>
+<p>TWS taxpayer id this role change applies to. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres. Example: <code>0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab</code></p>
+        </div>
+        </form>
 
                     <h2 id="users-PATCHapi-v1-users--id--activate">Activate a user</h2>
 
@@ -14943,7 +15173,13 @@ authenticated organization.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/users/42/activate" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --data "{
+    \"tax_number\": \"1726051285001\",
+    \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -14954,11 +15190,18 @@ authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+let body = {
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
 };
 
 fetch(url, {
     method: "PATCH",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -14971,6 +15214,11 @@ $response = $client-&gt;patch(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
+            'Content-Type' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'tax_number' =&gt; '1726051285001',
+            'tws_tax_payer_id' =&gt; '0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab',
         ],
     ]
 );
@@ -14983,12 +15231,17 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/users/42/activate'
+payload = {
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json'
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
 }
 
-response = requests.request('PATCH', url, headers=headers)
+response = requests.request('PATCH', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
@@ -15114,6 +15367,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-users--id--activate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -15127,7 +15392,32 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>The user's id. Example: <code>42</code></p>
             </div>
-                    </form>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_number"                data-endpoint="PATCHapi-v1-users--id--activate"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Tax number (RUC/cédula) of the taxpayer this status change applies to. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tws_tax_payer_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tws_tax_payer_id"                data-endpoint="PATCHapi-v1-users--id--activate"
+               value="0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+               data-component="body">
+    <br>
+<p>TWS taxpayer id this status change applies to. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres. Example: <code>0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab</code></p>
+        </div>
+        </form>
 
                     <h2 id="users-PATCHapi-v1-users--id--deactivate">Deactivate a user</h2>
 
@@ -15147,7 +15437,13 @@ authenticated organization.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/users/42/deactivate" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --data "{
+    \"tax_number\": \"1726051285001\",
+    \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -15158,11 +15454,18 @@ authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+let body = {
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
 };
 
 fetch(url, {
     method: "PATCH",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -15175,6 +15478,11 @@ $response = $client-&gt;patch(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
+            'Content-Type' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'tax_number' =&gt; '1726051285001',
+            'tws_tax_payer_id' =&gt; '0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab',
         ],
     ]
 );
@@ -15187,12 +15495,17 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/users/42/deactivate'
+payload = {
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json'
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
 }
 
-response = requests.request('PATCH', url, headers=headers)
+response = requests.request('PATCH', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
@@ -15318,6 +15631,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="PATCHapi-v1-users--id--deactivate"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -15331,7 +15656,32 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>The user's id. Example: <code>42</code></p>
             </div>
-                    </form>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_number"                data-endpoint="PATCHapi-v1-users--id--deactivate"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Tax number (RUC/cédula) of the taxpayer this status change applies to. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tws_tax_payer_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tws_tax_payer_id"                data-endpoint="PATCHapi-v1-users--id--deactivate"
+               value="0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+               data-component="body">
+    <br>
+<p>TWS taxpayer id this status change applies to. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres. Example: <code>0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab</code></p>
+        </div>
+        </form>
 
                     <h2 id="users-DELETEapi-v1-users--id-">Delete a user</h2>
 
@@ -15357,7 +15707,13 @@ associated with other taxpayers).</li>
     <pre><code class="language-bash">curl --request DELETE \
     "https://ec-demo.taxo.co/api/v1/users/42" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json"</code></pre></div>
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --data "{
+    \"tax_number\": \"1726051285001\",
+    \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\"
+}"
+</code></pre></div>
 
 
 <div class="javascript-example">
@@ -15368,11 +15724,18 @@ associated with other taxpayers).</li>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+let body = {
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
 };
 
 fetch(url, {
     method: "DELETE",
     headers,
+    body: JSON.stringify(body),
 }).then(response =&gt; response.json());</code></pre></div>
 
 
@@ -15385,6 +15748,11 @@ $response = $client-&gt;delete(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
+            'Content-Type' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'tax_number' =&gt; '1726051285001',
+            'tws_tax_payer_id' =&gt; '0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab',
         ],
     ]
 );
@@ -15397,12 +15765,17 @@ print_r(json_decode((string) $body));</code></pre></div>
 import json
 
 url = 'https://ec-demo.taxo.co/api/v1/users/42'
+payload = {
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+}
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json'
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
 }
 
-response = requests.request('DELETE', url, headers=headers)
+response = requests.request('DELETE', url, headers=headers, json=payload)
 response.json()</code></pre></div>
 
 </span>
@@ -15549,6 +15922,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="DELETEapi-v1-users--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -15562,7 +15947,32 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>The user's id. Example: <code>42</code></p>
             </div>
-                    </form>
+                            <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_number"                data-endpoint="DELETEapi-v1-users--id-"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Tax number (RUC/cédula) of the taxpayer this status change applies to. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tws_tax_payer_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tws_tax_payer_id"                data-endpoint="DELETEapi-v1-users--id-"
+               value="0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+               data-component="body">
+    <br>
+<p>TWS taxpayer id this status change applies to. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres. Example: <code>0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab</code></p>
+        </div>
+        </form>
 
             
 
