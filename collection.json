@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "11a4a79c-aecc-4d62-ac43-fd568bd1a8a2",
+        "_postman_id": "697c8d8d-f277-465b-8093-56c4ff599300",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -308,7 +308,7 @@
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "sales",
+                                    "value": "non_deductible_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=sales&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=non_deductible_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -3523,6 +3523,76 @@
                             "header": [],
                             "code": 500,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while deactivating the user\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/users\/:id",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/users\/:id",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "42",
+                                    "description": "The user's id."
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Removes a user's access to a taxpayer entirely. As a safety check, this only\nsucceeds if the user is currently deactivated for that taxpayer - deactivate\nthe user first via PATCH \/users\/{id}\/deactivate. Exactly one of `tax_number`\nor `tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization. This does not delete the user's account globally\n- only its association with this specific taxpayer (a user may still be\nassociated with other taxpayers)."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"User removed from taxpayer successfully\",\n  \"data\": { \"id\": 42, \"tax_number\": \"1726051285001\" }\n}",
+                            "name": "User removed"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"User not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"User is not associated with this taxpayer\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "User not associated with this taxpayer"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Cannot delete an active user. Deactivate it first.\",\n  \"code\": \"USER_IS_ACTIVE\"\n}",
+                            "name": "User is still active"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while deleting the user\",\n  \"code\": \"SERVER_ERROR\"\n}",
                             "name": "Server error"
                         }
                     ]

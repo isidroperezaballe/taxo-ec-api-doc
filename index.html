@@ -236,6 +236,9 @@
                                                                                 <li class="tocify-item level-2" data-unique="users-PATCHapi-v1-users--id--deactivate">
                                 <a href="#users-PATCHapi-v1-users--id--deactivate">Deactivate a user</a>
                             </li>
+                                                                                <li class="tocify-item level-2" data-unique="users-DELETEapi-v1-users--id-">
+                                <a href="#users-DELETEapi-v1-users--id-">Delete a user</a>
+                            </li>
                                                                         </ul>
                             </ul>
             </div>
@@ -1202,7 +1205,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=sales&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=non_deductible_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
@@ -1222,7 +1225,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "sales",
-    "filter[category_type]": "sales",
+    "filter[category_type]": "non_deductible_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1260,7 +1263,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'sales',
-            'filter[category_type]' =&gt; 'sales',
+            'filter[category_type]' =&gt; 'non_deductible_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1283,7 +1286,7 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'sales',
-  'filter[category_type]': 'sales',
+  'filter[category_type]': 'non_deductible_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1593,10 +1596,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="sales"
+               value="non_deductible_expenses"
                data-component="query">
     <br>
-<p>Example: <code>sales</code></p>
+<p>Example: <code>non_deductible_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -4790,7 +4793,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Venta al contado"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpJzhaYw" </code></pre></div>
+    --form "files[]=@/tmp/phpFJj7P9" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4860,7 +4863,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpJzhaYw', 'r')
+                'contents' =&gt; fopen('/tmp/phpFJj7P9', 'r')
             ],
         ],
     ]
@@ -4881,7 +4884,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Venta al contado'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpJzhaYw', 'rb')}
+  'files[]': open('/tmp/phpFJj7P9', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -12933,7 +12936,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Compra de suministros de oficina"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpknxKh6" </code></pre></div>
+    --form "files[]=@/tmp/phpsnmLJN" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -13003,7 +13006,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpknxKh6', 'r')
+                'contents' =&gt; fopen('/tmp/phpsnmLJN', 'r')
             ],
         ],
     ]
@@ -13024,7 +13027,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Compra de suministros de oficina'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpknxKh6', 'rb')}
+  'files[]': open('/tmp/phpsnmLJN', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -15403,6 +15406,253 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="id"                data-endpoint="PATCHapi-v1-users--id--deactivate"
+               value="42"
+               data-component="url">
+    <br>
+<p>The user's id. Example: <code>42</code></p>
+            </div>
+                    </form>
+
+                    <h2 id="users-DELETEapi-v1-users--id-">Delete a user</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Removes a user's access to a taxpayer entirely. As a safety check, this only
+succeeds if the user is currently deactivated for that taxpayer - deactivate
+the user first via PATCH /users/{id}/deactivate. Exactly one of <code>tax_number</code>
+or <code>tws_tax_payer_id</code> must identify the taxpayer, which must belong to the
+authenticated organization. This does not delete the user's account globally</p>
+<ul>
+<li>only its association with this specific taxpayer (a user may still be
+associated with other taxpayers).</li>
+</ul>
+
+<span id="example-requests-DELETEapi-v1-users--id-">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request DELETE \
+    "https://ec-demo.taxo.co/api/v1/users/42" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/users/42"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/users/42';
+$response = $client-&gt;delete(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/users/42'
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+}
+
+response = requests.request('DELETE', url, headers=headers)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-DELETEapi-v1-users--id-">
+            <blockquote>
+            <p>Example response (200, User removed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;User removed from taxpayer successfully&quot;,
+    &quot;data&quot;: {
+        &quot;id&quot;: 42,
+        &quot;tax_number&quot;: &quot;1726051285001&quot;
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found or access denied&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, User not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;User not found&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, User not associated with this taxpayer):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;User is not associated with this taxpayer&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (409, User is still active):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Cannot delete an active user. Deactivate it first.&quot;,
+    &quot;code&quot;: &quot;USER_IS_ACTIVE&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while deleting the user&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-DELETEapi-v1-users--id-" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-DELETEapi-v1-users--id-"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-DELETEapi-v1-users--id-"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-DELETEapi-v1-users--id-" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-DELETEapi-v1-users--id-">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-DELETEapi-v1-users--id-" data-method="DELETE"
+      data-path="api/v1/users/{id}"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('DELETEapi-v1-users--id-', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-DELETEapi-v1-users--id-"
+                    onclick="tryItOut('DELETEapi-v1-users--id-');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-DELETEapi-v1-users--id-"
+                    onclick="cancelTryOut('DELETEapi-v1-users--id-');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-DELETEapi-v1-users--id-"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-red">DELETE</small>
+            <b><code>api/v1/users/{id}</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="DELETEapi-v1-users--id-"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="DELETEapi-v1-users--id-"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-organization-id"                data-endpoint="DELETEapi-v1-users--id-"
+               value="{YOUR_ORGANIZATION_ID}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
+            </div>
+                        <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
+                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="id"                data-endpoint="DELETEapi-v1-users--id-"
                value="42"
                data-component="url">
     <br>

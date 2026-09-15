@@ -991,12 +991,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: sales
+          example: non_deductible_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: sales
+            example: non_deductible_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -12881,6 +12881,163 @@ paths:
                   message:
                     type: string
                     example: 'An error occurred while deactivating the user'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Users
+    parameters:
+      -
+        in: path
+        name: id
+        description: "The user's id."
+        example: 42
+        required: true
+        schema:
+          type: integer
+  '/api/v1/users/{id}':
+    delete:
+      summary: 'Delete a user'
+      operationId: deleteAUser
+      description: "Removes a user's access to a taxpayer entirely. As a safety check, this only\nsucceeds if the user is currently deactivated for that taxpayer - deactivate\nthe user first via PATCH /users/{id}/deactivate. Exactly one of `tax_number`\nor `tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization. This does not delete the user's account globally\n- only its association with this specific taxpayer (a user may still be\nassociated with other taxpayers)."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'User removed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'User removed from taxpayer successfully'
+                  data:
+                    id: 42
+                    tax_number: '1726051285001'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'User removed from taxpayer successfully'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 42
+                      tax_number:
+                        type: string
+                        example: '1726051285001'
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Taxpayer not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found or access denied'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found or access denied'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+                  -
+                    description: 'User not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'User not found'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'User not found'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+                  -
+                    description: 'User not associated with this taxpayer'
+                    type: object
+                    example:
+                      status: error
+                      message: 'User is not associated with this taxpayer'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'User is not associated with this taxpayer'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+        409:
+          description: 'User is still active'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Cannot delete an active user. Deactivate it first.'
+                  code: USER_IS_ACTIVE
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Cannot delete an active user. Deactivate it first.'
+                  code:
+                    type: string
+                    example: USER_IS_ACTIVE
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while deleting the user'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while deleting the user'
                   code:
                     type: string
                     example: SERVER_ERROR
