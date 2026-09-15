@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "63d99128-337f-4013-9bb6-b93c58aae307",
+        "_postman_id": "11a4a79c-aecc-4d62-ac43-fd568bd1a8a2",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -302,13 +302,13 @@
                                 },
                                 {
                                     "key": "filter.document_type",
-                                    "value": "purchases",
+                                    "value": "sales",
                                     "description": "",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "commercial_expenses",
+                                    "value": "sales",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=commercial_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=sales&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -381,6 +381,39 @@
                             "name": "Server error"
                         }
                     ]
+                },
+                {
+                    "name": "GET api\/v1\/taxpayers\/{taxNumber}\/purchases-categories",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxNumber\/purchases-categories",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/purchases-categories",
+                            "variable": [
+                                {
+                                    "id": "taxNumber",
+                                    "key": "taxNumber",
+                                    "value": "01jf8kyw5cyrr25bzgsgs8dwep",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
                 }
             ]
         },
@@ -1364,6 +1397,90 @@
                             "name": "Server Error"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "name": "Endpoints",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get withholding items summary grouped by withholding code for a specific tax type.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxPayerId\/sales\/withholdings\/summary\/:taxType",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxPayerId\/sales\/withholdings\/summary\/:taxType",
+                            "variable": [
+                                {
+                                    "id": "taxPayerId",
+                                    "key": "taxPayerId",
+                                    "value": "01jf8kyw5cyrr25bzgsgs8dwep",
+                                    "description": ""
+                                },
+                                {
+                                    "id": "taxType",
+                                    "key": "taxType",
+                                    "value": "consequatur",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get withholding items summary grouped by withholding code for a specific tax type.",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/taxpayers\/:taxPayerId\/purchases\/withholdings\/summary\/:taxType",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxPayerId\/purchases\/withholdings\/summary\/:taxType",
+                            "variable": [
+                                {
+                                    "id": "taxPayerId",
+                                    "key": "taxPayerId",
+                                    "value": "01jf8kyw5cyrr25bzgsgs8dwep",
+                                    "description": ""
+                                },
+                                {
+                                    "id": "taxType",
+                                    "key": "taxType",
+                                    "value": "consequatur",
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": ""
+                    },
+                    "response": []
                 }
             ]
         },
@@ -3066,6 +3183,347 @@
                             "code": 500,
                             "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving document status\"\n}",
                             "name": "Server Error"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Users",
+            "description": "\nAPI endpoints for managing the users of your organization's taxpayers.",
+            "item": [
+                {
+                    "name": "List users",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/users",
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1",
+                                    "description": "Page number for pagination. El campo value debe ser al menos 1.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "20",
+                                    "description": "Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "tax_number",
+                                    "value": "1726051285001",
+                                    "description": "Filter users associated with a specific taxpayer, by tax number (RUC\/c\u00e9dula). El campo value no debe ser mayor que 20 caracteres.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "tws_tax_payer_id",
+                                    "value": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab",
+                                    "description": "Filter users associated with a specific taxpayer, by TWS taxpayer id. El campo value no debe ser mayor que 64 caracteres.",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "role",
+                                    "value": "manager",
+                                    "description": "Filter by application role (manager, billing, accountant).",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "is_active",
+                                    "value": "",
+                                    "description": "Filter by active\/inactive status of the user-taxpayer relation.",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "jane%40example.com",
+                                    "description": "Search term to filter by user name or email. El campo value no debe ser mayor que 255 caracteres.",
+                                    "disabled": false
+                                }
+                            ],
+                            "raw": "{{baseUrl}}\/api\/v1\/users?page=1&per_page=20&tax_number=1726051285001&tws_tax_payer_id=0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab&role=manager&is_active=&search=jane%40example.com"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieves a paginated list of all users associated with any taxpayer belonging to\nthe authenticated organization. Use tax_number or tws_tax_payer_id to narrow the\nlist down to the users of a single taxpayer."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Users retrieved successfully\",\n  \"data\": {\n    \"users\": [\n      {\n        \"id\": 42,\n        \"name\": \"Jane Doe\",\n        \"email\": \"jane@example.com\",\n        \"roles\": [\"manager\"],\n        \"taxpayers\": [\n          {\n            \"tax_number\": \"1726051285001\",\n            \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\",\n            \"business_name\": \"EMPRESA DEMO S.A.\",\n            \"is_active\": true,\n            \"is_owner\": false,\n            \"activated_at\": \"2026-01-15 10:30:00\",\n            \"deactivated_at\": null\n          }\n        ],\n        \"created_at\": \"2026-01-15 10:30:00\",\n        \"updated_at\": \"2026-01-15 10:30:00\"\n      }\n    ]\n  },\n  \"meta\": {\n    \"pagination\": {\n      \"current_page\": 1,\n      \"per_page\": 20,\n      \"total\": 1,\n      \"total_pages\": 1,\n      \"from\": 1,\n      \"to\": 1\n    },\n    \"filters_applied\": { \"page\": 1, \"per_page\": 20 }\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Invalid API key\",\n  \"code\": \"UNAUTHORIZED\"\n}",
+                            "name": "Unauthorized"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while retrieving users\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create or associate a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Creates a new user account (and its Clerk account) with the given role, or, if the\nemail already belongs to an existing user, associates that existing user with the\ntaxpayer instead (its role is left untouched, matching the \"Manejo de usuarios\"\nweb behavior). Exactly one of `tax_number` or `tws_tax_payer_id` must identify the\ntarget taxpayer, which must belong to the authenticated organization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Existing user associated to taxpayer successfully\",\n  \"data\": { \"user\": { } }\n}",
+                            "name": "Existing user associated"
+                        },
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"User created and associated successfully\",\n  \"data\": {\n    \"user\": {\n      \"id\": 42,\n      \"name\": \"Jane Doe\",\n      \"email\": \"jane@example.com\",\n      \"roles\": [\"manager\"],\n      \"taxpayers\": [\n        {\n          \"tax_number\": \"1726051285001\",\n          \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\",\n          \"business_name\": \"EMPRESA DEMO S.A.\",\n          \"is_active\": true,\n          \"is_owner\": false,\n          \"activated_at\": \"2026-01-15 10:30:00\",\n          \"deactivated_at\": null\n        }\n      ],\n      \"created_at\": \"2026-01-15 10:30:00\",\n      \"updated_at\": \"2026-01-15 10:30:00\"\n    }\n  }\n}",
+                            "name": "New user created and associated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"This email belongs to an internal accountant and cannot be associated as a taxpayer user\",\n  \"code\": \"USER_IS_ACCOUNTANT\"\n}",
+                            "name": "Email belongs to an internal accountant"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"This user is already associated with the taxpayer\",\n  \"code\": \"ALREADY_ASSOCIATED\"\n}",
+                            "name": "User already associated"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": { \"tax_number\": [\"Either tax_number or tws_tax_payer_id is required\"] }\n}",
+                            "name": "Validation error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while creating the user\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update a user's role",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/users\/:id\/role",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/users\/:id\/role",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "42",
+                                    "description": "The user's id."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Updates the application role (manager, billing, or accountant) of a user for a\ngiven taxpayer. Exactly one of `tax_number` or `tws_tax_payer_id` must identify\nthe taxpayer, which must belong to the authenticated organization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"User role updated successfully\",\n  \"data\": { \"user\": { \"id\": 42, \"roles\": [\"accountant\"] } }\n}",
+                            "name": "Role updated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"User not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": { \"role\": [\"Role must be one of: manager, billing, accountant\"] }\n}",
+                            "name": "Validation error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while updating the user role\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Activate a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/users\/:id\/activate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/users\/:id\/activate",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "42",
+                                    "description": "The user's id."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Marks a user as active for the given taxpayer. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"User activated successfully\",\n  \"data\": { \"user\": { \"id\": 42 } }\n}",
+                            "name": "User activated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"User not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while activating the user\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Deactivate a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/users\/:id\/deactivate",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/users\/:id\/deactivate",
+                            "variable": [
+                                {
+                                    "id": "id",
+                                    "key": "id",
+                                    "value": "42",
+                                    "description": "The user's id."
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "x-organization-id",
+                                "value": "{YOUR_ORGANIZATION_ID}"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Marks a user as inactive for the given taxpayer. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"User deactivated successfully\",\n  \"data\": { \"user\": { \"id\": 42 } }\n}",
+                            "name": "User deactivated"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"User not found\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "User not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while deactivating the user\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
                         }
                     ]
                 }

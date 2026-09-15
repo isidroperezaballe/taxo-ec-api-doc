@@ -14,11 +14,17 @@ tags:
     name: 'Emitted Documents'
     description: "\nAPI endpoints for managing emitted documents (sales documents to customers).\n\n## Document Types\n\nEmitted documents include:\n- **Invoices (Facturas de Venta)**: Sales invoices issued to customers\n- **Credit Notes**: Applied to invoices\n- **Withholdings**: Tax withholding documents received from customers\n\n## Filtering & Categorization\n\n### Date Filtering\n- **Default**: Current month if no dates provided\n- **start_date**: Filter from this date (YYYY-MM-DD)\n- **end_date**: Filter until this date (YYYY-MM-DD)\n\n### Category Filtering\n\nThe system supports both document-level and item-level categorization.\n\n**Category filters:**\n\n- `category_id[]`: Filter by specific category ID(s) - array parameter (can pass multiple)\n  \n  **Searches in:** `invoice_items.tax_payer_category_id` (line item categories)\n  \n  **Note:** To obtain the available category IDs for a taxpayer, use the categories endpoint:\n  `GET /api/v1/taxpayers/{taxNumber}/categories?type=sales`\n  \n  Each taxpayer has their own custom categories for sales. You must retrieve the category IDs \n  from this endpoint before filtering by `category_id[]`.\n\n### Regime Filtering\n- `regime`: Filter by tax regime - single value parameter\n  - `general`: General tax regime\n  - `rimpe_entrepreneur`: RIMPE Entrepreneur regime\n  - `rimpe_popular_business`: RIMPE Popular Business regime\n\n### Deductibility Filtering\n- `deductible_type`: Filter by tax deductibility - single value parameter\n  - `deductible`: Tax-deductible (Con derecho a crédito tributario)\n  - `non_deductible`: Non-deductible (Sin derecho a crédito tributario)\n\n### Status Filtering\n- `status`: Filter by document status - single value parameter\n  - `AUTORIZADO`: Authorized/valid documents\n  - `ANULADO`: Voided documents\n\n### Origin Filtering\n- `origin`: Filter by document origin/source system - single value parameter\n  - `datil`: Documents issued through Datil integration\n  - `tws`: Documents processed by Taxo Web Services\n  - `xml-import`: Documents manually imported from XML files\n  - `physical-upload`: Physical documents uploaded/entered manually by user\n\n**Note:** Most filters accept a single value.\nOnly `category_id` accepts multiple values using array notation `category_id[]=123&category_id[]=456`.\n\n## Pagination\n\n- `page`: Page number (default: 1)\n- `per_page`: Items per page, 1-100 (default: 20)"
   -
+    name: Endpoints
+    description: ''
+  -
     name: 'IVA Reports'
     description: "\nAPI endpoints for managing IVA (Value Added Tax) reports.\n\n## Report Lifecycle & State Machine\n\nEach IVA report follows a state machine with controlled transitions. Understanding the states and allowed transitions is critical for proper API usage.\n\n### Report States\n\n| State | Code | Description | Can Edit? |\n|-------|------|-------------|-----------|\n| Draft | `draft` | Initial state, automatically created | ✅ Yes |\n| Edited | `edited` | Has manual modifications | ✅ Yes |\n| Saved | `saved` | Ready for review/approval | ❌ No |\n| Sent | `sent` | Sent to taxpayer for approval | ❌ No |\n| Approved | `approved` | Approved, ready for SRI submission | ❌ No |\n| Rejected | `rejected` | Rejected, requires corrections | ❌ No |\n| SRI Sended | `sri_sended` | Being sent to SRI | ❌ No |\n| SRI Completed | `sri_sended_completed` | SRI processing completed | ❌ No |\n| Declared | `declared` | Successfully declared in SRI | ❌ No |\n| Error | `error` | Error during SRI submission | ❌ No |\n\n### State Transitions Matrix\n\n| From State | Allowed Transitions | Endpoints |\n|------------|---------------------|-----------|\n| `draft` | → `edited`, `saved` | `/save` |\n| `edited` | → `draft`, `saved` | `/recalculate`, `/save` |\n| `saved` | → `draft`, `sent`, `approved`, `rejected`, `sri_sended` | `/recalculate`, `/send`, `/approve`, `/reject`, `/send-sri-draft` |\n| `sent` | → `draft`, `approved`, `rejected` | `/recalculate`, `/approve`, `/reject` |\n| `approved` | → `draft`, `sri_sended`, `declared` | `/recalculate`, `/send-sri-draft`, `/mark-declared` |\n| `rejected` | → `draft` | `/recalculate` |\n| `sri_sended` | → `sri_sended_completed`, `error` | (automatic) |\n| `sri_sended_completed` | → `draft`, `approved`, `rejected`, `declared` | `/recalculate`, `/approve`, `/reject`, `/mark-declared` |\n| `error` | → `draft`, `sri_sended` | `/recalculate`, `/send-sri-draft` |\n| `declared` | → `draft` | `/recalculate` |\n\n### Common Workflows\n\n#### Workflow 1: Direct Approval (no taxpayer review)\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. GET    /iva-reports/{period}           → Review calculated values\n3. PATCH  /iva-reports/save               → Lock for review (saved)\n4. PATCH  /iva-reports/approve            → Approve report (approved)\n5. POST   /iva-reports/send-sri-draft     → Submit to SRI (sri_sended → sri_sended_completed)\n6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)\n```\n\n#### Workflow 2: With Taxpayer Approval\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. PATCH  /iva-reports/save               → Lock for review (saved)\n3. POST   /iva-reports/send               → Email to taxpayer (sent)\n4. [Taxpayer reviews and approves via link]\n5. POST   /iva-reports/send-sri-draft     → Submit to SRI (approved → sri_sended)\n6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)\n```\n\n#### Workflow 3: SRI Draft First, Then Approval\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. PATCH  /iva-reports/save               → Lock for review (saved)\n3. POST   /iva-reports/send-sri-draft     → Submit draft to SRI (sri_sended → sri_sended_completed)\n4. POST   /iva-reports/send               → Email to taxpayer (sent)\n5. [Taxpayer approves via link]\n6. PATCH  /iva-reports/mark-declared      → Mark as declared (declared)\n```\n\n#### Workflow 4: Rejection & Correction\n```\n1. POST   /iva-reports                    → Creates report (draft)\n2. PATCH  /iva-reports/save               → Lock for review (saved)\n3. POST   /iva-reports/send               → Email to taxpayer (sent)\n4. PATCH  /iva-reports/reject             → Reject with comments (rejected)\n5. POST   /iva-reports/recalculate        → Reset to draft (draft)\n6. [Add missing documents, correct errors]\n7. PATCH  /iva-reports/save               → Save again (saved)\n8. PATCH  /iva-reports/approve            → Approve (approved)\n```\n\n### Endpoints That Don't Require Transitions\n\nThese endpoints can be called at any time regardless of state:\n\n- **`GET /iva-reports`** - List all reports\n- **`GET /iva-reports/{period}`** - View specific report details\n- **`POST /iva-reports`** - Create new report (always starts in `draft`)\n- **`POST /iva-reports/recalculate`** - Reset report to `draft` (allowed from most states)\n\n### Important Notes\n\n1. **Report Identification**: Reports are uniquely identified by `taxpayer_id`, `period`, and `team_id`\n2. **Period Format**: Use `YYYY-MM` format (e.g., `2024-03`). The system auto-calculates the exact date based on taxpayer's periodicity\n3. **Automatic Calculations**: Reports are automatically calculated from issued/received documents when created\n4. **State Validation**: All state-changing endpoints validate transitions. Invalid transitions return `400 INVALID_TRANSITION`\n5. **Idempotency**: Some endpoints are idempotent (e.g., `/save` from `saved` state, `/send` from `sent` state)\n\n### Error Handling\n\n- **`400 INVALID_TRANSITION`**: Attempted invalid state transition\n- **`404 NOT_FOUND`**: Report or taxpayer not found\n- **`422 VALIDATION_ERROR`**: Invalid input parameters\n- **`503 EMAIL_SEND_FAILED`**: Email service unavailable (only `/send` endpoint)"
   -
     name: 'Received Documents'
     description: "\nAPI endpoints for managing received documents (purchase documents from suppliers).\n\n## Document Types\n\nReceived documents include:\n- **Invoices (Facturas de Compra)**: Standard purchase invoices from suppliers\n- **Credit Notes**: Applied to invoices\n- **Withholdings**: Tax withholding documents\n\n## Filtering & Categorization\n\n### Date Filtering\n- **Default**: Current month if no dates provided\n- **start_date**: Filter from this date (YYYY-MM-DD)\n- **end_date**: Filter until this date (YYYY-MM-DD)\n\n### Category Filtering\n\nThe system supports two types of categorization:\n\n1. **Document-level categorization (mono-category)**: All items in the document share the same category\n2. **Item-level categorization (multi-category)**: Each line item has its own category\n\n**How Category Filters Work:**\n\nBoth category filters search at the **item level** (bill_items table). If **any item** in a document \nmatches the filter criteria, the **entire document** is included in the results.\n\n**Example:**\n```\nDocument #001:\n  - Item 1: Category \"Office Supplies\" (id: 123)\n  - Item 2: Category \"Services\" (id: 456)\n  - Item 3: Category \"Office Supplies\" (id: 123)\n\nFilter: category_id[]=123\nResult: ✓ Document #001 is included (has items with category 123)\n```\n\n**Category filters:**\n\n- `category_id[]`: Filter by specific category ID(s) - array parameter (can pass multiple)\n  \n  **Searches in:** `bill_items.tax_payer_category_id` (line item categories)\n  \n  **Note:** To obtain the available category IDs for a taxpayer, use the categories endpoint:\n  `GET /api/v1/taxpayers/{taxNumber}/categories`\n  \n  Each taxpayer has their own custom categories. You must retrieve the category IDs \n  from this endpoint before filtering by `category_id[]`.\n  \n- `category_type`: Filter by expense type - single value parameter\n  \n  **Searches in:** `bills.category_types` (JSON field that summarizes item categories)\n  \n  **Available values:**\n  - `commercial_expenses`: Business-related expenses (Actividad Comercial)\n  - `personal_expenses`: Personal expenses (Gasto Personal)\n  - `non_deductible_expenses`: Non-deductible expenses (No Deducible)\n\n### Deductibility Filtering\n- `deductible_type`: Filter by tax deductibility - single value parameter\n  - `deductible`: Tax-deductible expenses (Con derecho a crédito tributario)\n  - `non_deductible`: Non-deductible expenses (Sin derecho a crédito tributario)\n\n### Status Filtering\n- `status`: Filter by document status - single value parameter\n  - `AUTORIZADO`: Authorized/valid documents\n  - `ANULADO`: Voided documents\n\n### Search & Other Filters\n- `search`: Search in provider name, RUC, email, phone, document number, or access key\n- `uncategorized`: Filter uncategorized documents (boolean: true/false)\n- `origin`: Filter by document origin/source system - single value parameter\n  - `tws`: Documents automatically processed by Taxo Web Services from SRI\n  - `xml-import`: Documents manually imported from XML files\n  - `physical-upload`: Physical documents uploaded/entered manually by user\n\n**Note:** Most filters accept a single value.\nOnly `category_id` accepts multiple values using array notation `category_id[]=123&category_id[]=456`.\n\n## Sorting\n\nDefault sort: `-date_only,-bill_number` (newest first, then by number descending)\n\nAvailable sort fields (prefix with `-` for descending):\n- `date_only`: Document date\n- `bill_number`: Document number\n- `contact_name`: Provider name\n- `sub_total`: Subtotal amount\n- `total`: Total amount\n\n**Example:** `sort=-total,date_only` (highest total first, then oldest date)\n\n\n## Important Notes\n\n1. **Consistent Results**: This API uses the same services and repositories as the UI, ensuring identical results\n2. **Performance**: The endpoint uses optimized queries with lazy loading for related data\n3. **Pagination**: Results are paginated (default 20 items per page, max 100)\n4. **Timezone**: All dates are in UTC. Document dates (`billed_at`) show local Ecuador time"
+  -
+    name: Users
+    description: "\nAPI endpoints for managing the users of your organization's taxpayers."
 components:
   securitySchemes:
     default:
@@ -971,12 +977,12 @@ paths:
           in: query
           name: filter.document_type
           description: ''
-          example: purchases
+          example: sales
           required: false
           schema:
             type: string
             description: ''
-            example: purchases
+            example: sales
             enum:
               - purchases
               - sales
@@ -985,12 +991,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: commercial_expenses
+          example: sales
           required: false
           schema:
             type: string
             description: ''
-            example: commercial_expenses
+            example: sales
             enum:
               - personal_expenses
               - commercial_expenses
@@ -1252,6 +1258,38 @@ paths:
         name: taxNumber
         description: "The taxpayer's RUC number (13 digits)."
         example: '1726051285001'
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxNumber}/purchases-categories':
+    get:
+      summary: ''
+      operationId: getApiV1TaxpayersTaxNumberPurchasesCategories
+      description: ''
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses: {  }
+      tags:
+        - Taxpayers
+    parameters:
+      -
+        in: path
+        name: taxNumber
+        description: ''
+        example: 01jf8kyw5cyrr25bzgsgs8dwep
         required: true
         schema:
           type: string
@@ -5668,6 +5706,86 @@ paths:
         name: documentUlid
         description: 'The unique ULID identifier of the document. Can be from invoices, credit notes, withholdings, or settlements.'
         example: 01HQXZ8P9G2K4MNBVCXWERTYU1
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxPayerId}/sales/withholdings/summary/{taxType}':
+    get:
+      summary: 'Get withholding items summary grouped by withholding code for a specific tax type.'
+      operationId: getWithholdingItemsSummaryGroupedByWithholdingCodeForASpecificTaxType
+      description: ''
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: taxPayerId
+        description: ''
+        example: 01jf8kyw5cyrr25bzgsgs8dwep
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: taxType
+        description: ''
+        example: consequatur
+        required: true
+        schema:
+          type: string
+  '/api/v1/taxpayers/{taxPayerId}/purchases/withholdings/summary/{taxType}':
+    get:
+      summary: 'Get withholding items summary grouped by withholding code for a specific tax type.'
+      operationId: getWithholdingItemsSummaryGroupedByWithholdingCodeForASpecificTaxType
+      description: ''
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses: {  }
+      tags:
+        - Endpoints
+    parameters:
+      -
+        in: path
+        name: taxPayerId
+        description: ''
+        example: 01jf8kyw5cyrr25bzgsgs8dwep
+        required: true
+        schema:
+          type: string
+      -
+        in: path
+        name: taxType
+        description: ''
+        example: consequatur
         required: true
         schema:
           type: string
@@ -11818,3 +11936,962 @@ paths:
         required: true
         schema:
           type: string
+  /api/v1/users:
+    get:
+      summary: 'List users'
+      operationId: listUsers
+      description: "Retrieves a paginated list of all users associated with any taxpayer belonging to\nthe authenticated organization. Use tax_number or tws_tax_payer_id to narrow the\nlist down to the users of a single taxpayer."
+      parameters:
+        -
+          in: query
+          name: page
+          description: 'Page number for pagination. El campo value debe ser al menos 1.'
+          example: 1
+          required: false
+          schema:
+            type: integer
+            description: 'Page number for pagination. El campo value debe ser al menos 1.'
+            example: 1
+            nullable: true
+        -
+          in: query
+          name: per_page
+          description: 'Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+          example: 20
+          required: false
+          schema:
+            type: integer
+            description: 'Number of items per page (max 100). El campo value debe ser al menos 1. El campo value no debe ser mayor que 100.'
+            example: 20
+            nullable: true
+        -
+          in: query
+          name: tax_number
+          description: 'Filter users associated with a specific taxpayer, by tax number (RUC/cédula). El campo value no debe ser mayor que 20 caracteres.'
+          example: '1726051285001'
+          required: false
+          schema:
+            type: string
+            description: 'Filter users associated with a specific taxpayer, by tax number (RUC/cédula). El campo value no debe ser mayor que 20 caracteres.'
+            example: '1726051285001'
+            nullable: true
+        -
+          in: query
+          name: tws_tax_payer_id
+          description: 'Filter users associated with a specific taxpayer, by TWS taxpayer id. El campo value no debe ser mayor que 64 caracteres.'
+          example: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+          required: false
+          schema:
+            type: string
+            description: 'Filter users associated with a specific taxpayer, by TWS taxpayer id. El campo value no debe ser mayor que 64 caracteres.'
+            example: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+            nullable: true
+        -
+          in: query
+          name: role
+          description: 'Filter by application role (manager, billing, accountant).'
+          example: manager
+          required: false
+          schema:
+            type: string
+            description: 'Filter by application role (manager, billing, accountant).'
+            example: manager
+            enum:
+              - manager
+              - billing
+              - accountant
+            nullable: true
+        -
+          in: query
+          name: is_active
+          description: 'Filter by active/inactive status of the user-taxpayer relation.'
+          example: false
+          required: false
+          schema:
+            type: boolean
+            description: 'Filter by active/inactive status of the user-taxpayer relation.'
+            example: false
+            nullable: true
+        -
+          in: query
+          name: search
+          description: 'Search term to filter by user name or email. El campo value no debe ser mayor que 255 caracteres.'
+          example: jane@example.com
+          required: false
+          schema:
+            type: string
+            description: 'Search term to filter by user name or email. El campo value no debe ser mayor que 255 caracteres.'
+            example: jane@example.com
+            nullable: true
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Users retrieved successfully'
+                  data:
+                    users:
+                      -
+                        id: 42
+                        name: 'Jane Doe'
+                        email: jane@example.com
+                        roles:
+                          - manager
+                        taxpayers:
+                          -
+                            tax_number: '1726051285001'
+                            tws_tax_payer_id: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                            business_name: 'EMPRESA DEMO S.A.'
+                            is_active: true
+                            is_owner: false
+                            activated_at: '2026-01-15 10:30:00'
+                            deactivated_at: null
+                        created_at: '2026-01-15 10:30:00'
+                        updated_at: '2026-01-15 10:30:00'
+                  meta:
+                    pagination:
+                      current_page: 1
+                      per_page: 20
+                      total: 1
+                      total_pages: 1
+                      from: 1
+                      to: 1
+                    filters_applied:
+                      page: 1
+                      per_page: 20
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Users retrieved successfully'
+                  data:
+                    type: object
+                    properties:
+                      users:
+                        type: array
+                        example:
+                          -
+                            id: 42
+                            name: 'Jane Doe'
+                            email: jane@example.com
+                            roles:
+                              - manager
+                            taxpayers:
+                              -
+                                tax_number: '1726051285001'
+                                tws_tax_payer_id: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                                business_name: 'EMPRESA DEMO S.A.'
+                                is_active: true
+                                is_owner: false
+                                activated_at: '2026-01-15 10:30:00'
+                                deactivated_at: null
+                            created_at: '2026-01-15 10:30:00'
+                            updated_at: '2026-01-15 10:30:00'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 42
+                            name:
+                              type: string
+                              example: 'Jane Doe'
+                            email:
+                              type: string
+                              example: jane@example.com
+                            roles:
+                              type: array
+                              example:
+                                - manager
+                              items:
+                                type: string
+                            taxpayers:
+                              type: array
+                              example:
+                                -
+                                  tax_number: '1726051285001'
+                                  tws_tax_payer_id: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                                  business_name: 'EMPRESA DEMO S.A.'
+                                  is_active: true
+                                  is_owner: false
+                                  activated_at: '2026-01-15 10:30:00'
+                                  deactivated_at: null
+                              items:
+                                type: object
+                                properties:
+                                  tax_number:
+                                    type: string
+                                    example: '1726051285001'
+                                  tws_tax_payer_id:
+                                    type: string
+                                    example: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                                  business_name:
+                                    type: string
+                                    example: 'EMPRESA DEMO S.A.'
+                                  is_active:
+                                    type: boolean
+                                    example: true
+                                  is_owner:
+                                    type: boolean
+                                    example: false
+                                  activated_at:
+                                    type: string
+                                    example: '2026-01-15 10:30:00'
+                                  deactivated_at:
+                                    type: string
+                                    example: null
+                            created_at:
+                              type: string
+                              example: '2026-01-15 10:30:00'
+                            updated_at:
+                              type: string
+                              example: '2026-01-15 10:30:00'
+                  meta:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+                        properties:
+                          current_page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 20
+                          total:
+                            type: integer
+                            example: 1
+                          total_pages:
+                            type: integer
+                            example: 1
+                          from:
+                            type: integer
+                            example: 1
+                          to:
+                            type: integer
+                            example: 1
+                      filters_applied:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            example: 1
+                          per_page:
+                            type: integer
+                            example: 20
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Invalid API key'
+                  code: UNAUTHORIZED
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Invalid API key'
+                  code:
+                    type: string
+                    example: UNAUTHORIZED
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while retrieving users'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while retrieving users'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Users
+    post:
+      summary: 'Create or associate a user'
+      operationId: createOrAssociateAUser
+      description: "Creates a new user account (and its Clerk account) with the given role, or, if the\nemail already belongs to an existing user, associates that existing user with the\ntaxpayer instead (its role is left untouched, matching the \"Manejo de usuarios\"\nweb behavior). Exactly one of `tax_number` or `tws_tax_payer_id` must identify the\ntarget taxpayer, which must belong to the authenticated organization."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Existing user associated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Existing user associated to taxpayer successfully'
+                  data:
+                    user: {  }
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Existing user associated to taxpayer successfully'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties: {  }
+        201:
+          description: 'New user created and associated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'User created and associated successfully'
+                  data:
+                    user:
+                      id: 42
+                      name: 'Jane Doe'
+                      email: jane@example.com
+                      roles:
+                        - manager
+                      taxpayers:
+                        -
+                          tax_number: '1726051285001'
+                          tws_tax_payer_id: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                          business_name: 'EMPRESA DEMO S.A.'
+                          is_active: true
+                          is_owner: false
+                          activated_at: '2026-01-15 10:30:00'
+                          deactivated_at: null
+                      created_at: '2026-01-15 10:30:00'
+                      updated_at: '2026-01-15 10:30:00'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'User created and associated successfully'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 42
+                          name:
+                            type: string
+                            example: 'Jane Doe'
+                          email:
+                            type: string
+                            example: jane@example.com
+                          roles:
+                            type: array
+                            example:
+                              - manager
+                            items:
+                              type: string
+                          taxpayers:
+                            type: array
+                            example:
+                              -
+                                tax_number: '1726051285001'
+                                tws_tax_payer_id: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                                business_name: 'EMPRESA DEMO S.A.'
+                                is_active: true
+                                is_owner: false
+                                activated_at: '2026-01-15 10:30:00'
+                                deactivated_at: null
+                            items:
+                              type: object
+                              properties:
+                                tax_number:
+                                  type: string
+                                  example: '1726051285001'
+                                tws_tax_payer_id:
+                                  type: string
+                                  example: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                                business_name:
+                                  type: string
+                                  example: 'EMPRESA DEMO S.A.'
+                                is_active:
+                                  type: boolean
+                                  example: true
+                                is_owner:
+                                  type: boolean
+                                  example: false
+                                activated_at:
+                                  type: string
+                                  example: '2026-01-15 10:30:00'
+                                deactivated_at:
+                                  type: string
+                                  example: null
+                          created_at:
+                            type: string
+                            example: '2026-01-15 10:30:00'
+                          updated_at:
+                            type: string
+                            example: '2026-01-15 10:30:00'
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found or access denied'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found or access denied'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        409:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Email belongs to an internal accountant'
+                    type: object
+                    example:
+                      status: error
+                      message: 'This email belongs to an internal accountant and cannot be associated as a taxpayer user'
+                      code: USER_IS_ACCOUNTANT
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'This email belongs to an internal accountant and cannot be associated as a taxpayer user'
+                      code:
+                        type: string
+                        example: USER_IS_ACCOUNTANT
+                  -
+                    description: 'User already associated'
+                    type: object
+                    example:
+                      status: error
+                      message: 'This user is already associated with the taxpayer'
+                      code: ALREADY_ASSOCIATED
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'This user is already associated with the taxpayer'
+                      code:
+                        type: string
+                        example: ALREADY_ASSOCIATED
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    tax_number:
+                      - 'Either tax_number or tws_tax_payer_id is required'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      tax_number:
+                        type: array
+                        example:
+                          - 'Either tax_number or tws_tax_payer_id is required'
+                        items:
+                          type: string
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while creating the user'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while creating the user'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Users
+  '/api/v1/users/{id}/role':
+    patch:
+      summary: "Update a user's role"
+      operationId: updateAUsersRole
+      description: "Updates the application role (manager, billing, or accountant) of a user for a\ngiven taxpayer. Exactly one of `tax_number` or `tws_tax_payer_id` must identify\nthe taxpayer, which must belong to the authenticated organization."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Role updated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'User role updated successfully'
+                  data:
+                    user:
+                      id: 42
+                      roles:
+                        - accountant
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'User role updated successfully'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 42
+                          roles:
+                            type: array
+                            example:
+                              - accountant
+                            items:
+                              type: string
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Taxpayer not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found or access denied'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found or access denied'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+                  -
+                    description: 'User not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'User not found'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'User not found'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    role:
+                      - 'Role must be one of: manager, billing, accountant'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      role:
+                        type: array
+                        example:
+                          - 'Role must be one of: manager, billing, accountant'
+                        items:
+                          type: string
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while updating the user role'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while updating the user role'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Users
+    parameters:
+      -
+        in: path
+        name: id
+        description: "The user's id."
+        example: 42
+        required: true
+        schema:
+          type: integer
+  '/api/v1/users/{id}/activate':
+    patch:
+      summary: 'Activate a user'
+      operationId: activateAUser
+      description: "Marks a user as active for the given taxpayer. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'User activated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'User activated successfully'
+                  data:
+                    user:
+                      id: 42
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'User activated successfully'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 42
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Taxpayer not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found or access denied'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found or access denied'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+                  -
+                    description: 'User not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'User not found'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'User not found'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while activating the user'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while activating the user'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Users
+    parameters:
+      -
+        in: path
+        name: id
+        description: "The user's id."
+        example: 42
+        required: true
+        schema:
+          type: integer
+  '/api/v1/users/{id}/deactivate':
+    patch:
+      summary: 'Deactivate a user'
+      operationId: deactivateAUser
+      description: "Marks a user as inactive for the given taxpayer. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the taxpayer, which must belong to the\nauthenticated organization."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+        -
+          in: header
+          name: x-organization-id
+          description: ''
+          example: '{YOUR_ORGANIZATION_ID}'
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'User deactivated'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'User deactivated successfully'
+                  data:
+                    user:
+                      id: 42
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'User deactivated successfully'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 42
+        404:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Taxpayer not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'Taxpayer not found or access denied'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'Taxpayer not found or access denied'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+                  -
+                    description: 'User not found'
+                    type: object
+                    example:
+                      status: error
+                      message: 'User not found'
+                      code: NOT_FOUND
+                    properties:
+                      status:
+                        type: string
+                        example: error
+                      message:
+                        type: string
+                        example: 'User not found'
+                      code:
+                        type: string
+                        example: NOT_FOUND
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while deactivating the user'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while deactivating the user'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Users
+    parameters:
+      -
+        in: path
+        name: id
+        description: "The user's id."
+        example: 42
+        required: true
+        schema:
+          type: integer
