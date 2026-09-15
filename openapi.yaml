@@ -977,12 +977,12 @@ paths:
           in: query
           name: filter.document_type
           description: ''
-          example: sales
+          example: purchases
           required: false
           schema:
             type: string
             description: ''
-            example: sales
+            example: purchases
             enum:
               - purchases
               - sales
@@ -991,12 +991,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: non_deductible_expenses
+          example: personal_expenses
           required: false
           schema:
             type: string
             description: ''
-            example: non_deductible_expenses
+            example: personal_expenses
             enum:
               - personal_expenses
               - commercial_expenses
@@ -12030,13 +12030,6 @@ paths:
           example: YOUR_API_KEY_HERE
           schema:
             type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
-          schema:
-            type: string
       responses:
         200:
           description: Success
@@ -12251,13 +12244,6 @@ paths:
           name: x-api-key
           description: ''
           example: YOUR_API_KEY_HERE
-          schema:
-            type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
           schema:
             type: string
       responses:
@@ -12508,13 +12494,6 @@ paths:
           example: YOUR_API_KEY_HERE
           schema:
             type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
-          schema:
-            type: string
       responses:
         200:
           description: 'Role updated'
@@ -12668,13 +12647,6 @@ paths:
           example: YOUR_API_KEY_HERE
           schema:
             type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
-          schema:
-            type: string
       responses:
         200:
           description: 'User activated'
@@ -12788,13 +12760,6 @@ paths:
           example: YOUR_API_KEY_HERE
           schema:
             type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
-          schema:
-            type: string
       responses:
         200:
           description: 'User deactivated'
@@ -12906,13 +12871,6 @@ paths:
           name: x-api-key
           description: ''
           example: YOUR_API_KEY_HERE
-          schema:
-            type: string
-        -
-          in: header
-          name: x-organization-id
-          description: ''
-          example: '{YOUR_ORGANIZATION_ID}'
           schema:
             type: string
       responses:

@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "697c8d8d-f277-465b-8093-56c4ff599300",
+        "_postman_id": "feed20ad-5e17-4820-af9c-397a1a39a387",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -302,13 +302,13 @@
                                 },
                                 {
                                     "key": "filter.document_type",
-                                    "value": "sales",
+                                    "value": "purchases",
                                     "description": "",
                                     "disabled": false
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "non_deductible_expenses",
+                                    "value": "personal_expenses",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=sales&filter.category_type=non_deductible_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=personal_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -3249,10 +3249,6 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
                         "body": null,
@@ -3293,10 +3289,6 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
                         "body": null,
@@ -3369,10 +3361,6 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
                         "body": null,
@@ -3433,10 +3421,6 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
                         "body": null,
@@ -3491,10 +3475,6 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
                         "body": null,
@@ -3549,10 +3529,6 @@
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
-                            },
-                            {
-                                "key": "x-organization-id",
-                                "value": "{YOUR_ORGANIZATION_ID}"
                             }
                         ],
                         "body": null,

@@ -1205,7 +1205,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=sales&amp;filter[category_type]=non_deductible_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
@@ -1224,8 +1224,8 @@ const params = {
     "enabled": "1",
     "editable": "1",
     "search": "Alimentación",
-    "filter[document_type]": "sales",
-    "filter[category_type]": "non_deductible_expenses",
+    "filter[document_type]": "purchases",
+    "filter[category_type]": "personal_expenses",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1262,8 +1262,8 @@ $response = $client-&gt;get(
             'enabled' =&gt; '1',
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
-            'filter[document_type]' =&gt; 'sales',
-            'filter[category_type]' =&gt; 'non_deductible_expenses',
+            'filter[document_type]' =&gt; 'purchases',
+            'filter[category_type]' =&gt; 'personal_expenses',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1285,8 +1285,8 @@ params = {
   'enabled': '1',
   'editable': '1',
   'search': 'Alimentación',
-  'filter[document_type]': 'sales',
-  'filter[category_type]': 'non_deductible_expenses',
+  'filter[document_type]': 'purchases',
+  'filter[category_type]': 'personal_expenses',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1582,10 +1582,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.document_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="sales"
+               value="purchases"
                data-component="query">
     <br>
-<p>Example: <code>sales</code></p>
+<p>Example: <code>purchases</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>purchases</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1596,10 +1596,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="non_deductible_expenses"
+               value="personal_expenses"
                data-component="query">
     <br>
-<p>Example: <code>non_deductible_expenses</code></p>
+<p>Example: <code>personal_expenses</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -4793,7 +4793,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Venta al contado"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpFJj7P9" </code></pre></div>
+    --form "files[]=@/tmp/phpn9Ukjn" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4863,7 +4863,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpFJj7P9', 'r')
+                'contents' =&gt; fopen('/tmp/phpn9Ukjn', 'r')
             ],
         ],
     ]
@@ -4884,7 +4884,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Venta al contado'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpFJj7P9', 'rb')}
+  'files[]': open('/tmp/phpn9Ukjn', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -12936,7 +12936,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Compra de suministros de oficina"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpsnmLJN" </code></pre></div>
+    --form "files[]=@/tmp/phpXCYzkp" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -13006,7 +13006,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpsnmLJN', 'r')
+                'contents' =&gt; fopen('/tmp/phpXCYzkp', 'r')
             ],
         ],
     ]
@@ -13027,7 +13027,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Compra de suministros de oficina'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpsnmLJN', 'rb')}
+  'files[]': open('/tmp/phpXCYzkp', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -14128,8 +14128,7 @@ list down to the users of a single taxpayer.</p>
     <pre><code class="language-bash">curl --request GET \
     --get "https://ec-demo.taxo.co/api/v1/users?page=1&amp;per_page=20&amp;tax_number=1726051285001&amp;tws_tax_payer_id=0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab&amp;role=manager&amp;is_active=&amp;search=jane%40example.com" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -14152,7 +14151,6 @@ Object.keys(params)
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
-    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
 fetch(url, {
@@ -14170,7 +14168,6 @@ $response = $client-&gt;get(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
-            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
         'query' =&gt; [
             'page' =&gt; '1',
@@ -14203,8 +14200,7 @@ params = {
 }
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'Accept': 'application/json'
 }
 
 response = requests.request('GET', url, headers=headers, params=params)
@@ -14356,18 +14352,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="x-organization-id"                data-endpoint="GETapi-v1-users"
-               value="{YOUR_ORGANIZATION_ID}"
-               data-component="header">
-    <br>
-<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
-            </div>
                             <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
                                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
@@ -14487,8 +14471,7 @@ target taxpayer, which must belong to the authenticated organization.</p>
     <pre><code class="language-bash">curl --request POST \
     "https://ec-demo.taxo.co/api/v1/users" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -14499,7 +14482,6 @@ target taxpayer, which must belong to the authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
-    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
 fetch(url, {
@@ -14517,7 +14499,6 @@ $response = $client-&gt;post(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
-            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
     ]
 );
@@ -14532,8 +14513,7 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/users'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'Accept': 'application/json'
 }
 
 response = requests.request('POST', url, headers=headers)
@@ -14720,18 +14700,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="x-organization-id"                data-endpoint="POSTapi-v1-users"
-               value="{YOUR_ORGANIZATION_ID}"
-               data-component="header">
-    <br>
-<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
-            </div>
                         </form>
 
                     <h2 id="users-PATCHapi-v1-users--id--role">Update a user&#039;s role</h2>
@@ -14752,8 +14720,7 @@ the taxpayer, which must belong to the authenticated organization.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/users/42/role" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -14764,7 +14731,6 @@ the taxpayer, which must belong to the authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
-    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
 fetch(url, {
@@ -14782,7 +14748,6 @@ $response = $client-&gt;patch(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
-            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
     ]
 );
@@ -14797,8 +14762,7 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/users/42/role'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'Accept': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers)
@@ -14946,18 +14910,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="x-organization-id"                data-endpoint="PATCHapi-v1-users--id--role"
-               value="{YOUR_ORGANIZATION_ID}"
-               data-component="header">
-    <br>
-<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
-            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -14991,8 +14943,7 @@ authenticated organization.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/users/42/activate" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -15003,7 +14954,6 @@ authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
-    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
 fetch(url, {
@@ -15021,7 +14971,6 @@ $response = $client-&gt;patch(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
-            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
     ]
 );
@@ -15036,8 +14985,7 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/users/42/activate'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'Accept': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers)
@@ -15166,18 +15114,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="x-organization-id"                data-endpoint="PATCHapi-v1-users--id--activate"
-               value="{YOUR_ORGANIZATION_ID}"
-               data-component="header">
-    <br>
-<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
-            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -15211,8 +15147,7 @@ authenticated organization.</p>
     <pre><code class="language-bash">curl --request PATCH \
     "https://ec-demo.taxo.co/api/v1/users/42/deactivate" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -15223,7 +15158,6 @@ authenticated organization.</p>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
-    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
 fetch(url, {
@@ -15241,7 +15175,6 @@ $response = $client-&gt;patch(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
-            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
     ]
 );
@@ -15256,8 +15189,7 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/users/42/deactivate'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'Accept': 'application/json'
 }
 
 response = requests.request('PATCH', url, headers=headers)
@@ -15386,18 +15318,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="x-organization-id"                data-endpoint="PATCHapi-v1-users--id--deactivate"
-               value="{YOUR_ORGANIZATION_ID}"
-               data-component="header">
-    <br>
-<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
-            </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>id</code></b>&nbsp;&nbsp;
@@ -15437,8 +15357,7 @@ associated with other taxpayers).</li>
     <pre><code class="language-bash">curl --request DELETE \
     "https://ec-demo.taxo.co/api/v1/users/42" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
-    --header "Accept: application/json" \
-    --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
+    --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
@@ -15449,7 +15368,6 @@ associated with other taxpayers).</li>
 const headers = {
     "x-api-key": "YOUR_API_KEY_HERE",
     "Accept": "application/json",
-    "x-organization-id": "{YOUR_ORGANIZATION_ID}",
 };
 
 fetch(url, {
@@ -15467,7 +15385,6 @@ $response = $client-&gt;delete(
         'headers' =&gt; [
             'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
             'Accept' =&gt; 'application/json',
-            'x-organization-id' =&gt; '{YOUR_ORGANIZATION_ID}',
         ],
     ]
 );
@@ -15482,8 +15399,7 @@ import json
 url = 'https://ec-demo.taxo.co/api/v1/users/42'
 headers = {
   'x-api-key': 'YOUR_API_KEY_HERE',
-  'Accept': 'application/json',
-  'x-organization-id': '{YOUR_ORGANIZATION_ID}'
+  'Accept': 'application/json'
 }
 
 response = requests.request('DELETE', url, headers=headers)
@@ -15632,18 +15548,6 @@ You can check the Dev Tools console for debugging information.</code></pre>
                data-component="header">
     <br>
 <p>Example: <code>application/json</code></p>
-            </div>
-                                <div style="padding-left: 28px; clear: unset;">
-                <b style="line-height: 2;"><code>x-organization-id</code></b>&nbsp;&nbsp;
-&nbsp;
- &nbsp;
- &nbsp;
-                <input type="text" style="display: none"
-                              name="x-organization-id"                data-endpoint="DELETEapi-v1-users--id-"
-               value="{YOUR_ORGANIZATION_ID}"
-               data-component="header">
-    <br>
-<p>Example: <code>{YOUR_ORGANIZATION_ID}</code></p>
             </div>
                         <h4 class="fancy-heading-panel"><b>URL Parameters</b></h4>
                     <div style="padding-left: 28px; clear: unset;">
