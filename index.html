@@ -8,8 +8,8 @@
 
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/theme-default.style.css" media="screen">
-    <link rel="stylesheet" href="css/theme-default.print.css" media="print">
+    <link rel="stylesheet" href="../docs/css/theme-default.style.css" media="screen">
+    <link rel="stylesheet" href="../docs/css/theme-default.print.css" media="print">
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
 
@@ -32,9 +32,9 @@
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="js/tryitout-5.6.0.js"></script>
+    <script src="../docs/js/tryitout-5.6.0.js"></script>
 
-    <script src="js/theme-default-5.6.0.js"></script>
+    <script src="../docs/js/theme-default-5.6.0.js"></script>
 
 </head>
 
@@ -43,7 +43,7 @@
 <a href="#" id="nav-button">
     <span>
         MENU
-        <img src="images/navbar.png" alt="navbar-image"/>
+        <img src="../docs/images/navbar.png" alt="navbar-image"/>
     </span>
 </a>
 <div class="tocify-wrapper">
@@ -89,6 +89,16 @@
                             </li>
                                                                                 <li class="tocify-item level-2" data-unique="taxpayers-GETapi-v1-taxpayers--taxNumber--purchases-categories">
                                 <a href="#taxpayers-GETapi-v1-taxpayers--taxNumber--purchases-categories">GET api/v1/taxpayers/{taxNumber}/purchases-categories</a>
+                            </li>
+                                                                        </ul>
+                            </ul>
+                    <ul id="tocify-header-applications" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="applications">
+                    <a href="#applications">Applications</a>
+                </li>
+                                    <ul id="tocify-subheader-applications" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="applications-POSTapi-v1-applications-api-key">
+                                <a href="#applications-POSTapi-v1-applications-api-key">Create or update an application's API key</a>
                             </li>
                                                                         </ul>
                             </ul>
@@ -244,13 +254,13 @@
             </div>
 
     <ul class="toc-footer" id="toc-footer">
-                    <li style="padding-bottom: 5px;"><a href="collection.json">View Postman collection</a></li>
-                            <li style="padding-bottom: 5px;"><a href="openapi.yaml">View OpenAPI spec</a></li>
+                    <li style="padding-bottom: 5px;"><a href="../docs/collection.json">View Postman collection</a></li>
+                            <li style="padding-bottom: 5px;"><a href="../docs/openapi.yaml">View OpenAPI spec</a></li>
                 <li><a href="http://github.com/knuckleswtf/scribe">Documentation powered by Scribe ✍</a></li>
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: September 15, 2026</li>
+        <li>Last updated: September 30, 2026</li>
     </ul>
 </div>
 
@@ -1205,7 +1215,7 @@ Categories are used to classify purchase and sales documents.</p>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=personal_expenses&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
+    --get "https://ec-demo.taxo.co/api/v1/taxpayers/1726051285001/categories?page=1&amp;per_page=20&amp;document_type=sales&amp;category_type=commercial_expenses&amp;enabled=1&amp;editable=1&amp;search=Alimentaci%C3%B3n&amp;filter[document_type]=purchases&amp;filter[category_type]=sales&amp;filter[search]=vmqeopfuudtdsufvyvddq" \
     --header "x-api-key: YOUR_API_KEY_HERE" \
     --header "Accept: application/json" \
     --header "x-organization-id: {YOUR_ORGANIZATION_ID}"</code></pre></div>
@@ -1225,7 +1235,7 @@ const params = {
     "editable": "1",
     "search": "Alimentación",
     "filter[document_type]": "purchases",
-    "filter[category_type]": "personal_expenses",
+    "filter[category_type]": "sales",
     "filter[search]": "vmqeopfuudtdsufvyvddq",
 };
 Object.keys(params)
@@ -1263,7 +1273,7 @@ $response = $client-&gt;get(
             'editable' =&gt; '1',
             'search' =&gt; 'Alimentación',
             'filter[document_type]' =&gt; 'purchases',
-            'filter[category_type]' =&gt; 'personal_expenses',
+            'filter[category_type]' =&gt; 'sales',
             'filter[search]' =&gt; 'vmqeopfuudtdsufvyvddq',
         ],
     ]
@@ -1286,7 +1296,7 @@ params = {
   'editable': '1',
   'search': 'Alimentación',
   'filter[document_type]': 'purchases',
-  'filter[category_type]': 'personal_expenses',
+  'filter[category_type]': 'sales',
   'filter[search]': 'vmqeopfuudtdsufvyvddq',
 }
 headers = {
@@ -1596,10 +1606,10 @@ Must be one of:
  &nbsp;
                 <input type="text" style="display: none"
                               name="filter.category_type"                data-endpoint="GETapi-v1-taxpayers--taxNumber--categories"
-               value="personal_expenses"
+               value="sales"
                data-component="query">
     <br>
-<p>Example: <code>personal_expenses</code></p>
+<p>Example: <code>sales</code></p>
 Must be one of:
 <ul style="list-style-type: square;"><li><code>personal_expenses</code></li> <li><code>commercial_expenses</code></li> <li><code>non_deductible_expenses</code></li> <li><code>sales</code></li></ul>
             </div>
@@ -1810,6 +1820,345 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>Example: <code>01jf8kyw5cyrr25bzgsgs8dwep</code></p>
             </div>
                     </form>
+
+                <h1 id="applications">Applications</h1>
+
+    <p>API endpoints for connecting external applications (e.g. Datil/&quot;Facturador&quot;,
+application_id=2) to your organization's taxpayers.</p>
+
+                                <h2 id="applications-POSTapi-v1-applications-api-key">Create or update an application&#039;s API key</h2>
+
+<p>
+<small class="badge badge-darkred">requires authentication</small>
+</p>
+
+<p>Connects an application to a taxpayer by storing its API key, or updates the key
+if the connection already exists (upsert). Currently the only available application
+is Datil (&quot;Facturador&quot;), application_id=2. When connecting to Datil, the key is
+verified against Datil's API (bounded to a few seconds); the result is always saved
+regardless of the outcome, reflected in the <code>verified</code> (and <code>verification_message</code>
+when it fails) fields of the response. Exactly one of <code>tax_number</code> or
+<code>tws_tax_payer_id</code> must identify the target taxpayer, which must belong to the
+authenticated organization.</p>
+
+<span id="example-requests-POSTapi-v1-applications-api-key">
+<blockquote>Example request:</blockquote>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request POST \
+    "https://ec-demo.taxo.co/api/v1/applications/api-key" \
+    --header "x-api-key: YOUR_API_KEY_HERE" \
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --data "{
+    \"application_id\": 2,
+    \"tax_number\": \"1726051285001\",
+    \"tws_tax_payer_id\": \"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\",
+    \"api_key\": \"bd319a8b11bb453c8788e4a475360623\"
+}"
+</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "https://ec-demo.taxo.co/api/v1/applications/api-key"
+);
+
+const headers = {
+    "x-api-key": "YOUR_API_KEY_HERE",
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+};
+
+let body = {
+    "application_id": 2,
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab",
+    "api_key": "bd319a8b11bb453c8788e4a475360623"
+};
+
+fetch(url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(body),
+}).then(response =&gt; response.json());</code></pre></div>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'https://ec-demo.taxo.co/api/v1/applications/api-key';
+$response = $client-&gt;post(
+    $url,
+    [
+        'headers' =&gt; [
+            'x-api-key' =&gt; 'YOUR_API_KEY_HERE',
+            'Accept' =&gt; 'application/json',
+            'Content-Type' =&gt; 'application/json',
+        ],
+        'json' =&gt; [
+            'application_id' =&gt; 2,
+            'tax_number' =&gt; '1726051285001',
+            'tws_tax_payer_id' =&gt; '0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab',
+            'api_key' =&gt; 'bd319a8b11bb453c8788e4a475360623',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="python-example">
+    <pre><code class="language-python">import requests
+import json
+
+url = 'https://ec-demo.taxo.co/api/v1/applications/api-key'
+payload = {
+    "application_id": 2,
+    "tax_number": "1726051285001",
+    "tws_tax_payer_id": "0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab",
+    "api_key": "bd319a8b11bb453c8788e4a475360623"
+}
+headers = {
+  'x-api-key': 'YOUR_API_KEY_HERE',
+  'Accept': 'application/json',
+  'Content-Type': 'application/json'
+}
+
+response = requests.request('POST', url, headers=headers, json=payload)
+response.json()</code></pre></div>
+
+</span>
+
+<span id="example-responses-POSTapi-v1-applications-api-key">
+            <blockquote>
+            <p>Example response (200, Existing connection updated, verification failed):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Application API key updated successfully&quot;,
+    &quot;data&quot;: {
+        &quot;application_tax_payer&quot;: {
+            &quot;id&quot;: 76,
+            &quot;application_id&quot;: 2,
+            &quot;application_name&quot;: &quot;facturador&quot;,
+            &quot;tax_number&quot;: &quot;1726051285001&quot;,
+            &quot;verified&quot;: false,
+            &quot;verification_message&quot;: &quot;Supplied credentials are not valid&quot;,
+            &quot;enabled&quot;: true,
+            &quot;created_at&quot;: &quot;2026-01-15 10:30:00&quot;,
+            &quot;updated_at&quot;: &quot;2026-01-15 10:31:00&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (201, New connection created):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;success&quot;,
+    &quot;message&quot;: &quot;Application connected successfully&quot;,
+    &quot;data&quot;: {
+        &quot;application_tax_payer&quot;: {
+            &quot;id&quot;: 76,
+            &quot;application_id&quot;: 2,
+            &quot;application_name&quot;: &quot;facturador&quot;,
+            &quot;tax_number&quot;: &quot;1726051285001&quot;,
+            &quot;verified&quot;: true,
+            &quot;enabled&quot;: true,
+            &quot;created_at&quot;: &quot;2026-01-15 10:30:00&quot;,
+            &quot;updated_at&quot;: &quot;2026-01-15 10:30:00&quot;
+        }
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (404, Taxpayer not found):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Taxpayer not found or access denied&quot;,
+    &quot;code&quot;: &quot;NOT_FOUND&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (409, API key already used by another taxpayer):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;This API key is already in use by another taxpayer for this application&quot;,
+    &quot;code&quot;: &quot;API_KEY_IN_USE&quot;
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (422, Validation error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;Validation failed&quot;,
+    &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+    &quot;errors&quot;: {
+        &quot;application_id&quot;: [
+            &quot;The given application_id does not exist&quot;
+        ]
+    }
+}</code>
+ </pre>
+            <blockquote>
+            <p>Example response (500, Server error):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;status&quot;: &quot;error&quot;,
+    &quot;message&quot;: &quot;An error occurred while connecting the application&quot;,
+    &quot;code&quot;: &quot;SERVER_ERROR&quot;
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-POSTapi-v1-applications-api-key" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-POSTapi-v1-applications-api-key"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-POSTapi-v1-applications-api-key"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-POSTapi-v1-applications-api-key" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-POSTapi-v1-applications-api-key">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-POSTapi-v1-applications-api-key" data-method="POST"
+      data-path="api/v1/applications/api-key"
+      data-authed="1"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('POSTapi-v1-applications-api-key', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-POSTapi-v1-applications-api-key"
+                    onclick="tryItOut('POSTapi-v1-applications-api-key');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-POSTapi-v1-applications-api-key"
+                    onclick="cancelTryOut('POSTapi-v1-applications-api-key');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-POSTapi-v1-applications-api-key"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-black">POST</small>
+            <b><code>api/v1/applications/api-key</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-api-key</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-api-key" class="auth-value"               data-endpoint="POSTapi-v1-applications-api-key"
+               value="YOUR_API_KEY_HERE"
+               data-component="header">
+    <br>
+<p>Example: <code>YOUR_API_KEY_HERE</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="POSTapi-v1-applications-api-key"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="POSTapi-v1-applications-api-key"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <h4 class="fancy-heading-panel"><b>Body Parameters</b></h4>
+        <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>application_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="application_id"                data-endpoint="POSTapi-v1-applications-api-key"
+               value="2"
+               data-component="body">
+    <br>
+<p>ID of the application to connect. Currently the only available application is Datil (&quot;Facturador&quot;), application_id=2. The <code>id</code> of an existing record in the applications table. Example: <code>2</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tax_number</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tax_number"                data-endpoint="POSTapi-v1-applications-api-key"
+               value="1726051285001"
+               data-component="body">
+    <br>
+<p>Tax number (RUC/cédula) of the taxpayer to connect the application to. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres. Example: <code>1726051285001</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>tws_tax_payer_id</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="tws_tax_payer_id"                data-endpoint="POSTapi-v1-applications-api-key"
+               value="0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab"
+               data-component="body">
+    <br>
+<p>TWS taxpayer id to connect the application to. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres. Example: <code>0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab</code></p>
+        </div>
+                <div style=" padding-left: 28px;  clear: unset;">
+            <b style="line-height: 2;"><code>api_key</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="api_key"                data-endpoint="POSTapi-v1-applications-api-key"
+               value="bd319a8b11bb453c8788e4a475360623"
+               data-component="body">
+    <br>
+<p>API key issued by the application (e.g. the Datil personal API key) to store or update for this taxpayer. El campo value no debe ser mayor que 191 caracteres. Example: <code>bd319a8b11bb453c8788e4a475360623</code></p>
+        </div>
+        </form>
 
                 <h1 id="emitted-documents">Emitted Documents</h1>
 
@@ -4793,7 +5142,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Venta al contado"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpbwJMQm" </code></pre></div>
+    --form "files[]=@/tmp/phphyUCIr" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -4863,7 +5212,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpbwJMQm', 'r')
+                'contents' =&gt; fopen('/tmp/phphyUCIr', 'r')
             ],
         ],
     ]
@@ -4884,7 +5233,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Venta al contado'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpbwJMQm', 'rb')}
+  'files[]': open('/tmp/phphyUCIr', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",
@@ -12936,7 +13285,7 @@ the web interface and complete the information (update totals, VAT type, categor
     --form "document_date=2026-01-22"\
     --form "notes=Compra de suministros de oficina"\
     --form "contact_tax_number=1234567890001"\
-    --form "files[]=@/tmp/phpHnrAIp" </code></pre></div>
+    --form "files[]=@/tmp/phpC3LVFe" </code></pre></div>
 
 
 <div class="javascript-example">
@@ -13006,7 +13355,7 @@ $response = $client-&gt;post(
             ],
             [
                 'name' =&gt; 'files[]',
-                'contents' =&gt; fopen('/tmp/phpHnrAIp', 'r')
+                'contents' =&gt; fopen('/tmp/phpC3LVFe', 'r')
             ],
         ],
     ]
@@ -13027,7 +13376,7 @@ files = {
   'document_date': (None, '2026-01-22'),
   'notes': (None, 'Compra de suministros de oficina'),
   'contact_tax_number': (None, '1234567890001'),
-  'files[]': open('/tmp/phpHnrAIp', 'rb')}
+  'files[]': open('/tmp/phpC3LVFe', 'rb')}
 payload = {
     "category_id": 123,
     "total_value": "150.50",

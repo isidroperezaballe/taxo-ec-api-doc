@@ -10,7 +10,7 @@
     ],
     "info": {
         "name": "Taxo Impuestos API - Documentaci\u00f3n",
-        "_postman_id": "bbf7272a-b417-4fa8-80b5-033e49fc2e6d",
+        "_postman_id": "e9bb3fe2-4aed-4f83-a993-ba528d9fba4e",
         "description": "Taxo Impuestos API v1 - Gesti\u00f3n de contribuyentes y documentos tributarios",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json",
         "version": "1.0.0"
@@ -308,7 +308,7 @@
                                 },
                                 {
                                     "key": "filter.category_type",
-                                    "value": "personal_expenses",
+                                    "value": "sales",
                                     "description": "",
                                     "disabled": false
                                 },
@@ -331,7 +331,7 @@
                                     "disabled": false
                                 }
                             ],
-                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=personal_expenses&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
+                            "raw": "{{baseUrl}}\/api\/v1\/taxpayers\/:taxNumber\/categories?page=1&per_page=20&document_type=sales&category_type=commercial_expenses&enabled=1&editable=1&search=Alimentaci%C3%B3n&filter[]=&filter.document_type=purchases&filter.category_type=sales&filter.enabled=&filter.editable=&filter.search=vmqeopfuudtdsufvyvddq",
                             "variable": [
                                 {
                                     "id": "taxNumber",
@@ -414,6 +414,77 @@
                         "description": ""
                     },
                     "response": []
+                }
+            ]
+        },
+        {
+            "name": "Applications",
+            "description": "\nAPI endpoints for connecting external applications (e.g. Datil\/\"Facturador\",\napplication_id=2) to your organization's taxpayers.",
+            "item": [
+                {
+                    "name": "Create or update an application's API key",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/v1\/applications\/api-key",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/v1\/applications\/api-key"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"application_id\":2,\"tax_number\":\"1726051285001\",\"tws_tax_payer_id\":\"0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab\",\"api_key\":\"bd319a8b11bb453c8788e4a475360623\"}"
+                        },
+                        "description": "Connects an application to a taxpayer by storing its API key, or updates the key\nif the connection already exists (upsert). Currently the only available application\nis Datil (\"Facturador\"), application_id=2. When connecting to Datil, the key is\nverified against Datil's API (bounded to a few seconds); the result is always saved\nregardless of the outcome, reflected in the `verified` (and `verification_message`\nwhen it fails) fields of the response. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the target taxpayer, which must belong to the\nauthenticated organization."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Application API key updated successfully\",\n  \"data\": {\n    \"application_tax_payer\": {\n      \"id\": 76,\n      \"application_id\": 2,\n      \"application_name\": \"facturador\",\n      \"tax_number\": \"1726051285001\",\n      \"verified\": false,\n      \"verification_message\": \"Supplied credentials are not valid\",\n      \"enabled\": true,\n      \"created_at\": \"2026-01-15 10:30:00\",\n      \"updated_at\": \"2026-01-15 10:31:00\"\n    }\n  }\n}",
+                            "name": "Existing connection updated, verification failed"
+                        },
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"status\": \"success\",\n  \"message\": \"Application connected successfully\",\n  \"data\": {\n    \"application_tax_payer\": {\n      \"id\": 76,\n      \"application_id\": 2,\n      \"application_name\": \"facturador\",\n      \"tax_number\": \"1726051285001\",\n      \"verified\": true,\n      \"enabled\": true,\n      \"created_at\": \"2026-01-15 10:30:00\",\n      \"updated_at\": \"2026-01-15 10:30:00\"\n    }\n  }\n}",
+                            "name": "New connection created"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Taxpayer not found or access denied\",\n  \"code\": \"NOT_FOUND\"\n}",
+                            "name": "Taxpayer not found"
+                        },
+                        {
+                            "header": [],
+                            "code": 409,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"This API key is already in use by another taxpayer for this application\",\n  \"code\": \"API_KEY_IN_USE\"\n}",
+                            "name": "API key already used by another taxpayer"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"Validation failed\",\n  \"code\": \"VALIDATION_ERROR\",\n  \"errors\": { \"application_id\": [\"The given application_id does not exist\"] }\n}",
+                            "name": "Validation error"
+                        },
+                        {
+                            "header": [],
+                            "code": 500,
+                            "body": "{\n  \"status\": \"error\",\n  \"message\": \"An error occurred while connecting the application\",\n  \"code\": \"SERVER_ERROR\"\n}",
+                            "name": "Server error"
+                        }
+                    ]
                 }
             ]
         },

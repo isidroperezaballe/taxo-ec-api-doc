@@ -11,6 +11,9 @@ tags:
     name: Taxpayers
     description: "\nAPI endpoints for managing taxpayers and their related data."
   -
+    name: Applications
+    description: "\nAPI endpoints for connecting external applications (e.g. Datil/\"Facturador\",\napplication_id=2) to your organization's taxpayers."
+  -
     name: 'Emitted Documents'
     description: "\nAPI endpoints for managing emitted documents (sales documents to customers).\n\n## Document Types\n\nEmitted documents include:\n- **Invoices (Facturas de Venta)**: Sales invoices issued to customers\n- **Credit Notes**: Applied to invoices\n- **Withholdings**: Tax withholding documents received from customers\n\n## Filtering & Categorization\n\n### Date Filtering\n- **Default**: Current month if no dates provided\n- **start_date**: Filter from this date (YYYY-MM-DD)\n- **end_date**: Filter until this date (YYYY-MM-DD)\n\n### Category Filtering\n\nThe system supports both document-level and item-level categorization.\n\n**Category filters:**\n\n- `category_id[]`: Filter by specific category ID(s) - array parameter (can pass multiple)\n  \n  **Searches in:** `invoice_items.tax_payer_category_id` (line item categories)\n  \n  **Note:** To obtain the available category IDs for a taxpayer, use the categories endpoint:\n  `GET /api/v1/taxpayers/{taxNumber}/categories?type=sales`\n  \n  Each taxpayer has their own custom categories for sales. You must retrieve the category IDs \n  from this endpoint before filtering by `category_id[]`.\n\n### Regime Filtering\n- `regime`: Filter by tax regime - single value parameter\n  - `general`: General tax regime\n  - `rimpe_entrepreneur`: RIMPE Entrepreneur regime\n  - `rimpe_popular_business`: RIMPE Popular Business regime\n\n### Deductibility Filtering\n- `deductible_type`: Filter by tax deductibility - single value parameter\n  - `deductible`: Tax-deductible (Con derecho a crédito tributario)\n  - `non_deductible`: Non-deductible (Sin derecho a crédito tributario)\n\n### Status Filtering\n- `status`: Filter by document status - single value parameter\n  - `AUTORIZADO`: Authorized/valid documents\n  - `ANULADO`: Voided documents\n\n### Origin Filtering\n- `origin`: Filter by document origin/source system - single value parameter\n  - `datil`: Documents issued through Datil integration\n  - `tws`: Documents processed by Taxo Web Services\n  - `xml-import`: Documents manually imported from XML files\n  - `physical-upload`: Physical documents uploaded/entered manually by user\n\n**Note:** Most filters accept a single value.\nOnly `category_id` accepts multiple values using array notation `category_id[]=123&category_id[]=456`.\n\n## Pagination\n\n- `page`: Page number (default: 1)\n- `per_page`: Items per page, 1-100 (default: 20)"
   -
@@ -991,12 +994,12 @@ paths:
           in: query
           name: filter.category_type
           description: ''
-          example: personal_expenses
+          example: sales
           required: false
           schema:
             type: string
             description: ''
-            example: personal_expenses
+            example: sales
             enum:
               - personal_expenses
               - commercial_expenses
@@ -1293,6 +1296,258 @@ paths:
         required: true
         schema:
           type: string
+  /api/v1/applications/api-key:
+    post:
+      summary: "Create or update an application's API key"
+      operationId: createOrUpdateAnApplicationsAPIKey
+      description: "Connects an application to a taxpayer by storing its API key, or updates the key\nif the connection already exists (upsert). Currently the only available application\nis Datil (\"Facturador\"), application_id=2. When connecting to Datil, the key is\nverified against Datil's API (bounded to a few seconds); the result is always saved\nregardless of the outcome, reflected in the `verified` (and `verification_message`\nwhen it fails) fields of the response. Exactly one of `tax_number` or\n`tws_tax_payer_id` must identify the target taxpayer, which must belong to the\nauthenticated organization."
+      parameters:
+        -
+          in: header
+          name: x-api-key
+          description: ''
+          example: YOUR_API_KEY_HERE
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Existing connection updated, verification failed'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Application API key updated successfully'
+                  data:
+                    application_tax_payer:
+                      id: 76
+                      application_id: 2
+                      application_name: facturador
+                      tax_number: '1726051285001'
+                      verified: false
+                      verification_message: 'Supplied credentials are not valid'
+                      enabled: true
+                      created_at: '2026-01-15 10:30:00'
+                      updated_at: '2026-01-15 10:31:00'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Application API key updated successfully'
+                  data:
+                    type: object
+                    properties:
+                      application_tax_payer:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 76
+                          application_id:
+                            type: integer
+                            example: 2
+                          application_name:
+                            type: string
+                            example: facturador
+                          tax_number:
+                            type: string
+                            example: '1726051285001'
+                          verified:
+                            type: boolean
+                            example: false
+                          verification_message:
+                            type: string
+                            example: 'Supplied credentials are not valid'
+                          enabled:
+                            type: boolean
+                            example: true
+                          created_at:
+                            type: string
+                            example: '2026-01-15 10:30:00'
+                          updated_at:
+                            type: string
+                            example: '2026-01-15 10:31:00'
+        201:
+          description: 'New connection created'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: success
+                  message: 'Application connected successfully'
+                  data:
+                    application_tax_payer:
+                      id: 76
+                      application_id: 2
+                      application_name: facturador
+                      tax_number: '1726051285001'
+                      verified: true
+                      enabled: true
+                      created_at: '2026-01-15 10:30:00'
+                      updated_at: '2026-01-15 10:30:00'
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: 'Application connected successfully'
+                  data:
+                    type: object
+                    properties:
+                      application_tax_payer:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 76
+                          application_id:
+                            type: integer
+                            example: 2
+                          application_name:
+                            type: string
+                            example: facturador
+                          tax_number:
+                            type: string
+                            example: '1726051285001'
+                          verified:
+                            type: boolean
+                            example: true
+                          enabled:
+                            type: boolean
+                            example: true
+                          created_at:
+                            type: string
+                            example: '2026-01-15 10:30:00'
+                          updated_at:
+                            type: string
+                            example: '2026-01-15 10:30:00'
+        404:
+          description: 'Taxpayer not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Taxpayer not found or access denied'
+                  code: NOT_FOUND
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Taxpayer not found or access denied'
+                  code:
+                    type: string
+                    example: NOT_FOUND
+        409:
+          description: 'API key already used by another taxpayer'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'This API key is already in use by another taxpayer for this application'
+                  code: API_KEY_IN_USE
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'This API key is already in use by another taxpayer for this application'
+                  code:
+                    type: string
+                    example: API_KEY_IN_USE
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'Validation failed'
+                  code: VALIDATION_ERROR
+                  errors:
+                    application_id:
+                      - 'The given application_id does not exist'
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'Validation failed'
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  errors:
+                    type: object
+                    properties:
+                      application_id:
+                        type: array
+                        example:
+                          - 'The given application_id does not exist'
+                        items:
+                          type: string
+        500:
+          description: 'Server error'
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  status: error
+                  message: 'An error occurred while connecting the application'
+                  code: SERVER_ERROR
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  message:
+                    type: string
+                    example: 'An error occurred while connecting the application'
+                  code:
+                    type: string
+                    example: SERVER_ERROR
+      tags:
+        - Applications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                application_id:
+                  type: integer
+                  description: 'ID of the application to connect. Currently the only available application is Datil ("Facturador"), application_id=2. The <code>id</code> of an existing record in the applications table.'
+                  example: 2
+                tax_number:
+                  type: string
+                  description: 'Tax number (RUC/cédula) of the taxpayer to connect the application to. Required if tws_tax_payer_id is not provided. This field is required when <code>tws_tax_payer_id</code> is not present. El campo value no debe ser mayor que 20 caracteres.'
+                  example: '1726051285001'
+                  nullable: true
+                tws_tax_payer_id:
+                  type: string
+                  description: 'TWS taxpayer id to connect the application to. Required if tax_number is not provided. If both are given, tax_number takes priority. This field is required when <code>tax_number</code> is not present. El campo value no debe ser mayor que 64 caracteres.'
+                  example: 0f8a1c2e-4b3d-4e2a-9c1a-1234567890ab
+                  nullable: true
+                api_key:
+                  type: string
+                  description: 'API key issued by the application (e.g. the Datil personal API key) to store or update for this taxpayer. El campo value no debe ser mayor que 191 caracteres.'
+                  example: bd319a8b11bb453c8788e4a475360623
+              required:
+                - application_id
+                - api_key
   '/api/v1/taxpayers/{taxNumber}/emitted':
     get:
       summary: 'List emitted documents for a taxpayer'
